@@ -26,9 +26,6 @@ module.exports = {
     'react/function-component-definition': 0,
     'arrow-body-style': 0,
     'react/self-closing-comp': 0,
-    'no-param-reassign': [
-      'error',
-      { props: true, ignorePropertyModificationsFor: ['state'] },
-    ],
+    'no-param-reassign': 0,
   },
 };

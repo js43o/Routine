@@ -23,7 +23,6 @@ const CalendarList = styled.ul`
   border: 1px solid ${({ theme }) => theme.border_main};
   border-radius: 0.5rem;
   @media (min-width: 430px) {
-    row-gap: 2rem;
     padding: 2rem 0.5rem;
   }
   span:nth-of-type(1) {
@@ -38,9 +37,8 @@ const CalendarItem = styled.li<{ selected: boolean; performed: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 1.75rem;
-  height: 1.75rem;
-  padding: 0.25rem;
+  width: 2rem;
+  height: 2rem;
   border: ${({ performed, theme }) =>
     performed ? `2px solid ${theme.primary}` : ''};
   border-radius: 50%;
@@ -49,17 +47,15 @@ const CalendarItem = styled.li<{ selected: boolean; performed: boolean }>`
   font-weight: bold;
   cursor: pointer;
   &:nth-of-type(7n + 1) {
-    color: ${({ selected, theme }) =>
-      selected ? theme.letter_primary : theme.red};
+    color: ${({ theme }) => theme.red};
   }
   &:nth-of-type(7n) {
-    color: ${({ selected, theme }) =>
-      selected ? theme.letter_primary : theme.blue};
+    color: ${({ theme }) => theme.blue};
   }
   @media (min-width: 430px) {
     font-size: 1.25rem;
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 3rem;
+    height: 3rem;
   }
 `;
 
@@ -81,16 +77,20 @@ const CalendarHeader = styled.div`
 const PrevButton = styled(MdNavigateBefore)`
   font-size: 2.5rem;
   border-radius: 50%;
-  &:hover {
-    background: rgba(0, 0, 0, 0.1);
+  @media (hover: hover) {
+    &:hover {
+      background: rgba(0, 0, 0, 0.1);
+    }
   }
 `;
 
 const NextButton = styled(MdNavigateNext)`
   font-size: 2.5rem;
   border-radius: 50%;
-  &:hover {
-    background: rgba(0, 0, 0, 0.1);
+  @media (hover: hover) {
+    &:hover {
+      background: rgba(0, 0, 0, 0.1);
+    }
   }
 `;
 
@@ -138,16 +138,20 @@ const RecordCalendar = ({
         {[...Array(7)].map((x, i) => (
           <span>{dayidxToDaystr(i)}</span>
         ))}
-        {records.map((d) => (
-          <CalendarItem
-            key={d.date}
-            performed={d.list.length > 0}
-            selected={selectedDate === d.date}
-            onClick={(e) => onSelect(e)}
-          >
-            {+d.date.slice(8, 10) > 0 && +d.date.slice(8, 10)}
-          </CalendarItem>
-        ))}
+        {records.length > 0
+          ? records.map((d) => (
+              <CalendarItem
+                key={d.date}
+                performed={d.list.length > 0}
+                selected={selectedDate === d.date}
+                onClick={(e) => onSelect(e)}
+              >
+                {+d.date.slice(8, 10) > 0 && +d.date.slice(8, 10)}
+              </CalendarItem>
+            ))
+          : [...Array(30)].map(() => (
+              <CalendarItem selected={false} performed={false}></CalendarItem>
+            ))}
       </CalendarList>
     </RecordCalendarBlock>
   );

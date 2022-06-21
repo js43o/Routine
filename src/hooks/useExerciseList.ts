@@ -1,7 +1,6 @@
-/* eslint-disable no-param-reassign */
-import { insertExercise } from 'modules/routine';
 import { useRef } from 'react';
 import { useDispatch } from 'react-redux';
+import { insertExercise } from 'modules/routine';
 
 const useScroll = () => {
   const ref = useRef<HTMLUListElement>(null);

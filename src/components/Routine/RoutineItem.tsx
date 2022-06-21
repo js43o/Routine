@@ -9,7 +9,7 @@ import { dayidxToDaystr } from 'lib/methods';
 import { BsTriangleFill, BsStar, BsStarFill } from 'react-icons/bs';
 import { MdCheck } from 'react-icons/md';
 import { FaPencilAlt, FaTrashAlt } from 'react-icons/fa';
-import RoutineExerciseList from './RoutineExerciseList';
+import RoutineExerciseList from './ExerciseList';
 
 const RoutineItemBlock = styled.li<{ visible: boolean; editing?: boolean }>`
   height: ${({ visible }) => (visible ? '42rem' : '3rem')};
@@ -23,28 +23,36 @@ const RoutineItemBlock = styled.li<{ visible: boolean; editing?: boolean }>`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    .title {
-      height: 2rem;
-      display: flex;
-      place-items: center;
-      gap: 0.5rem;
-      min-width: 0;
-      font-weight: bold;
-      font-size: 1.25rem;
-      white-space: nowrap;
-      overflow: hidden;
-      input {
-        min-width: 0;
-        font-size: 1.025rem;
-        margin-right: 0.5rem;
-      }
-    }
+    gap: 0.5rem;
     .buttons {
       display: flex;
       place-items: center;
-      gap: 0.5rem;
+      gap: 0.75rem;
       font-size: 1.5rem;
     }
+  }
+`;
+
+const TitleBlock = styled.div<{ editing: boolean }>`
+  height: 2rem;
+  display: flex;
+  place-items: center;
+  gap: 0.5rem;
+  flex-grow: 1;
+  font-weight: bold;
+  font-size: 1.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  border-radius: 0.25rem;
+  @media (hover: hover) {
+    &:hover {
+      color: ${({ editing, theme }) => !editing && theme.letter_sub};
+    }
+  }
+  input {
+    min-width: 0;
+    font-size: 1.025rem;
+    margin-right: 0.5rem;
   }
 `;
 
@@ -68,12 +76,12 @@ const RoutineDetailBlock = styled.ul`
   display: flex;
   flex-direction: column;
   margin-top: 0.5rem;
+  gap: 0.25rem;
 `;
 
 const RoutineDetailItem = styled.li`
   display: flex;
   place-items: center;
-  padding: 0.25rem;
   border-radius: 0.5rem;
   overflow: hidden;
   .list {
@@ -99,31 +107,27 @@ const CheckButton = styled(MdCheck)`
 
 type RoutineItemProps = {
   routine: Routine;
-  isCurrent?: boolean;
-  isVisible?: boolean;
-  isEditing?: boolean;
-  onOpenModal?: (day: number) => void;
-  onVisible?: (id: string) => void;
-  onInvisible?: () => void;
-  onEditing?: (id: string) => void;
-  onUnediting?: () => void;
+  isVisible: boolean;
+  isEditing: boolean;
+  onOpenModal: (day: number) => void;
+  onSetVisible: (id?: string) => void;
+  onSetEditing: (id?: string) => void;
 };
 
 const RoutineItem = ({
   routine,
-  isCurrent = false,
   isVisible = false,
   isEditing = false,
   onOpenModal,
-  onVisible,
-  onInvisible,
-  onEditing,
-  onUnediting,
+  onSetVisible,
+  onSetEditing,
 }: RoutineItemProps) => {
   const user = useSelector(userSelector);
   const dispatch = useDispatch();
 
   const onRemoveRoutine = () => {
+    // eslint-disable-next-line no-alert
+    if (!window.confirm('정말 삭제하시겠습니까?')) return;
     if (user.currentRoutine && user.currentRoutine.id === routine.id)
       dispatch(setCurrentRoutine(null));
     dispatch(removeRoutine(routine.id));
@@ -134,40 +138,18 @@ const RoutineItem = ({
       dispatch(setCurrentRoutine(routine));
   }, [routine.lastModified]);
 
-  return isCurrent ? (
-    <RoutineItemBlock key={routine.id} visible>
-      <div className="header">
-        <div className="title">{routine.title}</div>
-      </div>
-      <RoutineDetailBlock>
-        {routine.weekRoutine.map((dayRoutine, dayIdx) => (
-          <RoutineDetailItem>
-            <DaySpan dayIdx={dayIdx}>{dayidxToDaystr(dayIdx)}</DaySpan>
-            <div className="list">
-              <RoutineExerciseList
-                dayRoutine={dayRoutine}
-                dayIdx={dayIdx}
-                routineId={routine.id}
-                editing={isEditing}
-                onOpenModal={onOpenModal}
-              />
-            </div>
-          </RoutineDetailItem>
-        ))}
-      </RoutineDetailBlock>
-    </RoutineItemBlock>
-  ) : (
+  return (
     <RoutineItemBlock key={routine.id} visible={isVisible} editing={isEditing}>
       <div className="header">
-        <div className="title">
-          {onVisible && onInvisible && (
-            <Button>
-              <DetailButton
-                visible={isVisible ? 1 : 0}
-                onClick={isVisible ? onInvisible : () => onVisible(routine.id)}
-              />
-            </Button>
-          )}
+        <TitleBlock
+          editing={isEditing}
+          onClick={
+            !isEditing && isVisible
+              ? () => onSetVisible()
+              : () => onSetVisible(routine.id)
+          }
+        >
+          <DetailButton visible={isVisible ? 1 : 0} />
           {isEditing ? (
             <input
               type="text"
@@ -180,7 +162,7 @@ const RoutineItem = ({
           ) : (
             routine.title
           )}
-        </div>
+        </TitleBlock>
         <div className="buttons">
           {user.currentRoutine?.id === routine.id ? (
             <Button>
@@ -195,17 +177,13 @@ const RoutineItem = ({
               />
             </Button>
           )}
-          {onEditing &&
-            onUnediting &&
-            (isEditing ? (
-              <Button>
-                <CheckButton onClick={onUnediting} />
-              </Button>
+          <Button>
+            {isEditing ? (
+              <CheckButton onClick={() => onSetEditing()} />
             ) : (
-              <Button>
-                <FaPencilAlt onClick={() => onEditing(routine.id)} />
-              </Button>
-            ))}
+              <FaPencilAlt onClick={() => onSetEditing(routine.id)} />
+            )}
+          </Button>
           <Button>
             <RemoveRoutineButton onClick={onRemoveRoutine} />
           </Button>
@@ -229,17 +207,6 @@ const RoutineItem = ({
       </RoutineDetailBlock>
     </RoutineItemBlock>
   );
-};
-
-RoutineItem.defaultProps = {
-  isCurrent: false,
-  isVisible: false,
-  isEditing: false,
-  onOpenModal: null,
-  onVisible: null,
-  onInvisible: null,
-  onEditing: null,
-  onUnediting: null,
 };
 
 export default React.memo(RoutineItem);

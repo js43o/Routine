@@ -8,36 +8,52 @@ import useAddExercise from 'hooks/useAddExercise';
 import { getKorCategory } from 'lib/methods';
 import exerciseJSON from '../../data/exercise.json';
 
+const AddExerciseWrapper = styled.div<{ visible: boolean }>`
+  display: flex;
+  place-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: ${({ visible }) => (visible ? 1 : 0)};
+  transition: opacity 0.5s;
+  pointer-events: ${({ visible }) => (visible ? 'auto' : 'none')};
+`;
+
 const AddExerciseBlock = styled.div<{ visible: boolean }>`
   display: flex;
   flex-direction: column;
+  align-items: center;
   z-index: 100;
   top: ${({ visible }) => (visible ? '5%' : '100%')};
   left: 5%;
   position: fixed;
   max-width: 480px;
-  @media (min-width: 540px) {
-    left: calc(50% - 240px);
-  }
   width: 90%;
   height: 90%;
   border: 1px solid ${({ theme }) => theme.border_main};
   border-radius: 0.5rem;
   margin: 0 auto;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
   background: ${({ theme }) => theme.background_main};
   overflow: hidden;
   transition: top 0.5s;
   h2 {
     align-self: center;
   }
+  @media (min-width: 540px) {
+    left: calc(50% - 240px);
+  }
 `;
 
 const CategoryListBlock = styled.ul`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  padding: 1rem;
   gap: 0.5rem;
+  padding: 1rem;
+  width: 100%;
 `;
 
 const CategoryItemBlock = styled(Button)<{ checked: number }>`
@@ -49,11 +65,12 @@ const CategoryItemBlock = styled(Button)<{ checked: number }>`
 const ExerciseListBlock = styled.ul`
   display: flex;
   flex-direction: column;
-  overflow-y: scroll;
-  background: ${({ theme }) => theme.background_sub};
   gap: 0.5rem;
-  padding: 0.5rem;
+  width: 100%;
   height: 100%;
+  padding: 0.5rem;
+  background: ${({ theme }) => theme.background_sub};
+  overflow-y: scroll;
 `;
 
 const ExerciseItemBlock = styled.li<{ isSelected: number }>`
@@ -134,7 +151,7 @@ const AddExerciseModal = ({ id, day, visible, onClose }: AddExerciseProps) => {
   };
 
   return (
-    <>
+    <AddExerciseWrapper visible={visible}>
       <AlertModal visible={addState.alertVisible} text={addState.alertText} />
       <AddExerciseBlock visible={visible}>
         <h2>운동 목록</h2>
@@ -230,7 +247,7 @@ const AddExerciseModal = ({ id, day, visible, onClose }: AddExerciseProps) => {
           </ButtonsBlock>
         </FooterBlock>
       </AddExerciseBlock>
-    </>
+    </AddExerciseWrapper>
   );
 };
 

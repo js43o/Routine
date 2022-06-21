@@ -41,8 +41,10 @@ const ExerciseItemBlock = styled.li<{ editing?: number }>`
   span {
     font-size: 0.8rem;
   }
-  &:hover {
-    opacity: ${({ editing }) => (editing ? 0.75 : 1)};
+  @media (hover: hover) {
+    &:hover {
+      opacity: ${({ editing }) => (editing ? 0.75 : 1)};
+    }
   }
   &:active {
     opacity: ${({ editing }) => (editing ? 0.5 : 1)};
@@ -81,7 +83,7 @@ const NextScrollButton = styled(Button)<{ isEnd: boolean }>`
   font-size: 1.75rem;
 `;
 
-type RoutineExerciseListProps = {
+type ExerciseListProps = {
   dayRoutine: ExerciseItem[];
   routineId?: string;
   dayIdx?: number;
@@ -89,13 +91,13 @@ type RoutineExerciseListProps = {
   onOpenModal?: (day: number) => void;
 };
 
-const RoutineExerciseList = ({
+const ExerciseList = ({
   dayRoutine,
   routineId = '',
   dayIdx = -1,
   editing = false,
   onOpenModal,
-}: RoutineExerciseListProps) => {
+}: ExerciseListProps) => {
   const dispatch = useDispatch();
   const { ref, moveTo, onDragStart } = useScroll();
   const dr = useRef<ExerciseItem[]>(dayRoutine);
@@ -103,6 +105,7 @@ const RoutineExerciseList = ({
   const onPointerDown = (e: PointerEvent, idx: number) => {
     const elem = (e.target as HTMLElement).closest('li') as HTMLLIElement;
     const timer = setTimeout(() => {
+      if (!editing) return;
       onDragStart(routineId, dayIdx, idx, elem, e.clientX);
     }, 500);
     document.onpointerup = () => {
@@ -123,7 +126,6 @@ const RoutineExerciseList = ({
   useEffect(() => {
     if (dayRoutine.length <= 0) return;
     if (routineId && dr.current.length < dayRoutine.length) moveTo('end');
-    else moveTo('init');
     dr.current = dayRoutine;
   }, [dayRoutine]);
 
@@ -173,11 +175,11 @@ const RoutineExerciseList = ({
   );
 };
 
-RoutineExerciseList.defaultProps = {
+ExerciseList.defaultProps = {
   routineId: '',
   dayIdx: -1,
   editing: false,
   onOpenModal: null,
 };
 
-export default React.memo(RoutineExerciseList);
+export default React.memo(ExerciseList);

@@ -78,14 +78,14 @@ const ProgressViewer = () => {
   if (!data)
     return (
       <ProgressViewerBlock>
-        <h1>기록이 없습니다.</h1>
+        <h3>기록이 없습니다.</h3>
       </ProgressViewerBlock>
     );
 
   if (!data[0].data.length)
     return (
       <ProgressViewerBlock>
-        <h2>새 측정값을 추가하세요.</h2>
+        <h3>새 측정값을 추가하세요.</h3>
         <AddProgress />
       </ProgressViewerBlock>
     );
@@ -95,7 +95,7 @@ const ProgressViewer = () => {
       <MyResponsiveLine data={data} />
       {!data[0].data.filter((d) => d.x === getDatestr(new Date())).length ? (
         <div>
-          <h2>신규 측정값 추가</h2>
+          <h3>신규 측정값 추가</h3>
           <AddProgress />
         </div>
       ) : (

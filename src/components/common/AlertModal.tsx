@@ -33,7 +33,6 @@ const InfoModal = styled.div<{ visible: boolean }>`
     font-weight: bold;
     transform: translate(-50%, -50%);
     opacity: ${({ visible }) => (visible ? 1 : 0)};
-    box-shadow: 0 0 16px rgba(0, 0, 0, 0.5);
     transition: opacity 0.5s;
     .icon {
       font-size: 2.5rem;

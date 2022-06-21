@@ -3,26 +3,21 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import Template from 'templates/Template';
 import { addRoutine } from 'modules/routine';
-import { routineSelector, userSelector } from 'modules/hooks';
+import { routineSelector } from 'modules/hooks';
 import RoutineItem from 'components/Routine/RoutineItem';
 import AddExercise from 'components/Routine/AddExerciseModal';
 import { BsPlusCircle } from 'react-icons/bs';
 import { v4 as uuidv4 } from 'uuid';
+import Button from 'components/common/Button';
 
 const AddRoutineButton = styled.div`
   display: flex;
   flex-direction: column;
+  flex-grow: 0;
   place-items: center;
   padding: 0.5rem;
   margin-top: 1rem;
   font-size: 2rem;
-  cursor: pointer;
-  &:hover {
-    opacity: 0.75;
-  }
-  &:active {
-    opacity: 0.5;
-  }
   b {
     font-size: 1rem;
   }
@@ -36,7 +31,6 @@ const RoutineListBlock = styled.ul`
 `;
 
 const RoutinePage = () => {
-  const user = useSelector(userSelector);
   const routines = useSelector(routineSelector);
   const dispatch = useDispatch();
 
@@ -51,47 +45,46 @@ const RoutinePage = () => {
   }, []);
   const onCloseModal = useCallback(() => setModal(false), []);
 
-  const onVisible = useCallback((id: string) => setVisible(id), []);
-  const onInvisible = useCallback(() => setVisible(null), []);
-  const onEditing = useCallback((id: string) => {
-    setVisible(id);
-    setEditing(id);
+  const onSetVisible = useCallback((id?: string) => {
+    if (id) {
+      setVisible(id);
+      return;
+    }
+    setVisible(null);
   }, []);
-  const onUnediting = useCallback(() => setEditing(null), []);
+  const onSetEditing = useCallback((id?: string) => {
+    if (id) {
+      setVisible(id);
+      setEditing(id);
+      return;
+    }
+    setEditing(null);
+  }, []);
 
   return (
     <Template>
-      <h1>현재 루틴</h1>
-      {user.currentRoutine?.id ? (
-        <RoutineItem isCurrent routine={user.currentRoutine} />
-      ) : (
-        <h3>선택된 루틴이 없습니다.</h3>
-      )}
-      <hr />
-      <h1>루틴 목록</h1>
       <AddExercise
         id={editing}
         day={day}
         visible={modal}
         onClose={onCloseModal}
       />
+      <h1>루틴 목록</h1>
       <RoutineListBlock>
         {routines.map((routine) => (
           <RoutineItem
+            key={routine.id}
             routine={routine}
             isVisible={visible === routine.id}
             isEditing={editing === routine.id}
             onOpenModal={onOpenModal}
-            onVisible={onVisible}
-            onInvisible={onInvisible}
-            onEditing={onEditing}
-            onUnediting={onUnediting}
-            key={routine.id}
+            onSetVisible={onSetVisible}
+            onSetEditing={onSetEditing}
           />
         ))}
       </RoutineListBlock>
       <AddRoutineButton>
-        <BsPlusCircle
+        <Button
           onClick={() => {
             const id = uuidv4();
             dispatch(
@@ -102,10 +95,12 @@ const RoutinePage = () => {
                 weekRoutine: [[], [], [], [], [], [], []],
               }),
             );
-            onEditing(id);
+            onSetEditing(id);
           }}
-        />
-        <b>루틴 추가</b>
+        >
+          <BsPlusCircle />
+          <b>루틴 추가</b>
+        </Button>
       </AddRoutineButton>
     </Template>
   );

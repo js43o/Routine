@@ -12,8 +12,10 @@ const ButtonBlock = styled.div`
   border-radius: 0.5rem;
   font-weight: bold;
   cursor: pointer;
-  &:hover {
-    opacity: 0.75;
+  @media (hover: hover) {
+    &:hover {
+      opacity: 0.75;
+    }
   }
   &:active {
     opacity: 0.5;

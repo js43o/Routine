@@ -6,6 +6,7 @@ import Template from 'templates/Template';
 import Info from 'components/Home/Info';
 import PerformRoutine from 'components/Home/PerformRoutine';
 import { getDatestr, getWeekDate } from 'lib/methods';
+import { FaPencilAlt } from 'react-icons/fa';
 
 const PerformListBlock = styled.ul`
   display: grid;
@@ -66,10 +67,11 @@ const HomePage = () => {
         <h1>안녕하세요, {user.name}님!</h1>
       ) : (
         <NoUserBlock>
-          <h1>사용자 정보가 없습니다.</h1>
-          <span>
-            우측의 <strong>편집</strong> 아이콘을 눌러 정보를 입력해주세요.
-          </span>
+          <p>
+            사용자 정보가 없습니다.
+            <br />
+            우측의 <FaPencilAlt />을 눌러 정보를 입력해주세요.
+          </p>
         </NoUserBlock>
       )}
       <Info user={user}></Info>
