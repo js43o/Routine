@@ -44,3 +44,15 @@ export const getWeekDate = (date: Date) => {
 
   return result;
 };
+
+export const hideScroll = () => {
+  let offset = document.body.offsetWidth;
+  document.body.style.overflowY = 'hidden';
+  offset -= document.body.offsetWidth;
+  document.body.style.paddingRight = `${-offset}px`;
+};
+
+export const unhideScroll = () => {
+  document.body.style.overflow = '';
+  document.body.style.paddingRight = '';
+};

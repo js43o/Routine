@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { insertExercise } from 'modules/routine';
+import { hideScroll, unhideScroll } from 'lib/methods';
 
 const useScroll = () => {
   const ref = useRef<HTMLUListElement>(null);
@@ -44,6 +45,8 @@ const useScroll = () => {
     elem: HTMLLIElement,
     x: number,
   ) => {
+    hideScroll();
+
     elem.classList.add('hold');
     document.onpointermove = (e) => {
       elem.style.transform = `scale(1.1) translate(${e.clientX - x}px)`;
@@ -62,6 +65,8 @@ const useScroll = () => {
     fromIdx: number,
     init: number,
   ) => {
+    unhideScroll();
+
     if (!ref.current) return;
 
     const items = Array.from(ref.current.querySelectorAll('li'));

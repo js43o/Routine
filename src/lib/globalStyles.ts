@@ -7,7 +7,6 @@ export const globalStyles = css`
   }
 
   html {
-    overflow-y: scroll;
   }
 
   body {
@@ -16,6 +15,8 @@ export const globalStyles = css`
     font-family: 'Noto Sans KR', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    touch-action: pan-y;
+    overflow-y: scroll;
   }
 
   button,

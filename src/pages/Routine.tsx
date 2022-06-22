@@ -9,6 +9,7 @@ import AddExercise from 'components/Routine/AddExerciseModal';
 import { BsPlusCircle } from 'react-icons/bs';
 import { v4 as uuidv4 } from 'uuid';
 import Button from 'components/common/Button';
+import { hideScroll, unhideScroll } from 'lib/methods';
 
 const AddRoutineButton = styled.div`
   display: flex;
@@ -42,8 +43,12 @@ const RoutinePage = () => {
   const onOpenModal = useCallback((day: number) => {
     setDay(day);
     setModal(true);
+    hideScroll();
   }, []);
-  const onCloseModal = useCallback(() => setModal(false), []);
+  const onCloseModal = useCallback(() => {
+    setModal(false);
+    unhideScroll();
+  }, []);
 
   const onSetVisible = useCallback((id?: string) => {
     if (id) {

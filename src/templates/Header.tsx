@@ -57,14 +57,12 @@ type NavLinkBlockProps = {
 };
 
 const NavLinkBlock = ({ to, children }: NavLinkBlockProps) => (
-  <Button>
-    <StyledNavLink
-      to={to}
-      className={({ isActive }) => (isActive ? 'active' : '')}
-    >
-      {children}
-    </StyledNavLink>
-  </Button>
+  <StyledNavLink
+    to={to}
+    className={({ isActive }) => (isActive ? 'active' : '')}
+  >
+    {children}
+  </StyledNavLink>
 );
 
 function Header() {

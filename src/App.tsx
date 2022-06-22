@@ -12,7 +12,6 @@ import { globalStyles } from './lib/globalStyles';
 const AppBlock = styled.div`
   display: flex;
   justify-content: center;
-  padding: 1rem 0;
   @media (min-width: 430px) {
     padding: 1rem;
   }
@@ -27,7 +26,6 @@ const GlobalStyles = () => {
         body {
           background: ${theme.body};
           color: ${theme.letter_main};
-          touch-action: pan-y;
         }
         input,
         textArea,

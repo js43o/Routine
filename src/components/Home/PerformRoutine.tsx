@@ -66,8 +66,13 @@ const CompleteButton = styled.button`
   background: ${({ theme }) => theme.background_sub};
   font-size: 1.5rem;
   font-weight: bold;
+  @media (hover: hover) {
+    &:hover {
+      opacity: 0.75;
+    }
+  }
   &:active {
-    background: ${({ theme }) => theme.border_primary};
+    background: ${({ theme }) => theme.primary};
   }
   cursor: pointer;
 `;

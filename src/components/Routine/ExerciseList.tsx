@@ -27,6 +27,7 @@ const ExerciseListBlock = styled.ul<{ editing: boolean }>`
     editing ? theme.primary : theme.background_sub};
   overflow: hidden;
   scroll-behavior: smooth;
+  touch-action: ${({ editing }) => editing && 'none'};
 `;
 
 const ExerciseItemBlock = styled.li<{ editing?: number }>`
@@ -105,7 +106,9 @@ const ExerciseList = ({
   const onPointerDown = (e: PointerEvent, idx: number) => {
     const elem = (e.target as HTMLElement).closest('li') as HTMLLIElement;
     const timer = setTimeout(() => {
-      if (!editing) return;
+      if (!editing) {
+        return;
+      }
       onDragStart(routineId, dayIdx, idx, elem, e.clientX);
     }, 500);
     document.onpointerup = () => {
