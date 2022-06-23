@@ -96,10 +96,20 @@ export const userSlice = createSlice({
         }),
       );
     },
+    removeProgress: (state, { payload }: { payload: string }) => {
+      state.progress.forEach((item) => {
+        item.data = item.data.filter((a) => a.x !== payload);
+      });
+    },
   },
 });
 
-export const { setUser, setCurrentRoutine, addCompleteDay, addProgress } =
-  userSlice.actions;
+export const {
+  setUser,
+  setCurrentRoutine,
+  addCompleteDay,
+  addProgress,
+  removeProgress,
+} = userSlice.actions;
 
 export default userSlice.reducer;

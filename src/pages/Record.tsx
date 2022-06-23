@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import Template from 'templates/Template';
 import { userSelector } from 'modules/hooks';
-import { CompleteItem } from 'modules/user';
-import { getDatestr } from 'lib/methods';
+import { CompleteItem, ProgressItem } from 'modules/user';
+import { getDatestr, hideScroll, unhideScroll } from 'lib/methods';
+import { FaPencilAlt } from 'react-icons/fa';
 import RoutineExerciseList from 'components/Routine/ExerciseList';
 import RecordCalendar from 'components/Record/RecordCalendar';
 import ProgressViewer from 'components/Record/ProgressViewer';
+import SetProgressModal from 'components/Record/SetProgressModal';
+import Button from 'components/common/Button';
 
 const MemoBlock = styled.div`
   background: ${({ theme }) => theme.memo_body};
@@ -15,14 +18,35 @@ const MemoBlock = styled.div`
   padding: 0.5rem;
 `;
 
+const ProgressHeader = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  div {
+    font-size: 1.5rem;
+  }
+`;
+
 const RecordPage = () => {
   const users = useSelector(userSelector);
+  const progressData: ProgressItem[] = users.progress;
   const [currentDate, setCurrentDate] = useState({
     year: new Date().getFullYear(),
     month: new Date().getMonth(),
   });
   const [records, setRecords] = useState<CompleteItem[]>([]);
   const [selected, setSelected] = useState<CompleteItem | null>(null);
+  const [modal, setModal] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(document.body.offsetWidth);
+
+  const onOpenModal = useCallback(() => {
+    setWindowWidth(document.body.offsetWidth);
+    setModal(true);
+    hideScroll();
+  }, []);
+  const onCloseModal = useCallback(() => {
+    setModal(false);
+    unhideScroll();
+  }, []);
 
   useEffect(() => {
     const firstDate = new Date(currentDate.year, currentDate.month);
@@ -103,6 +127,12 @@ const RecordPage = () => {
 
   return (
     <Template>
+      <SetProgressModal
+        data={progressData}
+        visible={modal}
+        offset={windowWidth}
+        onCloseModal={onCloseModal}
+      />
       <RecordCalendar
         date={currentDate}
         records={records}
@@ -130,8 +160,13 @@ const RecordPage = () => {
         <h3>수행한 운동이 없습니다.</h3>
       )}
       <hr />
-      <h1>체성분 변화</h1>
-      <ProgressViewer />
+      <ProgressHeader>
+        <h1>체성분 변화</h1>
+        <Button onClick={onOpenModal}>
+          <FaPencilAlt />
+        </Button>
+      </ProgressHeader>
+      <ProgressViewer data={progressData} />
     </Template>
   );
 };

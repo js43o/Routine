@@ -135,7 +135,7 @@ const RecordCalendar = ({
         </Button>
       </CalendarHeader>
       <CalendarList>
-        {[...Array(7)].map((x, i) => (
+        {[...Array(7)].map((_, i) => (
           <span>{dayidxToDaystr(i)}</span>
         ))}
         {records.length > 0

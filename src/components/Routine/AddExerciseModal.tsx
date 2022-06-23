@@ -23,7 +23,7 @@ const AddExerciseWrapper = styled.div<{ visible: boolean }>`
   pointer-events: ${({ visible }) => (visible ? 'auto' : 'none')};
 `;
 
-const AddExerciseBlock = styled.div<{ visible: boolean }>`
+const AddExerciseBlock = styled.div<{ visible: boolean; offset: number }>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -44,7 +44,7 @@ const AddExerciseBlock = styled.div<{ visible: boolean }>`
     align-self: center;
   }
   @media (min-width: 540px) {
-    left: calc(50% - 240px);
+    left: ${({ offset }) => offset / 2 - 240}px;
   }
 `;
 
@@ -123,10 +123,17 @@ type AddExerciseProps = {
   id: string | null;
   day: number | null;
   visible: boolean;
+  offset: number;
   onClose: () => void;
 };
 
-const AddExerciseModal = ({ id, day, visible, onClose }: AddExerciseProps) => {
+const AddExerciseModal = ({
+  id,
+  day,
+  visible,
+  offset,
+  onClose,
+}: AddExerciseProps) => {
   const exercise: Exercise[] = exerciseJSON;
   const dispatch = useDispatch();
   const {
@@ -153,7 +160,7 @@ const AddExerciseModal = ({ id, day, visible, onClose }: AddExerciseProps) => {
   return (
     <AddExerciseWrapper visible={visible}>
       <AlertModal visible={addState.alertVisible} text={addState.alertText} />
-      <AddExerciseBlock visible={visible}>
+      <AddExerciseBlock visible={visible} offset={offset}>
         <h2>운동 목록</h2>
         <CategoryListBlock>
           <CategoryItemBlock

@@ -36,11 +36,13 @@ const RoutinePage = () => {
   const dispatch = useDispatch();
 
   const [modal, setModal] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(document.body.offsetWidth);
   const [visible, setVisible] = useState<string | null>(null);
   const [editing, setEditing] = useState<string | null>(null);
   const [day, setDay] = useState<number | null>(null);
 
   const onOpenModal = useCallback((day: number) => {
+    setWindowWidth(document.body.offsetWidth);
     setDay(day);
     setModal(true);
     hideScroll();
@@ -72,6 +74,7 @@ const RoutinePage = () => {
         id={editing}
         day={day}
         visible={modal}
+        offset={windowWidth}
         onClose={onCloseModal}
       />
       <h1>루틴 목록</h1>
