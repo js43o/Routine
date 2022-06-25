@@ -10,7 +10,7 @@ import {
 import { initialPerform, toggleCheck, checkAll } from 'modules/perform';
 import { addCompleteDay } from 'modules/user';
 import { getDatestr } from 'lib/methods';
-import AlertModal from 'components/common/AlertModal';
+import ErrorMessage from 'lib/ErrorMessage';
 
 const PerformRoutineBlock = styled.div`
   display: flex;
@@ -95,7 +95,7 @@ type PerformRoutineProps = {
 const PerformRoutine = ({ currentRoutine, complete }: PerformRoutineProps) => {
   const performs = useSelector(performSelector);
   const dispatch = useDispatch();
-  const [modal, setModal] = useState(false);
+  const [message, setMessage] = useState('');
   const [memo, setMemo] = useState('');
 
   useEffect(() => {
@@ -136,65 +136,64 @@ const PerformRoutine = ({ currentRoutine, complete }: PerformRoutineProps) => {
       (acc, exer) => acc + exer.setCheck.filter((a) => !a).length,
       0,
     ) === 0;
+
   const onMemo = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
     setMemo(e.target.value);
+
   const onComplete = () => {
     if (!isCompleted()) {
-      setModal(true);
-      setTimeout(() => setModal(false), 2000);
-    } else {
-      dispatch(
-        addCompleteDay({
-          date: getDatestr(new Date()),
-          list: todayRoutine,
-          memo,
-        }),
-      );
-      setMemo('');
+      setMessage('남은 운동이 있습니다.');
+      return;
     }
+    dispatch(
+      addCompleteDay({
+        date: getDatestr(new Date()),
+        list: todayRoutine,
+        memo,
+      }),
+    );
+    setMemo('');
   };
 
   return (
-    <>
-      <AlertModal visible={modal} text="남은 운동이 있습니다." />
-      <PerformRoutineBlock>
-        {performs.list.map((p, i) => (
-          <PerformExerciseBlock>
-            <ExerciseBlock
-              completed={!p.setCheck.filter((a) => !a).length}
-              onClick={() => onCheckAll(i)}
+    <PerformRoutineBlock>
+      {performs.list.map((p, i) => (
+        <PerformExerciseBlock>
+          <ExerciseBlock
+            completed={!p.setCheck.filter((a) => !a).length}
+            onClick={() => onCheckAll(i)}
+          >
+            <b>{p.exercise.exercise.name}</b>
+            <span>
+              {p.exercise.weight}kg, {p.exercise.numberOfTimes}회
+            </span>
+          </ExerciseBlock>
+          {p.setCheck.map((_, j) => (
+            <SetButton
+              available={j === 0 || p.setCheck[j - 1]}
+              onClick={() => onToggleCheck(i, j)}
             >
-              <b>{p.exercise.exercise.name}</b>
-              <span>
-                {p.exercise.weight}kg, {p.exercise.numberOfTimes}회
-              </span>
-            </ExerciseBlock>
-            {p.setCheck.map((_, j) => (
-              <SetButton
-                available={j === 0 || p.setCheck[j - 1]}
-                onClick={() => onToggleCheck(i, j)}
-              >
-                {p.setCheck[j] ? (
-                  <MdOutlineCheckCircleOutline />
-                ) : (
-                  <MdRadioButtonUnchecked />
-                )}
-                <b>{j + 1}세트</b>
-              </SetButton>
-            ))}
-          </PerformExerciseBlock>
-        ))}
-        <MemoBlock
-          placeholder="오늘의 운동 소감은?"
-          visible={isCompleted() ? 1 : 0}
-          rows={5}
-          wrap="soft"
-          onChange={onMemo}
-          value={memo}
-        ></MemoBlock>
-        <CompleteButton onClick={onComplete}>운동완료</CompleteButton>
-      </PerformRoutineBlock>
-    </>
+              {p.setCheck[j] ? (
+                <MdOutlineCheckCircleOutline />
+              ) : (
+                <MdRadioButtonUnchecked />
+              )}
+              <b>{j + 1}세트</b>
+            </SetButton>
+          ))}
+        </PerformExerciseBlock>
+      ))}
+      <MemoBlock
+        placeholder="오늘의 운동 소감은?"
+        visible={isCompleted() ? 1 : 0}
+        rows={5}
+        wrap="soft"
+        onChange={onMemo}
+        value={memo}
+      ></MemoBlock>
+      <CompleteButton onClick={onComplete}>운동완료</CompleteButton>
+      <ErrorMessage message={message} />
+    </PerformRoutineBlock>
   );
 };
 

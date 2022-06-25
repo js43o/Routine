@@ -14,7 +14,7 @@ const shaking = keyframes`
   }
 `;
 
-const ErrorMessageBlock = styled.p`
+const ErrorMessageBlock = styled.div`
   color: red;
   &.shaking {
     animation: ${shaking} linear 0.1s 0s 3;

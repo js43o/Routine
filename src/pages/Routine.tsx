@@ -75,7 +75,7 @@ const RoutinePage = () => {
         day={day}
         visible={modal}
         offset={windowWidth}
-        onClose={onCloseModal}
+        onCloseModal={onCloseModal}
       />
       <h1>루틴 목록</h1>
       <RoutineListBlock>

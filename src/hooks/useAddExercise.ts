@@ -9,14 +9,11 @@ type State = {
     numberOfTimes: number;
     numberOfSets: number;
   };
-  alertVisible: boolean;
-  alertText: string;
 };
 
 type Action =
-  | { type: 'SET_CATEGORY' | 'SET_ALERT_TEXT'; payload: string }
+  | { type: 'SET_CATEGORY'; payload: string }
   | { type: 'SET_SELECTED'; payload: Exercise | null }
-  | { type: 'TOGGLE_ALERT'; payload: boolean }
   | {
       type: 'CHANGE_WEIGHT' | 'CHANGE_NUM_OF_TIMES' | 'CHANGE_NUM_OF_SETS';
       payload: number;
@@ -40,10 +37,6 @@ const reducer = (state: State, action: Action) => {
         ...state,
         inputs: { ...state.inputs, numberOfSets: action.payload },
       };
-    case 'TOGGLE_ALERT':
-      return { ...state, alertVisible: action.payload };
-    case 'SET_ALERT_TEXT':
-      return { ...state, alertText: action.payload };
     default:
       return state;
   }
@@ -58,8 +51,6 @@ const useAddExercise = () => {
       numberOfTimes: 0,
       numberOfSets: 0,
     },
-    alertVisible: false,
-    alertText: '',
   });
 
   const onSelectExercise = useCallback(
@@ -87,41 +78,29 @@ const useAddExercise = () => {
     [],
   );
 
-  const onCheckInputs = useCallback(() => {
+  const checkInputs = useCallback(() => {
     if (!state.selected) {
-      dispatch({ type: 'SET_ALERT_TEXT', payload: '운동 종류를 선택하세요.' });
-      onAlert();
-      return false;
+      return '운동 종류를 선택하세요.';
     }
     if (
       !state.inputs.weight ||
       !state.inputs.numberOfTimes ||
       !state.inputs.numberOfSets
     ) {
-      dispatch({ type: 'SET_ALERT_TEXT', payload: '정확한 값을 입력하세요.' });
-      onAlert();
-      return false;
+      return '정확한 값을 입력하세요.';
     }
     if (state.inputs.numberOfSets > 20) {
-      dispatch({ type: 'SET_ALERT_TEXT', payload: '최대 세트 수는 20입니다.' });
-      onAlert();
-      return false;
+      return '최대 세트 수는 20입니다.';
     }
-    return true;
+    return '';
   }, [state.selected, state.inputs]);
-
-  const onAlert = useCallback(() => {
-    dispatch({ type: 'TOGGLE_ALERT', payload: true });
-    setTimeout(() => dispatch({ type: 'TOGGLE_ALERT', payload: false }), 2000);
-  }, []);
 
   return {
     addState: state,
     onSetCategory,
     onSelectExercise,
     onChangeInput,
-    onCheckInputs,
-    onAlert,
+    checkInputs,
   };
 };
 

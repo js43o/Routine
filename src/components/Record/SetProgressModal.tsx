@@ -237,7 +237,7 @@ const SetProgressModal = ({
               kg
             </div>
             <div className="fatMass">
-              <b>지방량</b>
+              <b>체지방량</b>
               <input
                 type="number"
                 min={0}

@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from '@emotion/styled';
 import { Exercise, addExercise, ExerciseItem } from 'modules/routine';
-import AlertModal from 'components/common/AlertModal';
 import Button from 'components/common/Button';
 import useAddExercise from 'hooks/useAddExercise';
+import ErrorMessage from 'lib/ErrorMessage';
 import { getKorCategory } from 'lib/methods';
 import exerciseJSON from '../../data/exercise.json';
 
@@ -124,7 +124,7 @@ type AddExerciseProps = {
   day: number | null;
   visible: boolean;
   offset: number;
-  onClose: () => void;
+  onCloseModal: () => void;
 };
 
 const AddExerciseModal = ({
@@ -132,7 +132,7 @@ const AddExerciseModal = ({
   day,
   visible,
   offset,
-  onClose,
+  onCloseModal,
 }: AddExerciseProps) => {
   const exercise: Exercise[] = exerciseJSON;
   const dispatch = useDispatch();
@@ -141,12 +141,17 @@ const AddExerciseModal = ({
     onSetCategory,
     onSelectExercise,
     onChangeInput,
-    onCheckInputs,
+    checkInputs,
   } = useAddExercise();
+  const [message, setMessage] = useState('');
 
   const onAddExercise = () => {
     if (!id || day === null) return;
-    if (!onCheckInputs()) return;
+    const error = checkInputs();
+    if (error) {
+      setMessage(error);
+      return;
+    }
     const exercise: ExerciseItem = {
       exercise: addState.selected as Exercise,
       weight: addState.inputs.weight,
@@ -157,9 +162,13 @@ const AddExerciseModal = ({
     onClose();
   };
 
+  const onClose = () => {
+    setMessage('');
+    onCloseModal();
+  };
+
   return (
     <AddExerciseWrapper visible={visible}>
-      <AlertModal visible={addState.alertVisible} text={addState.alertText} />
       <AddExerciseBlock visible={visible} offset={offset}>
         <h2>운동 목록</h2>
         <CategoryListBlock>
@@ -252,6 +261,7 @@ const AddExerciseModal = ({
               취소
             </Button>
           </ButtonsBlock>
+          <ErrorMessage message={message} />
         </FooterBlock>
       </AddExerciseBlock>
     </AddExerciseWrapper>

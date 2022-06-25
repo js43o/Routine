@@ -5,15 +5,15 @@ import { setUser, UserStateType } from 'modules/user';
 import { FaPencilAlt } from 'react-icons/fa';
 import { MdCheck } from 'react-icons/md';
 import Button from 'components/common/Button';
-import AlertModal from 'components/common/AlertModal';
 import { getDatestr } from 'lib/methods';
+import ErrorMessage from 'lib/ErrorMessage';
 
 const InfoBlock = styled.div<{ editing: boolean }>`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   position: relative;
-  height: 8rem;
+  gap: 0.25rem;
   padding: 0.5rem;
   border: 1px solid
     ${({ editing, theme }) => (editing ? theme.primary : theme.border_main)};
@@ -76,7 +76,7 @@ type InfoBlockProps = {
 
 const Info = ({ user }: InfoBlockProps) => {
   const dispatch = useDispatch();
-  const [modal, setModal] = useState(false);
+  const [message, setMessage] = useState('');
   const [editing, setEditing] = useState(false);
   const [inputState, inputDispatch] = useReducer(reducer, {
     name: user.name,
@@ -84,7 +84,10 @@ const Info = ({ user }: InfoBlockProps) => {
     birth: user.birth,
     height: `${user.height}`,
   });
-  const onToggleEditing = () => setEditing(!editing);
+  const onToggleEditing = () => {
+    setEditing(!editing);
+    setMessage('');
+  };
   const onChange = (type: string, e: React.ChangeEvent<HTMLInputElement>) => {
     if (type === 'HEIGHT' && e.target.value.length > 3) return;
     inputDispatch({
@@ -100,10 +103,9 @@ const Info = ({ user }: InfoBlockProps) => {
       !inputState.name ||
       !inputState.gender ||
       inputState.birth.length < 8 ||
-      !inputState.height
+      +inputState.height < 100
     ) {
-      setModal(true);
-      setTimeout(() => setModal(false), 2000);
+      setMessage('입력값을 확인해주세요');
       return;
     }
     dispatch(
@@ -115,6 +117,7 @@ const Info = ({ user }: InfoBlockProps) => {
       }),
     );
     onToggleEditing();
+    setMessage('');
   };
 
   useEffect(() => {
@@ -128,7 +131,6 @@ const Info = ({ user }: InfoBlockProps) => {
     <InfoBlock editing={editing}>
       {editing ? (
         <>
-          <AlertModal visible={modal} text="입력값을 확인해 주세요." />
           <EditButton onClick={onSubmit}>
             <Button>
               <CheckButton />
@@ -204,6 +206,7 @@ const Info = ({ user }: InfoBlockProps) => {
           <div>키: {user.height}cm</div>
         </>
       )}
+      <ErrorMessage message={message} />
     </InfoBlock>
   );
 };

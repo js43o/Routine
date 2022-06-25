@@ -17,8 +17,7 @@ const persistor = persistStore(store);
 
 ReactDOM.render(
   <Provider store={store}>
-    <BrowserRouter>
-      {/* basename={process.env.PUBLIC_URL} */}
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
       <PersistGate loading={null} persistor={persistor} />
       <App />
     </BrowserRouter>
