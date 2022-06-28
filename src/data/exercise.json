@@ -1,57 +1,137 @@
 [
   {
     "name": "랫 풀 다운",
-    "category": "upper",
+    "category": ["upper"],
     "part": ["등"]
   },
   {
-    "name": "시티드 로우",
-    "category": "upper",
+    "name": "케이블 로우",
+    "category": ["upper"],
+    "part": ["등"]
+  },
+  {
+    "name": "풀업",
+    "category": ["upper"],
+    "part": ["등"]
+  },
+  {
+    "name": "어시스티드 풀업",
+    "category": ["upper"],
     "part": ["등"]
   },
   {
     "name": "숄더 프레스",
-    "category": "upper",
+    "category": ["upper"],
+    "part": ["어깨"]
+  },
+  {
+    "name": "밀리터리 프레스",
+    "category": ["upper"],
     "part": ["어깨"]
   },
   {
     "name": "리버스 팩 덱 플라이",
-    "category": "upper",
+    "category": ["upper"],
+    "part": ["어깨"]
+  },
+  {
+    "name": "사이드 레터럴 레이즈",
+    "category": ["upper"],
     "part": ["어깨"]
   },
   {
     "name": "체스트 프레스",
-    "category": "upper",
+    "category": ["upper"],
+    "part": ["가슴"]
+  },
+  {
+    "name": "벤치 프레스",
+    "category": ["upper"],
+    "part": ["가슴"]
+  },
+  {
+    "name": "인클라인 프레스",
+    "category": ["upper"],
     "part": ["가슴"]
   },
   {
     "name": "팩토럴 플라이",
-    "category": "upper",
+    "category": ["upper"],
     "part": ["가슴"]
   },
   {
-    "name": "암 컬",
-    "category": "upper",
+    "name": "딥스",
+    "category": ["upper"],
+    "part": ["가슴", "삼두"]
+  },
+  {
+    "name": "덤벨 컬",
+    "category": ["upper"],
     "part": ["이두"]
   },
   {
+    "name": "바벨 컬",
+    "category": ["upper"],
+    "part": ["이두"]
+  },
+  {
+    "name": "트라이셉스 익스텐션",
+    "category": ["upper"],
+    "part": ["삼두"]
+  },
+  {
+    "name": "라잉 익스텐션",
+    "category": ["upper"],
+    "part": ["삼두"]
+  },
+  {
+    "name": "케이블 프레스 다운",
+    "category": ["upper"],
+    "part": ["삼두"]
+  },
+  {
+    "name": "레그 프레스",
+    "category": ["lower"],
+    "part": ["허벅지"]
+  },
+  {
     "name": "레그 컬",
-    "category": "lower",
-    "part": ["다리"]
+    "category": ["lower"],
+    "part": ["허벅지"]
   },
   {
     "name": "레그 익스텐션",
-    "category": "lower",
-    "part": ["다리"]
+    "category": ["lower"],
+    "part": ["허벅지"]
+  },
+  {
+    "name": "카프레이즈",
+    "category": ["lower"],
+    "part": ["종아리"]
   },
   {
     "name": "크런치",
-    "category": "core",
+    "category": ["core"],
     "part": ["복근"]
   },
   {
     "name": "플랭크",
-    "category": "core",
-    "part": ["복근, 허리"]
+    "category": ["core"],
+    "part": ["복근", "허리"]
+  },
+  {
+    "name": "푸쉬업",
+    "category": ["upper", "lower", "core"],
+    "part": ["전신"]
+  },
+  {
+    "name": "스쿼트",
+    "category": ["upper", "lower", "core"],
+    "part": ["전신"]
+  },
+  {
+    "name": "데드리프트",
+    "category": ["upper", "lower", "core"],
+    "part": ["전신"]
   }
 ]

@@ -5,7 +5,6 @@ import { Exercise, addExercise, ExerciseItem } from 'modules/routine';
 import Button from 'components/common/Button';
 import useAddExercise from 'hooks/useAddExercise';
 import ErrorMessage from 'lib/ErrorMessage';
-import { getKorCategory } from 'lib/methods';
 import exerciseJSON from '../../data/exercise.json';
 
 const AddExerciseWrapper = styled.div<{ visible: boolean }>`
@@ -31,7 +30,7 @@ const AddExerciseBlock = styled.div<{ visible: boolean; offset: number }>`
   top: ${({ visible }) => (visible ? '5%' : '100%')};
   left: 5%;
   position: fixed;
-  max-width: 480px;
+  max-width: 430px;
   width: 90%;
   height: 90%;
   border: 1px solid ${({ theme }) => theme.border_main};
@@ -44,7 +43,7 @@ const AddExerciseBlock = styled.div<{ visible: boolean; offset: number }>`
     align-self: center;
   }
   @media (min-width: 540px) {
-    left: ${({ offset }) => offset / 2 - 240}px;
+    left: ${({ offset }) => offset / 2 - 215}px;
   }
 `;
 
@@ -80,6 +79,9 @@ const ExerciseItemBlock = styled.li<{ isSelected: number }>`
   border-radius: 0.5rem;
   background: ${({ isSelected, theme }) =>
     isSelected ? theme.primary : theme.background_main};
+  span {
+    color: ${({ theme }) => theme.letter_sub};
+  }
 `;
 
 const FooterBlock = styled.div`
@@ -202,7 +204,7 @@ const AddExerciseModal = ({
             .filter((exer) =>
               addState.category === 'all'
                 ? true
-                : exer.category === addState.category,
+                : exer.category.includes(addState.category),
             )
             .map(
               (exer) => (
@@ -211,9 +213,11 @@ const AddExerciseModal = ({
                   isSelected={addState.selected === exer ? 1 : 0}
                 >
                   <b>{exer.name}</b>
-                  <span>
-                    [{getKorCategory(exer.category)}] {exer.part}
-                  </span>
+                  <div>
+                    {exer.part.map((item) => (
+                      <span>#{item} </span>
+                    ))}
+                  </div>
                 </ExerciseItemBlock>
               ),
               [addState.category, addState.selected],

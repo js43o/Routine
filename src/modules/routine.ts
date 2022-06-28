@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 export type Exercise = {
   name: string;
-  category: string;
+  category: string[];
   part: string[];
   imageSrc?: string;
   description?: string;

@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import Template from 'templates/Template';
 import { userSelector } from 'modules/hooks';
-import { CompleteItem, ProgressItem } from 'modules/user';
+import { CompleteItem } from 'modules/user';
 import { getDatestr, hideScroll, unhideScroll } from 'lib/methods';
 import { FaPencilAlt } from 'react-icons/fa';
 import RoutineExerciseList from 'components/Routine/ExerciseList';
@@ -28,7 +28,6 @@ const ProgressHeader = styled.div`
 
 const RecordPage = () => {
   const users = useSelector(userSelector);
-  const progressData: ProgressItem[] = users.progress;
   const [currentDate, setCurrentDate] = useState({
     year: new Date().getFullYear(),
     month: new Date().getMonth(),
@@ -36,10 +35,10 @@ const RecordPage = () => {
   const [records, setRecords] = useState<CompleteItem[]>([]);
   const [selected, setSelected] = useState<CompleteItem | null>(null);
   const [modal, setModal] = useState(false);
-  const [windowWidth, setWindowWidth] = useState(document.body.offsetWidth);
+  const windowWidth = useRef(document.body.offsetWidth);
 
   const onOpenModal = useCallback(() => {
-    setWindowWidth(document.body.offsetWidth);
+    windowWidth.current = document.body.offsetWidth;
     setModal(true);
     hideScroll();
   }, []);
@@ -73,7 +72,7 @@ const RecordPage = () => {
     setRecords(tempRecords);
   }, [currentDate, users.completes]);
 
-  const increaseMonth = () => {
+  const increaseMonth = useCallback(() => {
     if (currentDate.month >= 11) {
       setCurrentDate({
         year: currentDate.year + 1,
@@ -84,9 +83,9 @@ const RecordPage = () => {
         ...currentDate,
         month: currentDate.month + 1,
       });
-  };
+  }, [currentDate]);
 
-  const decreaseMonth = () => {
+  const decreaseMonth = useCallback(() => {
     if (currentDate.month <= 0) {
       setCurrentDate({
         year: currentDate.year - 1,
@@ -97,40 +96,45 @@ const RecordPage = () => {
         ...currentDate,
         month: currentDate.month - 1,
       });
-  };
+  }, [currentDate]);
 
-  const setDateNow = () =>
-    setCurrentDate({
-      year: new Date().getFullYear(),
-      month: new Date().getMonth(),
-    });
+  const setDateNow = useCallback(
+    () =>
+      setCurrentDate({
+        year: new Date().getFullYear(),
+        month: new Date().getMonth(),
+      }),
+    [],
+  );
 
-  const onSelect = (e: React.MouseEvent) => {
-    const elem = (e.target as HTMLLIElement).closest('li');
-    if (!elem || !elem.textContent) return;
+  const onSelect = useCallback(
+    (e: React.MouseEvent) => {
+      const elem = (e.target as HTMLLIElement).closest('li');
+      if (!elem || !elem.textContent) return;
 
-    const info = records.find(
-      (r) =>
-        r.date ===
-        getDatestr(
-          new Date(
-            currentDate.year,
-            currentDate.month,
-            +(elem.textContent as string),
+      const info = records.find(
+        (r) =>
+          r.date ===
+          getDatestr(
+            new Date(
+              currentDate.year,
+              currentDate.month,
+              +(elem.textContent as string),
+            ),
           ),
-        ),
-    );
-    if (!info) return;
-
-    setSelected(info);
-  };
+      );
+      if (!info) return;
+      setSelected(info);
+    },
+    [records, currentDate],
+  );
 
   return (
     <Template>
       <SetProgressModal
-        data={progressData}
+        data={users.progress}
         visible={modal}
-        offset={windowWidth}
+        offset={windowWidth.current}
         onCloseModal={onCloseModal}
       />
       <RecordCalendar
@@ -166,7 +170,7 @@ const RecordPage = () => {
           <FaPencilAlt />
         </Button>
       </ProgressHeader>
-      <ProgressViewer data={progressData} />
+      <ProgressViewer data={users.progress} />
     </Template>
   );
 };

@@ -11,19 +11,6 @@ export const getDatestr = (date: Date) =>
     date.getMonth() + 1 > 9 ? date.getMonth() + 1 : `0${date.getMonth() + 1}`
   }-${date.getDate() > 9 ? date.getDate() : `0${date.getDate()}`}`;
 
-export const getKorCategory = (str: string) => {
-  switch (str) {
-    case 'upper':
-      return '상체';
-    case 'lower':
-      return '하체';
-    case 'core':
-      return '코어';
-    default:
-      return str;
-  }
-};
-
 export const getKorProgress = (str: string) => {
   if (/weight/.test(str)) return '체중';
   if (/muscleMass/.test(str)) return '골격근량';
