@@ -1,13 +1,7 @@
-import mongoose, { Schema, Document, Model } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-
-export interface ExerciseItem {
-  exercise: string;
-  weight: number;
-  numberOfTimes: number;
-  numberOfSets: number;
-}
+import { IUserDocument, IUserModel } from './types';
 
 const ExerciseSchema = new Schema({
   exercise: String,
@@ -16,59 +10,16 @@ const ExerciseSchema = new Schema({
   numberOfSets: Number,
 });
 
-interface Routine {
-  routineId: string;
-  title: string;
-  weekRoutine: [
-    ExerciseItem[],
-    ExerciseItem[],
-    ExerciseItem[],
-    ExerciseItem[],
-    ExerciseItem[],
-    ExerciseItem[],
-    ExerciseItem[],
-  ];
-}
-
 const RoutineSchema = new Schema({
   routineId: String,
   title: String,
   weekRoutine: [[ExerciseSchema]],
 });
 
-interface IUser {
-  username: string;
-  hashedPassword: string;
-  name: string;
-  gender: string;
-  birth: string;
-  height: number;
-  currentRoutine: Routine | null;
-  routine: Routine[];
-  completes: {
-    date: string;
-    list: ExerciseItem[];
-    memo: string;
-  }[];
-  progress: {
-    id: string;
-    data: {
-      x: string;
-      y: number;
-    }[];
-  }[];
-}
-
-interface IUserDocument extends IUser, Document {
-  setPassword: (password: string) => Promise<void>;
-  checkPassword: (password: string) => Promise<boolean>;
-  serialize: () => string;
-  generateToken: () => string;
-}
-
-interface IUserModel extends Model<IUserDocument> {
-  findByUsername: (username: string) => Promise<IUserDocument>;
-}
+const ProgressSchema = new Schema({
+  x: String,
+  y: Number,
+});
 
 const UserSchema: Schema<IUserDocument> = new Schema({
   username: { type: String, required: true },
@@ -86,17 +37,11 @@ const UserSchema: Schema<IUserDocument> = new Schema({
       memo: String,
     },
   ],
-  progress: [
-    {
-      id: String,
-      data: [
-        {
-          x: String,
-          y: String,
-        },
-      ],
-    },
-  ],
+  progress: {
+    weight: [ProgressSchema],
+    muscleMass: [ProgressSchema],
+    fatMass: [ProgressSchema],
+  },
 });
 
 UserSchema.methods.setPassword = async function (password: string) {
@@ -144,5 +89,4 @@ UserSchema.statics.findByUsername = function (username: string) {
   return this.findOne({ username });
 };
 
-const User = mongoose.model<IUserDocument, IUserModel>('User', UserSchema);
-export default User;
+export default mongoose.model<IUserDocument, IUserModel>('User', UserSchema);

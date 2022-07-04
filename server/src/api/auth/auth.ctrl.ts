@@ -3,7 +3,7 @@ import Joi from 'joi';
 import User from '../../models/user';
 
 export const register = async (ctx: DefaultContext) => {
-  const schema = Joi.object().keys({
+  const inputSchema = Joi.object().keys({
     username: Joi.string().alphanum().min(3).max(20).required(),
     password: Joi.string().required(),
     name: Joi.string().max(20).required(),
@@ -11,7 +11,7 @@ export const register = async (ctx: DefaultContext) => {
     birth: Joi.string().max(20).required(),
     height: Joi.number().min(100).max(300),
   });
-  const result = schema.validate(ctx.request.body);
+  const result = inputSchema.validate(ctx.request.body);
   if (result.error) {
     ctx.status = 400;
     ctx.body = result.error;
@@ -49,13 +49,18 @@ export const register = async (ctx: DefaultContext) => {
 };
 
 export const login = async (ctx: DefaultContext) => {
-  const { username, password } = ctx.request.body;
-
-  if (!username || !password) {
-    ctx.status = 401;
+  const inputSchema = Joi.object().keys({
+    username: Joi.string().alphanum().min(3).max(20).required(),
+    password: Joi.string().required(),
+  });
+  const result = inputSchema.validate(ctx.request.body);
+  if (result.error) {
+    ctx.status = 400;
+    ctx.body = result.error;
     return;
   }
 
+  const { username, password } = ctx.request.body;
   try {
     const user = await User.findByUsername(username);
     if (!user) {

@@ -9,15 +9,15 @@ const exerciseSchema = Joi.object().keys({
   numberOfSets: Joi.number().min(1).max(20),
 });
 
-export const addRoutine = async (ctx: DefaultContext) => {
-  const schema = Joi.object().keys({
-    username: Joi.string().alphanum().min(3).max(20).required(),
-    routineId: Joi.string().required(),
-    title: Joi.string().required(),
-    weekRoutine: Joi.array().items(Joi.array().items(exerciseSchema)),
-  });
+const RoutineSchema = Joi.object().keys({
+  username: Joi.string().alphanum().min(3).max(20).required(),
+  routineId: Joi.string().required(),
+  title: Joi.string().required(),
+  weekRoutine: Joi.array().items(Joi.array().items(exerciseSchema)),
+});
 
-  const result = schema.validate(ctx.request.body);
+export const addRoutine = async (ctx: DefaultContext) => {
+  const result = RoutineSchema.validate(ctx.request.body);
   if (result.error) {
     ctx.status = 400;
     ctx.body = result.error;
@@ -44,12 +44,12 @@ export const addRoutine = async (ctx: DefaultContext) => {
 };
 
 export const removeRoutine = async (ctx: DefaultContext) => {
-  const schema = Joi.object().keys({
+  const inputSchema = Joi.object().keys({
     username: Joi.string().alphanum().min(3).max(20).required(),
     routineId: Joi.string().required(),
   });
 
-  const result = schema.validate(ctx.request.body);
+  const result = inputSchema.validate(ctx.request.body);
   if (result.error) {
     ctx.status = 400;
     ctx.body = result.error;
@@ -63,7 +63,40 @@ export const removeRoutine = async (ctx: DefaultContext) => {
       ctx.status = 401;
       return;
     }
+
     user.routine = user.routine.filter((item) => item.routineId !== routineId);
+    await user.save();
+    ctx.body = user.serialize();
+  } catch (e) {
+    ctx.throw(500, e as Error);
+  }
+};
+
+export const editRoutine = async (ctx: DefaultContext) => {
+  const result = RoutineSchema.validate(ctx.request.body);
+  if (result.error) {
+    ctx.status = 400;
+    ctx.body = result.error;
+    return;
+  }
+
+  const { username, routineId, title, weekRoutine } = ctx.request.body;
+  try {
+    const user = await User.findByUsername(username);
+    if (!user) {
+      ctx.status = 401;
+      return;
+    }
+
+    user.routine = user.routine.map((item) =>
+      item.routineId === routineId
+        ? {
+            routineId,
+            title,
+            weekRoutine,
+          }
+        : item,
+    );
     await user.save();
     ctx.body = user.serialize();
   } catch (e) {

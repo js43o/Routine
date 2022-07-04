@@ -18,7 +18,7 @@
       ]
     }
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules"],
   "scripts": {
     "start": "nodemon --exec ts-node src/index.ts"
