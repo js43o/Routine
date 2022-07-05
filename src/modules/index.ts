@@ -1,8 +1,8 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import storage from 'redux-persist/lib/storage';
 import { persistReducer, REGISTER, PERSIST, REHYDRATE } from 'redux-persist';
-import user from './user';
-import routine from './routine';
+import user, { User } from './user';
+import routine, { Routine } from './routine';
 import perform from './perform';
 import theme from './theme';
 
@@ -29,6 +29,8 @@ const store = configureStore({
       },
     }),
 });
+
+export type UserPayload = User & { routine: Routine[] };
 
 export type RootState = ReturnType<typeof store.getState>;
 

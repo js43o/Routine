@@ -60,7 +60,7 @@ const useScroll = () => {
 
   const onDragEnd = (
     e: PointerEvent,
-    id: string,
+    routineId: string,
     day: number,
     fromIdx: number,
     init: number,
@@ -79,7 +79,7 @@ const useScroll = () => {
             items[i].getBoundingClientRect().right) /
           2;
         if (e.clientX < pos) {
-          dispatch(insertExercise({ id, day, fromIdx, toIdx: i }));
+          dispatch(insertExercise({ routineId, day, fromIdx, toIdx: i }));
           break;
         }
       }
@@ -90,7 +90,7 @@ const useScroll = () => {
             items[i].getBoundingClientRect().right) /
           2;
         if (e.clientX > pos) {
-          dispatch(insertExercise({ id, day, fromIdx, toIdx: i }));
+          dispatch(insertExercise({ routineId, day, fromIdx, toIdx: i }));
           break;
         }
       }

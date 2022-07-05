@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import { Exercise, addExercise, ExerciseItem } from 'modules/routine';
 import Button from 'components/common/Button';
 import useAddExercise from 'hooks/useAddExercise';
-import ErrorMessage from 'lib/ErrorMessage';
+import ErrorMessage from 'components/common/ErrorMessage';
 import exerciseJSON from '../../data/exercise.json';
 
 const AddExerciseWrapper = styled.div<{ visible: boolean }>`
@@ -122,7 +122,7 @@ const ButtonsBlock = styled.div`
 `;
 
 type AddExerciseProps = {
-  id: string | null;
+  routineId: string | null;
   day: number | null;
   visible: boolean;
   offset: number;
@@ -130,7 +130,7 @@ type AddExerciseProps = {
 };
 
 const AddExerciseModal = ({
-  id,
+  routineId,
   day,
   visible,
   offset,
@@ -148,19 +148,19 @@ const AddExerciseModal = ({
   const [message, setMessage] = useState('');
 
   const onAddExercise = () => {
-    if (!id || day === null) return;
+    if (!routineId || day === null) return;
     const error = checkInputs();
     if (error) {
       setMessage(error);
       return;
     }
     const exercise: ExerciseItem = {
-      exercise: addState.selected as Exercise,
+      exercise: (addState.selected as Exercise).name,
       weight: addState.inputs.weight,
       numberOfTimes: addState.inputs.numberOfTimes,
       numberOfSets: addState.inputs.numberOfSets,
     };
-    dispatch(addExercise({ id, day, exercise }));
+    dispatch(addExercise({ routineId, day, exercise }));
     onClose();
   };
 

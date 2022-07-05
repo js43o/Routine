@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { addProgress, ProgressItem, removeProgress } from 'modules/user';
 import { getDatestr } from 'lib/methods';
 import Button from 'components/common/Button';
-import ErrorMessage from 'lib/ErrorMessage';
+import ErrorMessage from 'components/common/ErrorMessage';
 
 const SetProgressWrapper = styled.div<{ visible: boolean }>`
   display: flex;

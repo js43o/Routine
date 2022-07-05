@@ -1,12 +1,12 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from '@emotion/styled';
-import { setUser, UserStateType } from 'modules/user';
+import { setUserInfo, User } from 'modules/user';
 import { FaPencilAlt } from 'react-icons/fa';
 import { MdCheck } from 'react-icons/md';
 import Button from 'components/common/Button';
 import { getDatestr } from 'lib/methods';
-import ErrorMessage from 'lib/ErrorMessage';
+import ErrorMessage from 'components/common/ErrorMessage';
 
 const InfoBlock = styled.div<{ editing: boolean }>`
   display: flex;
@@ -71,7 +71,7 @@ const reducer = (state: InputState, action: InputAction) => {
 };
 
 type InfoBlockProps = {
-  user: UserStateType;
+  user: User;
 };
 
 const Info = ({ user }: InfoBlockProps) => {
@@ -109,7 +109,7 @@ const Info = ({ user }: InfoBlockProps) => {
       return;
     }
     dispatch(
-      setUser({
+      setUserInfo({
         name: inputState.name,
         gender: inputState.gender,
         birth: inputState.birth,

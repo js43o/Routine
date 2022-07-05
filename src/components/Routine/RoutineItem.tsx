@@ -128,25 +128,29 @@ const RoutineItem = ({
   const onRemoveRoutine = () => {
     // eslint-disable-next-line no-alert
     if (!window.confirm('정말 삭제하시겠습니까?')) return;
-    if (user.currentRoutine && user.currentRoutine.id === routine.id)
-      dispatch(setCurrentRoutine(null));
-    dispatch(removeRoutine(routine.id));
+    if (user.currentRoutineId === routine.routineId)
+      dispatch(setCurrentRoutine(''));
+    dispatch(removeRoutine(routine.routineId));
   };
 
   useEffect(() => {
-    if (user.currentRoutine?.id === routine.id)
-      dispatch(setCurrentRoutine(routine));
+    if (user.currentRoutineId === routine.routineId)
+      dispatch(setCurrentRoutine(routine.routineId));
   }, [routine.lastModified]);
 
   return (
-    <RoutineItemBlock key={routine.id} visible={isVisible} editing={isEditing}>
+    <RoutineItemBlock
+      key={routine.routineId}
+      visible={isVisible}
+      editing={isEditing}
+    >
       <div className="header">
         <TitleBlock
           editing={isEditing}
           onClick={
             !isEditing && isVisible
               ? () => onSetVisible()
-              : () => onSetVisible(routine.id)
+              : () => onSetVisible(routine.routineId)
           }
         >
           <DetailButton visible={isVisible ? 1 : 0} />
@@ -156,7 +160,12 @@ const RoutineItem = ({
               value={routine.title}
               maxLength={12}
               onChange={(e) =>
-                dispatch(changeTitle({ id: routine.id, value: e.target.value }))
+                dispatch(
+                  changeTitle({
+                    routineId: routine.routineId,
+                    value: e.target.value,
+                  }),
+                )
               }
             />
           ) : (
@@ -164,16 +173,16 @@ const RoutineItem = ({
           )}
         </TitleBlock>
         <div className="buttons">
-          {user.currentRoutine?.id === routine.id ? (
+          {user.currentRoutineId === routine.routineId ? (
             <Button>
               <UnsetCurrentRoutineButton
-                onClick={() => dispatch(setCurrentRoutine(null))}
+                onClick={() => dispatch(setCurrentRoutine(''))}
               />
             </Button>
           ) : (
             <Button>
               <SetCurrentRoutineButton
-                onClick={() => dispatch(setCurrentRoutine(routine))}
+                onClick={() => dispatch(setCurrentRoutine(routine.routineId))}
               />
             </Button>
           )}
@@ -181,7 +190,7 @@ const RoutineItem = ({
             {isEditing ? (
               <CheckButton onClick={() => onSetEditing()} />
             ) : (
-              <FaPencilAlt onClick={() => onSetEditing(routine.id)} />
+              <FaPencilAlt onClick={() => onSetEditing(routine.routineId)} />
             )}
           </Button>
           <Button>
@@ -197,7 +206,7 @@ const RoutineItem = ({
               <RoutineExerciseList
                 dayRoutine={dayRoutine}
                 dayIdx={dayIdx}
-                routineId={routine.id}
+                routineId={routine.routineId}
                 editing={isEditing}
                 onOpenModal={onOpenModal}
               />

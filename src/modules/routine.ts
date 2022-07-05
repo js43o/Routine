@@ -9,14 +9,14 @@ export type Exercise = {
 };
 
 export type ExerciseItem = {
-  exercise: Exercise;
+  exercise: string;
   weight: number;
   numberOfTimes: number;
   numberOfSets: number;
 };
 
 export type Routine = {
-  id: string;
+  routineId: string;
   title: string;
   lastModified: number;
   weekRoutine: [
@@ -38,26 +38,32 @@ export const routineSlice = createSlice({
   reducers: {
     changeTitle: (
       state,
-      { payload: { id, value } }: { payload: { id: string; value: string } },
+      {
+        payload: { routineId, value },
+      }: { payload: { routineId: string; value: string } },
     ) => {
-      const r = state.find((s) => s.id === id);
+      const r = state.find((s) => s.routineId === routineId);
       if (!r) return;
       r.title = value;
+    },
+    initializeRoutine: (state, { payload }: { payload: Routine[] }) => {
+      return payload;
     },
     addRoutine: (state, { payload }: { payload: Routine }) => {
       state.push(payload);
     },
     removeRoutine: (state, { payload }: { payload: string }) => {
-      const filtered = state.filter((routine) => routine.id !== payload);
-      return filtered;
+      return state.filter((routine) => routine.routineId !== payload);
     },
     addExercise: (
       state,
       {
-        payload: { id, day, exercise },
-      }: { payload: { id: string; day: number; exercise: ExerciseItem } },
+        payload: { routineId, day, exercise },
+      }: {
+        payload: { routineId: string; day: number; exercise: ExerciseItem };
+      },
     ) => {
-      const r = state.find((s) => s.id === id);
+      const r = state.find((s) => s.routineId === routineId);
       if (!r) return;
       const d = r.weekRoutine[day];
       if (!d) return;
@@ -67,10 +73,10 @@ export const routineSlice = createSlice({
     removeExercise: (
       state,
       {
-        payload: { id, day, idx },
-      }: { payload: { id: string; day: number; idx: number } },
+        payload: { routineId, day, idx },
+      }: { payload: { routineId: string; day: number; idx: number } },
     ) => {
-      const r = state.find((s) => s.id === id);
+      const r = state.find((s) => s.routineId === routineId);
       if (!r) return;
       const d = r.weekRoutine[day];
       if (!d) return;
@@ -80,12 +86,17 @@ export const routineSlice = createSlice({
     insertExercise: (
       state,
       {
-        payload: { id, day, fromIdx, toIdx },
+        payload: { routineId, day, fromIdx, toIdx },
       }: {
-        payload: { id: string; day: number; fromIdx: number; toIdx: number };
+        payload: {
+          routineId: string;
+          day: number;
+          fromIdx: number;
+          toIdx: number;
+        };
       },
     ) => {
-      const r = state.find((s) => s.id === id);
+      const r = state.find((s) => s.routineId === routineId);
       if (!r) return;
       const d = r.weekRoutine[day];
       if (!d) return;
@@ -102,6 +113,7 @@ export const routineSlice = createSlice({
 
 export const {
   changeTitle,
+  initializeRoutine,
   addRoutine,
   removeRoutine,
   addExercise,

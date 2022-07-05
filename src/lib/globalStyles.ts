@@ -7,6 +7,7 @@ export const globalStyles = css`
   }
 
   html {
+    height: 100%;
   }
 
   body {
@@ -17,6 +18,11 @@ export const globalStyles = css`
     -moz-osx-font-smoothing: grayscale;
     touch-action: pan-y;
     overflow-y: scroll;
+    height: 100%;
+  }
+
+  #root {
+    height: 100%;
   }
 
   button,

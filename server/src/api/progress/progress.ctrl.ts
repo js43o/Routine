@@ -27,9 +27,10 @@ export const addProgress = async (ctx: DefaultContext) => {
       ctx.status = 401;
       return;
     }
-    user.progress.weight.push(progress[0]);
-    user.progress.muscleMass.push(progress[1]);
-    user.progress.fatMass.push(progress[2]);
+
+    user.progress[0].data.push(progress[0]);
+    user.progress[1].data.push(progress[1]);
+    user.progress[2].data.push(progress[2]);
     await user.save();
     ctx.body = user.serialize();
   } catch (e) {
@@ -58,13 +59,13 @@ export const removeProgress = async (ctx: DefaultContext) => {
       return;
     }
 
-    user.progress.weight = user.progress.weight.filter(
+    user.progress[0].data = user.progress[0].data.filter(
       (item) => item.x !== progressDate,
     );
-    user.progress.muscleMass = user.progress.muscleMass.filter(
+    user.progress[1].data = user.progress[1].data.filter(
       (item) => item.x !== progressDate,
     );
-    user.progress.fatMass = user.progress.fatMass.filter(
+    user.progress[2].data = user.progress[2].data.filter(
       (item) => item.x !== progressDate,
     );
     await user.save();

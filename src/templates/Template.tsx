@@ -1,11 +1,13 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import Header from './Header';
+import Footer from './Footer';
 
 const TemplateBlock = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  height: 100%;
   align-items: center;
   @media (min-width: 768px) {
     width: 768px;
@@ -17,6 +19,7 @@ const ContentBlock = styled.div`
   background: ${({ theme }) => theme.background_main};
   padding: 1rem;
   border-radius: 0.5rem;
+  flex-grow: 1;
 `;
 
 type TemplateProps = {
@@ -28,6 +31,7 @@ const Template = ({ children }: TemplateProps) => {
     <TemplateBlock>
       <Header />
       <ContentBlock>{children}</ContentBlock>
+      <Footer />
     </TemplateBlock>
   );
 };

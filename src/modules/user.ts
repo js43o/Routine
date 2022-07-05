@@ -1,18 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { ExerciseItem } from 'modules/routine';
-import { Routine } from './routine';
 
 export type CompleteItem = {
   date: string;
   list: ExerciseItem[];
   memo: string;
-};
-
-export type ProgressPayload = {
-  date: string;
-  weight: number;
-  muscleMass: number;
-  fatMass: number;
 };
 
 export type ProgressItem = {
@@ -24,22 +16,31 @@ export type ProgressItem = {
   }[];
 };
 
-export type UserStateType = {
+export type ProgressPayload = {
+  date: string;
+  weight: number;
+  muscleMass: number;
+  fatMass: number;
+};
+
+export type User = {
+  username: string;
   name: string;
   gender: string;
   birth: string;
   height: number;
-  currentRoutine: Routine | null;
+  currentRoutineId: string;
   completes: CompleteItem[];
   progress: ProgressItem[];
 };
 
-const initialState: UserStateType = {
+const initialState: User = {
+  username: '',
   name: '',
   gender: '',
   birth: '',
   height: 0,
-  currentRoutine: null,
+  currentRoutineId: '',
   completes: [],
   progress: [
     {
@@ -64,7 +65,7 @@ export const userSlice = createSlice({
   name: 'users',
   initialState,
   reducers: {
-    setUser: (
+    setUserInfo: (
       state,
       {
         payload,
@@ -82,11 +83,20 @@ export const userSlice = createSlice({
       state.gender = payload.gender;
       state.height = payload.height;
     },
-    setCurrentRoutine: (state, { payload }: { payload: Routine | null }) => {
-      state.currentRoutine = payload;
+    setCurrentRoutine: (state, { payload }: { payload: string }) => {
+      state.currentRoutineId = payload;
+    },
+    initializeCompleteDay: (
+      state,
+      { payload }: { payload: CompleteItem[] },
+    ) => {
+      state.completes = payload;
     },
     addCompleteDay: (state, { payload }: { payload: CompleteItem }) => {
       state.completes.push(payload);
+    },
+    initializeProgress: (state, { payload }: { payload: ProgressItem[] }) => {
+      state.progress = payload;
     },
     addProgress: (state, { payload }: { payload: ProgressPayload }) => {
       state.progress.map((item) =>
@@ -105,9 +115,11 @@ export const userSlice = createSlice({
 });
 
 export const {
-  setUser,
+  setUserInfo,
   setCurrentRoutine,
+  initializeCompleteDay,
   addCompleteDay,
+  initializeProgress,
   addProgress,
   removeProgress,
 } = userSlice.actions;

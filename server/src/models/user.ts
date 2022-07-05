@@ -13,34 +13,44 @@ const ExerciseSchema = new Schema({
 const RoutineSchema = new Schema({
   routineId: String,
   title: String,
+  lastModified: String,
   weekRoutine: [[ExerciseSchema]],
 });
 
+const CompleteSchema = new Schema({
+  date: String,
+  list: [ExerciseSchema],
+  memo: String,
+});
+
 const ProgressSchema = new Schema({
-  x: String,
-  y: Number,
+  id: String,
+  color: String,
+  data: [
+    {
+      x: String,
+      y: Number,
+    },
+  ],
 });
 
 const UserSchema: Schema<IUserDocument> = new Schema({
   username: { type: String, required: true },
   hashedPassword: { type: String, required: true },
-  name: { type: String, required: true },
-  gender: { type: String, required: true },
-  birth: { type: String, required: true },
-  height: { type: Number, required: true },
-  currentRoutine: RoutineSchema,
+  name: { type: String, default: '' },
+  gender: { type: String, default: '' },
+  birth: { type: String, default: '' },
+  height: { type: Number, default: 0 },
+  currentRoutineId: { type: String, default: '' },
   routine: [RoutineSchema],
-  completes: [
-    {
-      date: String,
-      list: [ExerciseSchema],
-      memo: String,
-    },
-  ],
+  completes: [CompleteSchema],
   progress: {
-    weight: [ProgressSchema],
-    muscleMass: [ProgressSchema],
-    fatMass: [ProgressSchema],
+    type: [ProgressSchema],
+    default: [
+      { id: 'weight', color: '', data: [] },
+      { id: 'muscleMass', color: '', data: [] },
+      { id: 'fatMass', color: '', data: [] },
+    ],
   },
 });
 

@@ -12,6 +12,7 @@ import { globalStyles } from './lib/globalStyles';
 const AppBlock = styled.div`
   display: flex;
   justify-content: center;
+  height: 100%;
   @media (min-width: 430px) {
     padding: 1rem;
   }

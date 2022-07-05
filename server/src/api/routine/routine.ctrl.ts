@@ -17,14 +17,20 @@ const RoutineSchema = Joi.object().keys({
 });
 
 export const addRoutine = async (ctx: DefaultContext) => {
-  const result = RoutineSchema.validate(ctx.request.body);
+  const inputSchema = Joi.object().keys({
+    username: Joi.string().alphanum().min(3).max(20).required(),
+    routineId: Joi.string().required(),
+    lastModified: Joi.string().required(),
+  });
+
+  const result = inputSchema.validate(ctx.request.body);
   if (result.error) {
     ctx.status = 400;
     ctx.body = result.error;
     return;
   }
 
-  const { username, routineId, title, weekRoutine } = ctx.request.body;
+  const { username, routineId, lastModified } = ctx.request.body;
   try {
     const user = await User.findByUsername(username);
     if (!user) {
@@ -33,8 +39,9 @@ export const addRoutine = async (ctx: DefaultContext) => {
     }
     user.routine.push({
       routineId,
-      title,
-      weekRoutine,
+      title: '새 루틴',
+      lastModified,
+      weekRoutine: [[], [], [], [], [], [], []],
     });
     await user.save();
     ctx.body = user.serialize();
@@ -80,7 +87,8 @@ export const editRoutine = async (ctx: DefaultContext) => {
     return;
   }
 
-  const { username, routineId, title, weekRoutine } = ctx.request.body;
+  const { username, routineId, lastModified, title, weekRoutine } =
+    ctx.request.body;
   try {
     const user = await User.findByUsername(username);
     if (!user) {
@@ -92,6 +100,7 @@ export const editRoutine = async (ctx: DefaultContext) => {
       item.routineId === routineId
         ? {
             routineId,
+            lastModified,
             title,
             weekRoutine,
           }

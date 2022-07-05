@@ -118,7 +118,7 @@ const ExerciseList = ({
       if (editing)
         dispatch(
           removeExercise({
-            id: routineId,
+            routineId,
             day: dayIdx,
             idx,
           }),
@@ -146,7 +146,7 @@ const ExerciseList = ({
             editing={editing ? 1 : 0}
             onPointerDown={(e) => onPointerDown(e, i)}
           >
-            <b>{s.exercise.name}</b>
+            <b>{s.exercise}</b>
             <span>{s.weight} kg</span>
             <span>
               {s.numberOfTimes} x {s.numberOfSets}

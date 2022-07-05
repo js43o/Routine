@@ -92,7 +92,7 @@ const HomePage = () => {
         {isCompleted ? <span>완료</span> : null}
       </CompleteText>
       <PerformRoutine
-        currentRoutine={user.currentRoutine}
+        currentRoutineId={user.currentRoutineId}
         complete={isCompleted}
       />
     </Template>

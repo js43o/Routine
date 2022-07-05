@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { useDispatch, useSelector } from 'react-redux';
-import { performSelector } from 'modules/hooks';
-import { Routine } from 'modules/routine';
+import { performSelector, routineSelector } from 'modules/hooks';
 import {
   MdRadioButtonUnchecked,
   MdOutlineCheckCircleOutline,
@@ -10,7 +9,7 @@ import {
 import { initialPerform, toggleCheck, checkAll } from 'modules/perform';
 import { addCompleteDay } from 'modules/user';
 import { getDatestr } from 'lib/methods';
-import ErrorMessage from 'lib/ErrorMessage';
+import ErrorMessage from 'components/common/ErrorMessage';
 
 const PerformRoutineBlock = styled.div`
   display: flex;
@@ -88,15 +87,23 @@ const MemoBlock = styled.textarea<{ visible: number }>`
 `;
 
 type PerformRoutineProps = {
-  currentRoutine: Routine | null;
+  currentRoutineId: string;
   complete: boolean;
 };
 
-const PerformRoutine = ({ currentRoutine, complete }: PerformRoutineProps) => {
+const PerformRoutine = ({
+  currentRoutineId,
+  complete,
+}: PerformRoutineProps) => {
   const performs = useSelector(performSelector);
+  const routine = useSelector(routineSelector);
   const dispatch = useDispatch();
   const [message, setMessage] = useState('');
   const [memo, setMemo] = useState('');
+
+  const currentRoutine = routine.find(
+    (item) => item.routineId === currentRoutineId,
+  );
 
   useEffect(() => {
     if (currentRoutine && currentRoutine.lastModified !== performs.lastModified)
@@ -163,7 +170,7 @@ const PerformRoutine = ({ currentRoutine, complete }: PerformRoutineProps) => {
             completed={!p.setCheck.filter((a) => !a).length}
             onClick={() => onCheckAll(i)}
           >
-            <b>{p.exercise.exercise.name}</b>
+            <b>{p.exercise.exercise}</b>
             <span>
               {p.exercise.weight}kg, {p.exercise.numberOfTimes}회
             </span>

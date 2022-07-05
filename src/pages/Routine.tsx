@@ -52,17 +52,17 @@ const RoutinePage = () => {
     unhideScroll();
   }, []);
 
-  const onSetVisible = useCallback((id?: string) => {
-    if (id) {
-      setVisible(id);
+  const onSetVisible = useCallback((routineId?: string) => {
+    if (routineId) {
+      setVisible(routineId);
       return;
     }
     setVisible(null);
   }, []);
-  const onSetEditing = useCallback((id?: string) => {
-    if (id) {
-      setVisible(id);
-      setEditing(id);
+  const onSetEditing = useCallback((routineId?: string) => {
+    if (routineId) {
+      setVisible(routineId);
+      setEditing(routineId);
       return;
     }
     setEditing(null);
@@ -71,7 +71,7 @@ const RoutinePage = () => {
   return (
     <Template>
       <AddExercise
-        id={editing}
+        routineId={editing}
         day={day}
         visible={modal}
         offset={windowWidth}
@@ -81,10 +81,10 @@ const RoutinePage = () => {
       <RoutineListBlock>
         {routines.map((routine) => (
           <RoutineItem
-            key={routine.id}
+            key={routine.routineId}
             routine={routine}
-            isVisible={visible === routine.id}
-            isEditing={editing === routine.id}
+            isVisible={visible === routine.routineId}
+            isEditing={editing === routine.routineId}
             onOpenModal={onOpenModal}
             onSetVisible={onSetVisible}
             onSetEditing={onSetEditing}
@@ -94,16 +94,16 @@ const RoutinePage = () => {
       <AddRoutineButton>
         <Button
           onClick={() => {
-            const id = uuidv4();
+            const routineId = uuidv4();
             dispatch(
               addRoutine({
-                id,
+                routineId,
                 title: '새 루틴',
                 lastModified: Date.now(),
                 weekRoutine: [[], [], [], [], [], [], []],
               }),
             );
-            onSetEditing(id);
+            onSetEditing(routineId);
           }}
         >
           <BsPlusCircle />
