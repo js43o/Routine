@@ -121,7 +121,35 @@ export const setInfo = async (ctx: DefaultContext) => {
       height,
     ];
     await user.save();
-    ctx.body = user.serialize();
+    ctx.status = 200;
+  } catch (e) {
+    ctx.throw(500, e as Error);
+  }
+};
+
+export const setCurrentRoutine = async (ctx: DefaultContext) => {
+  const inputSchema = Joi.object().keys({
+    username: Joi.string().alphanum().min(3).max(20).required(),
+    routineId: Joi.string().required(),
+  });
+
+  const result = inputSchema.validate(ctx.request.body);
+  if (result.error) {
+    ctx.status = 400;
+    ctx.body = result.error;
+    return;
+  }
+
+  const { username, routineId } = ctx.request.body;
+  try {
+    const user = await User.findByUsername(username);
+    if (!user) {
+      ctx.status = 401;
+      return;
+    }
+    user.currentRoutineId = routineId;
+    await user.save();
+    ctx.status = 200;
   } catch (e) {
     ctx.throw(500, e as Error);
   }

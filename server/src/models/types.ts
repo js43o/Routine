@@ -1,6 +1,4 @@
 import { Model, Document } from 'mongoose';
-import { ProgressItem } from '../../../src/modules/user';
-import { ExerciseItem, Routine } from '../../../src/modules/routine';
 import { UserPayload } from '../../../src/modules';
 
 export interface IUserDocument extends UserPayload, Document {

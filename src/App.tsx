@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
+import styled from '@emotion/styled';
+import { css, Global, ThemeProvider, useTheme } from '@emotion/react';
+import { useSelector, useDispatch } from 'react-redux';
+import { login } from 'modules/user';
+import { themeSelector } from 'modules/hooks';
+import { globalStyles } from 'lib/globalStyles';
 import HomePage from 'pages/Home';
 import RoutinePage from 'pages/Routine';
 import RecordPage from 'pages/Record';
-import styled from '@emotion/styled';
-import { css, Global, ThemeProvider, useTheme } from '@emotion/react';
-import { useSelector } from 'react-redux';
-import { themeSelector } from 'modules/hooks';
-import { globalStyles } from './lib/globalStyles';
 
 const AppBlock = styled.div`
   display: flex;
@@ -41,6 +42,12 @@ const GlobalStyles = () => {
 
 function App() {
   const theme = useSelector(themeSelector);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(login({ username: 'js43o', password: '123' }));
+  }, []);
+
   return (
     <AppBlock>
       <ThemeProvider theme={theme.colors}>

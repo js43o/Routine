@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { useDispatch, useSelector } from 'react-redux';
-import { performSelector, routineSelector } from 'modules/hooks';
+import { initialPerform, toggleCheck, checkAll } from 'modules/perform';
+import { addComplete } from 'modules/user';
+import { userSelector, performSelector, routineSelector } from 'modules/hooks';
+import { getDatestr } from 'lib/methods';
+import ErrorMessage from 'components/common/ErrorMessage';
 import {
   MdRadioButtonUnchecked,
   MdOutlineCheckCircleOutline,
 } from 'react-icons/md';
-import { initialPerform, toggleCheck, checkAll } from 'modules/perform';
-import { addCompleteDay } from 'modules/user';
-import { getDatestr } from 'lib/methods';
-import ErrorMessage from 'components/common/ErrorMessage';
 
 const PerformRoutineBlock = styled.div`
   display: flex;
@@ -95,6 +95,7 @@ const PerformRoutine = ({
   currentRoutineId,
   complete,
 }: PerformRoutineProps) => {
+  const { user } = useSelector(userSelector);
   const performs = useSelector(performSelector);
   const routine = useSelector(routineSelector);
   const dispatch = useDispatch();
@@ -153,10 +154,13 @@ const PerformRoutine = ({
       return;
     }
     dispatch(
-      addCompleteDay({
-        date: getDatestr(new Date()),
-        list: todayRoutine,
-        memo,
+      addComplete({
+        username: user.username,
+        complete: {
+          date: getDatestr(new Date()),
+          list: todayRoutine,
+          memo,
+        },
       }),
     );
     setMemo('');

@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from '@emotion/styled';
-import { setUserInfo, User } from 'modules/user';
+import { setInfo, User } from 'modules/user';
 import { FaPencilAlt } from 'react-icons/fa';
 import { MdCheck } from 'react-icons/md';
 import Button from 'components/common/Button';
@@ -98,7 +98,7 @@ const Info = ({ user }: InfoBlockProps) => {
   const onToggleRadio = (e: React.ChangeEvent<HTMLInputElement>) => {
     inputDispatch({ type: 'GENDER', payload: e.target.value });
   };
-  const onSubmit = () => {
+  const onSubmit = async () => {
     if (
       !inputState.name ||
       !inputState.gender ||
@@ -109,7 +109,8 @@ const Info = ({ user }: InfoBlockProps) => {
       return;
     }
     dispatch(
-      setUserInfo({
+      setInfo({
+        username: user.username,
         name: inputState.name,
         gender: inputState.gender,
         birth: inputState.birth,

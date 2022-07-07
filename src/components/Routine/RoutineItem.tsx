@@ -122,20 +122,25 @@ const RoutineItem = ({
   onSetVisible,
   onSetEditing,
 }: RoutineItemProps) => {
-  const user = useSelector(userSelector);
+  const { user } = useSelector(userSelector);
   const dispatch = useDispatch();
 
   const onRemoveRoutine = () => {
     // eslint-disable-next-line no-alert
     if (!window.confirm('정말 삭제하시겠습니까?')) return;
     if (user.currentRoutineId === routine.routineId)
-      dispatch(setCurrentRoutine(''));
+      dispatch(setCurrentRoutine({ username: user.username, routineId: '' }));
     dispatch(removeRoutine(routine.routineId));
   };
 
   useEffect(() => {
     if (user.currentRoutineId === routine.routineId)
-      dispatch(setCurrentRoutine(routine.routineId));
+      dispatch(
+        setCurrentRoutine({
+          username: user.username,
+          routineId: routine.routineId,
+        }),
+      );
   }, [routine.lastModified]);
 
   return (
@@ -176,13 +181,27 @@ const RoutineItem = ({
           {user.currentRoutineId === routine.routineId ? (
             <Button>
               <UnsetCurrentRoutineButton
-                onClick={() => dispatch(setCurrentRoutine(''))}
+                onClick={() =>
+                  dispatch(
+                    setCurrentRoutine({
+                      username: user.username,
+                      routineId: '',
+                    }),
+                  )
+                }
               />
             </Button>
           ) : (
             <Button>
               <SetCurrentRoutineButton
-                onClick={() => dispatch(setCurrentRoutine(routine.routineId))}
+                onClick={() =>
+                  dispatch(
+                    setCurrentRoutine({
+                      username: user.username,
+                      routineId: routine.routineId,
+                    }),
+                  )
+                }
               />
             </Button>
           )}

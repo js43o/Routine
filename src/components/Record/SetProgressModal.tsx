@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addProgress, ProgressItem, removeProgress } from 'modules/user';
+import { userSelector } from 'modules/hooks';
 import { getDatestr } from 'lib/methods';
 import Button from 'components/common/Button';
 import ErrorMessage from 'components/common/ErrorMessage';
@@ -137,6 +138,7 @@ const SetProgressModal = ({
     muscleMass: 0,
     fatMass: 0,
   });
+  const { user } = useSelector(userSelector);
   const dispatch = useDispatch();
   const [message, setMessage] = useState('');
 
@@ -163,10 +165,13 @@ const SetProgressModal = ({
 
     dispatch(
       addProgress({
-        date: getDatestr(new Date()),
-        weight: input.weight,
-        muscleMass: input.muscleMass,
-        fatMass: input.fatMass,
+        username: user.username,
+        progress: {
+          date: getDatestr(new Date()),
+          weight: input.weight,
+          muscleMass: input.muscleMass,
+          fatMass: input.fatMass,
+        },
       }),
     );
     setInput({
@@ -185,7 +190,7 @@ const SetProgressModal = ({
   const onRemove = (date: string) => {
     // eslint-disable-next-line no-alert
     if (!window.confirm('정말 삭제하시겠습니까?')) return;
-    dispatch(removeProgress(date));
+    dispatch(removeProgress({ username: user.username, date }));
     setMessage('');
   };
 

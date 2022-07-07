@@ -27,7 +27,7 @@ const ProgressHeader = styled.div`
 `;
 
 const RecordPage = () => {
-  const users = useSelector(userSelector);
+  const users = useSelector(userSelector).user;
   const [currentDate, setCurrentDate] = useState({
     year: new Date().getFullYear(),
     month: new Date().getMonth(),

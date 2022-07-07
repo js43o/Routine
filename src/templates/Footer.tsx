@@ -1,6 +1,7 @@
-import styled from '@emotion/styled';
 import React from 'react';
-import useAuth from 'hooks/useAuth';
+import { useDispatch } from 'react-redux';
+import styled from '@emotion/styled';
+import { login } from 'lib/api';
 
 const FooterBlock = styled.div`
   display: flex;
@@ -14,9 +15,13 @@ const LogoutButton = styled.div`
 `;
 
 const Footer = () => {
-  const { register, login } = useAuth();
+  const dispatch = useDispatch();
   const onClick = async () => {
-    await login('js43o', '123');
+    try {
+      await dispatch(login('js43o', '123'));
+    } catch (e) {
+      console.error(e);
+    }
   };
   return (
     <FooterBlock>

@@ -2,7 +2,7 @@ import { DefaultContext } from 'koa';
 import Joi from 'joi';
 import User from '../../models/user';
 
-export const addPerform = async (ctx: DefaultContext) => {
+export const addComplete = async (ctx: DefaultContext) => {
   const exerciseSchema = Joi.object().keys({
     exercise: Joi.string().required(),
     weight: Joi.number().min(1),
@@ -12,7 +12,7 @@ export const addPerform = async (ctx: DefaultContext) => {
 
   const inputSchema = Joi.object().keys({
     username: Joi.string().alphanum().min(3).max(20).required(),
-    perform: Joi.object().keys({
+    complete: Joi.object().keys({
       date: Joi.string(),
       list: Joi.array().items(exerciseSchema),
       memo: Joi.string(),
@@ -26,25 +26,25 @@ export const addPerform = async (ctx: DefaultContext) => {
     return;
   }
 
-  const { username, perform } = ctx.request.body;
+  const { username, complete } = ctx.request.body;
   try {
     const user = await User.findByUsername(username);
     if (!user) {
       ctx.status = 401;
       return;
     }
-    user.completes.push(perform);
+    user.completes.push(complete);
     await user.save();
-    ctx.body = user.serialize();
+    ctx.status = 200;
   } catch (e) {
     ctx.throw(500, e as Error);
   }
 };
 
-export const removePerform = async (ctx: DefaultContext) => {
+export const removeComplete = async (ctx: DefaultContext) => {
   const inputSchema = Joi.object().keys({
     username: Joi.string().alphanum().min(3).max(20).required(),
-    performDate: Joi.string().required(),
+    date: Joi.string().required(),
   });
 
   const result = inputSchema.validate(ctx.request.body);
@@ -54,7 +54,7 @@ export const removePerform = async (ctx: DefaultContext) => {
     return;
   }
 
-  const { username, performDate } = ctx.request.body;
+  const { username, date } = ctx.request.body;
   try {
     const user = await User.findByUsername(username);
     if (!user) {
@@ -62,9 +62,9 @@ export const removePerform = async (ctx: DefaultContext) => {
       return;
     }
 
-    user.completes = user.completes.filter((item) => item.date !== performDate);
+    user.completes = user.completes.filter((item) => item.date !== date);
     await user.save();
-    ctx.body = user.serialize();
+    ctx.status = 200;
   } catch (e) {
     ctx.throw(500, e as Error);
   }
