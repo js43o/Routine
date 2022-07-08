@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { useDispatch } from 'react-redux';
-import { insertExercise } from 'modules/routine';
+import { insertExercise } from 'modules/user';
 import { hideScroll, unhideScroll } from 'lib/methods';
 
 const useScroll = () => {

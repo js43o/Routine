@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { ExerciseItem } from './routine';
+import { ExerciseItem } from './user';
 
 export type PerformItem = {
   exercise: ExerciseItem;

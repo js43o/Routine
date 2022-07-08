@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import { useDispatch, useSelector } from 'react-redux';
 import { initialPerform, toggleCheck, checkAll } from 'modules/perform';
 import { addComplete } from 'modules/user';
-import { userSelector, performSelector, routineSelector } from 'modules/hooks';
+import { userSelector, performSelector } from 'modules/hooks';
 import { getDatestr } from 'lib/methods';
 import ErrorMessage from 'components/common/ErrorMessage';
 import {
@@ -97,12 +97,11 @@ const PerformRoutine = ({
 }: PerformRoutineProps) => {
   const { user } = useSelector(userSelector);
   const performs = useSelector(performSelector);
-  const routine = useSelector(routineSelector);
   const dispatch = useDispatch();
   const [message, setMessage] = useState('');
   const [memo, setMemo] = useState('');
 
-  const currentRoutine = routine.find(
+  const currentRoutine = user.routines.find(
     (item) => item.routineId === currentRoutineId,
   );
 

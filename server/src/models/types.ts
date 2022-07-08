@@ -1,7 +1,7 @@
 import { Model, Document } from 'mongoose';
-import { UserPayload } from '../../../src/modules';
+import { User } from '../../../src/modules/user';
 
-export interface IUserDocument extends UserPayload, Document {
+export interface IUserDocument extends User, Document {
   hashedPassword: string;
   setPassword: (password: string) => Promise<void>;
   checkPassword: (password: string) => Promise<boolean>;

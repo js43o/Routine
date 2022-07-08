@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from '@emotion/styled';
-import { Exercise, addExercise, ExerciseItem } from 'modules/routine';
+import { Exercise, addExercise, ExerciseItem } from 'modules/user';
 import Button from 'components/common/Button';
-import useAddExercise from 'hooks/useAddExercise';
 import ErrorMessage from 'components/common/ErrorMessage';
+import useAddExercise from 'hooks/useAddExercise';
 import exerciseJSON from '../../data/exercise.json';
 
 const AddExerciseWrapper = styled.div<{ visible: boolean }>`

@@ -2,14 +2,14 @@ import React, { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import Template from 'templates/Template';
-import { addRoutine } from 'modules/routine';
-import { routineSelector } from 'modules/hooks';
+import { addRoutine } from 'modules/user';
+import { userSelector } from 'modules/hooks';
+import { hideScroll, unhideScroll } from 'lib/methods';
 import RoutineItem from 'components/Routine/RoutineItem';
 import AddExercise from 'components/Routine/AddExerciseModal';
+import Button from 'components/common/Button';
 import { BsPlusCircle } from 'react-icons/bs';
 import { v4 as uuidv4 } from 'uuid';
-import Button from 'components/common/Button';
-import { hideScroll, unhideScroll } from 'lib/methods';
 
 const AddRoutineButton = styled.div`
   display: flex;
@@ -32,7 +32,7 @@ const RoutineListBlock = styled.ul`
 `;
 
 const RoutinePage = () => {
-  const routines = useSelector(routineSelector);
+  const { user } = useSelector(userSelector);
   const dispatch = useDispatch();
 
   const [modal, setModal] = useState(false);
@@ -79,7 +79,7 @@ const RoutinePage = () => {
       />
       <h1>루틴 목록</h1>
       <RoutineListBlock>
-        {routines.map((routine) => (
+        {user.routines.map((routine) => (
           <RoutineItem
             key={routine.routineId}
             routine={routine}
@@ -95,14 +95,7 @@ const RoutinePage = () => {
         <Button
           onClick={() => {
             const routineId = uuidv4();
-            dispatch(
-              addRoutine({
-                routineId,
-                title: '새 루틴',
-                lastModified: Date.now(),
-                weekRoutine: [[], [], [], [], [], [], []],
-              }),
-            );
+            dispatch(addRoutine({ username: user.username, routineId }));
             onSetEditing(routineId);
           }}
         >

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import styled from '@emotion/styled';
-import { login } from 'lib/api';
+import { login } from 'modules/user';
 
 const FooterBlock = styled.div`
   display: flex;
@@ -18,7 +18,7 @@ const Footer = () => {
   const dispatch = useDispatch();
   const onClick = async () => {
     try {
-      await dispatch(login('js43o', '123'));
+      await dispatch(login({ username: 'js43o', password: '123' }));
     } catch (e) {
       console.error(e);
     }

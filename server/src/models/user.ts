@@ -13,7 +13,7 @@ const ExerciseSchema = new Schema({
 const RoutineSchema = new Schema({
   routineId: String,
   title: String,
-  lastModified: String,
+  lastModified: Number,
   weekRoutine: [[ExerciseSchema]],
 });
 
@@ -42,7 +42,7 @@ const UserSchema: Schema<IUserDocument> = new Schema({
   birth: { type: String, default: '' },
   height: { type: Number, default: 0 },
   currentRoutineId: { type: String, default: '' },
-  routine: [RoutineSchema],
+  routines: [RoutineSchema],
   completes: [CompleteSchema],
   progress: {
     type: [ProgressSchema],

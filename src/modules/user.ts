@@ -4,7 +4,6 @@ import {
   SerializedError,
 } from '@reduxjs/toolkit';
 import * as api from 'lib/api';
-import { ExerciseItem } from 'modules/routine';
 
 export type CompleteItem = {
   date: string;
@@ -28,6 +27,36 @@ export type ProgressPayload = {
   fatMass: number;
 };
 
+export type Exercise = {
+  name: string;
+  category: string[];
+  part: string[];
+  imageSrc?: string;
+  description?: string;
+};
+
+export type ExerciseItem = {
+  exercise: string;
+  weight: number;
+  numberOfTimes: number;
+  numberOfSets: number;
+};
+
+export type Routine = {
+  routineId: string;
+  title: string;
+  lastModified: number;
+  weekRoutine: [
+    ExerciseItem[],
+    ExerciseItem[],
+    ExerciseItem[],
+    ExerciseItem[],
+    ExerciseItem[],
+    ExerciseItem[],
+    ExerciseItem[],
+  ];
+};
+
 export type User = {
   username: string;
   name: string;
@@ -37,6 +66,7 @@ export type User = {
   currentRoutineId: string;
   completes: CompleteItem[];
   progress: ProgressItem[];
+  routines: Routine[];
 };
 
 type UserStateType = {
@@ -70,6 +100,7 @@ const initialUser: User = {
       data: [],
     },
   ],
+  routines: [],
 };
 
 const initialState: UserStateType = {
@@ -170,10 +201,112 @@ export const removeProgress = createAsyncThunk(
   },
 );
 
+export const addRoutine = createAsyncThunk(
+  'ADD_ROUTINE',
+  async ({ username, routineId }: { username: string; routineId: string }) => {
+    const routine: Routine = {
+      routineId,
+      title: '새 루틴',
+      lastModified: 0,
+      weekRoutine: [[], [], [], [], [], [], []],
+    };
+    await api.addRoutine(username, routine);
+    return routine;
+  },
+);
+
+export const removeRoutine = createAsyncThunk(
+  'REMOVE_ROUTINE',
+  async ({ username, routineId }: { username: string; routineId: string }) => {
+    await api.removeRoutine(username, routineId);
+    return routineId;
+  },
+);
+
+export const editRoutine = createAsyncThunk(
+  'EDIT_ROUTINE',
+  async ({ username, routine }: { username: string; routine: Routine }) => {
+    await api.editRoutine(username, routine);
+    return routine.routineId;
+  },
+);
+
 export const userSlice = createSlice({
   name: 'users',
   initialState,
-  reducers: {},
+  reducers: {
+    changeRoutineTitle: (
+      state,
+      {
+        payload: { routineId, value },
+      }: { payload: { routineId: string; value: string } },
+    ) => {
+      const { user } = state;
+      const r = user.routines.find((s) => s.routineId === routineId);
+      if (!r) return;
+      r.title = value;
+    },
+    addRoutine: (state, { payload }: { payload: Routine }) => {
+      const { user } = state;
+      user.routines.push(payload);
+    },
+    addExercise: (
+      state,
+      {
+        payload: { routineId, day, exercise },
+      }: {
+        payload: { routineId: string; day: number; exercise: ExerciseItem };
+      },
+    ) => {
+      const { user } = state;
+      const r = user.routines.find((s) => s.routineId === routineId);
+      if (!r) return;
+      const d = r.weekRoutine[day];
+      if (!d) return;
+      r.weekRoutine[day] = [...d, exercise];
+      r.lastModified = Date.now();
+    },
+    removeExercise: (
+      state,
+      {
+        payload: { routineId, day, idx },
+      }: { payload: { routineId: string; day: number; idx: number } },
+    ) => {
+      const { user } = state;
+      const r = user.routines.find((s) => s.routineId === routineId);
+      if (!r) return;
+      const d = r.weekRoutine[day];
+      if (!d) return;
+      r.weekRoutine[day] = d.filter((_, i) => i !== idx);
+      r.lastModified = Date.now();
+    },
+    insertExercise: (
+      state,
+      {
+        payload: { routineId, day, fromIdx, toIdx },
+      }: {
+        payload: {
+          routineId: string;
+          day: number;
+          fromIdx: number;
+          toIdx: number;
+        };
+      },
+    ) => {
+      const { user } = state;
+      const r = user.routines.find((s) => s.routineId === routineId);
+      if (!r) return;
+      const d = r.weekRoutine[day];
+      if (!d) return;
+      const filtered = d.filter((_, i) => i !== fromIdx);
+      r.weekRoutine[day] = [
+        ...filtered.slice(0, toIdx),
+        d[fromIdx],
+        ...filtered.slice(toIdx),
+      ];
+      r.lastModified = Date.now();
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(register.pending, (state) => {
@@ -303,7 +436,56 @@ export const userSlice = createSlice({
         state.loading = false;
         state.error = action.error;
       });
+    builder
+      .addCase(addRoutine.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(addRoutine.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        const { user } = state;
+        user.routines.push(action.payload);
+      })
+      .addCase(addRoutine.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error;
+      });
+    builder
+      .addCase(removeRoutine.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(removeRoutine.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        const { user } = state;
+        user.routines = user.routines.filter(
+          (routine) => routine.routineId !== action.payload,
+        );
+      })
+      .addCase(removeRoutine.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error;
+      });
+    builder
+      .addCase(editRoutine.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(editRoutine.fulfilled, (state) => {
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(editRoutine.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error;
+      });
   },
 });
+
+export const {
+  changeRoutineTitle,
+  addExercise,
+  removeExercise,
+  insertExercise,
+} = userSlice.actions;
 
 export default userSlice.reducer;

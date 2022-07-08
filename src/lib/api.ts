@@ -1,6 +1,5 @@
 import axios from 'axios';
-import { Routine } from 'modules/routine';
-import { CompleteItem } from 'modules/user';
+import { Routine, CompleteItem } from 'modules/user';
 
 const client = axios.create();
 client.defaults.baseURL = '/api';
@@ -24,18 +23,14 @@ export const setInfo = (
 export const setCurrentRoutine = (username: string, routineId: string) =>
   client.post('/auth/set_current_routine', { username, routineId });
 
-export const addRoutine = (
-  username: string,
-  routineId: string,
-  lastModified: string,
-) => client.post('/routine/add', { username, routineId, lastModified });
+export const addRoutine = (username: string, routine: Routine) =>
+  client.post('/routine/add', { username, routine });
 
-export const editRoutine = (
-  username: string,
-  routineId: string,
-  title: string,
-  weekRoutine: Routine,
-) => client.post('/routine/edit', { username, routineId, title, weekRoutine });
+export const editRoutine = (username: string, routine: Routine) =>
+  client.post('/routine/edit', {
+    username,
+    routine,
+  });
 
 export const removeRoutine = (username: string, routineId: string) =>
   client.post('/routine/remove', { username, routineId });

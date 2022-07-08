@@ -130,7 +130,7 @@ export const setInfo = async (ctx: DefaultContext) => {
 export const setCurrentRoutine = async (ctx: DefaultContext) => {
   const inputSchema = Joi.object().keys({
     username: Joi.string().alphanum().min(3).max(20).required(),
-    routineId: Joi.string().required(),
+    routineId: Joi.string().allow(''),
   });
 
   const result = inputSchema.validate(ctx.request.body);

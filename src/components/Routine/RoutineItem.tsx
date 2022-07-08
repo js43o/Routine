@@ -1,8 +1,13 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from '@emotion/styled';
-import { setCurrentRoutine } from 'modules/user';
-import { changeTitle, removeRoutine, Routine } from 'modules/routine';
+import {
+  setCurrentRoutine,
+  changeRoutineTitle,
+  removeRoutine,
+  Routine,
+  editRoutine,
+} from 'modules/user';
 import { userSelector } from 'modules/hooks';
 import Button from 'components/common/Button';
 import { dayidxToDaystr } from 'lib/methods';
@@ -125,12 +130,19 @@ const RoutineItem = ({
   const { user } = useSelector(userSelector);
   const dispatch = useDispatch();
 
+  const onSubmit = (routine: Routine) => {
+    onSetEditing();
+    dispatch(editRoutine({ username: user.username, routine }));
+  };
+
   const onRemoveRoutine = () => {
     // eslint-disable-next-line no-alert
     if (!window.confirm('정말 삭제하시겠습니까?')) return;
     if (user.currentRoutineId === routine.routineId)
       dispatch(setCurrentRoutine({ username: user.username, routineId: '' }));
-    dispatch(removeRoutine(routine.routineId));
+    dispatch(
+      removeRoutine({ username: user.username, routineId: routine.routineId }),
+    );
   };
 
   useEffect(() => {
@@ -166,7 +178,7 @@ const RoutineItem = ({
               maxLength={12}
               onChange={(e) =>
                 dispatch(
-                  changeTitle({
+                  changeRoutineTitle({
                     routineId: routine.routineId,
                     value: e.target.value,
                   }),
@@ -207,7 +219,7 @@ const RoutineItem = ({
           )}
           <Button>
             {isEditing ? (
-              <CheckButton onClick={() => onSetEditing()} />
+              <CheckButton onClick={() => onSubmit(routine)} />
             ) : (
               <FaPencilAlt onClick={() => onSetEditing(routine.routineId)} />
             )}

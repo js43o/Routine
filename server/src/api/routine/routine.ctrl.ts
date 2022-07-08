@@ -10,17 +10,16 @@ const exerciseSchema = Joi.object().keys({
 });
 
 const RoutineSchema = Joi.object().keys({
-  username: Joi.string().alphanum().min(3).max(20).required(),
   routineId: Joi.string().required(),
   title: Joi.string().required(),
+  lastModified: Joi.number().required(),
   weekRoutine: Joi.array().items(Joi.array().items(exerciseSchema)),
 });
 
 export const addRoutine = async (ctx: DefaultContext) => {
   const inputSchema = Joi.object().keys({
     username: Joi.string().alphanum().min(3).max(20).required(),
-    routineId: Joi.string().required(),
-    lastModified: Joi.string().required(),
+    routine: RoutineSchema,
   });
 
   const result = inputSchema.validate(ctx.request.body);
@@ -30,21 +29,16 @@ export const addRoutine = async (ctx: DefaultContext) => {
     return;
   }
 
-  const { username, routineId, lastModified } = ctx.request.body;
+  const { username, routine } = ctx.request.body;
   try {
     const user = await User.findByUsername(username);
     if (!user) {
       ctx.status = 401;
       return;
     }
-    user.routine.push({
-      routineId,
-      title: '새 루틴',
-      lastModified,
-      weekRoutine: [[], [], [], [], [], [], []],
-    });
+    user.routines.push(routine);
     await user.save();
-    ctx.body = user.serialize();
+    ctx.status = 200;
   } catch (e) {
     ctx.throw(500, e as Error);
   }
@@ -71,24 +65,33 @@ export const removeRoutine = async (ctx: DefaultContext) => {
       return;
     }
 
-    user.routine = user.routine.filter((item) => item.routineId !== routineId);
+    user.routines = user.routines.filter(
+      (item) => item.routineId !== routineId,
+    );
     await user.save();
-    ctx.body = user.serialize();
+    ctx.status = 200;
   } catch (e) {
     ctx.throw(500, e as Error);
   }
 };
 
 export const editRoutine = async (ctx: DefaultContext) => {
-  const result = RoutineSchema.validate(ctx.request.body);
+  const inputSchema = Joi.object().keys({
+    username: Joi.string().alphanum().min(3).max(20).required(),
+    routine: RoutineSchema,
+  });
+
+  const result = inputSchema.validate(ctx.request.body);
   if (result.error) {
     ctx.status = 400;
     ctx.body = result.error;
     return;
   }
 
-  const { username, routineId, lastModified, title, weekRoutine } =
-    ctx.request.body;
+  const {
+    username,
+    routine: { routineId, title, lastModified, weekRoutine },
+  } = ctx.request.body;
   try {
     const user = await User.findByUsername(username);
     if (!user) {
@@ -96,18 +99,18 @@ export const editRoutine = async (ctx: DefaultContext) => {
       return;
     }
 
-    user.routine = user.routine.map((item) =>
+    user.routines = user.routines.map((item) =>
       item.routineId === routineId
         ? {
             routineId,
-            lastModified,
             title,
+            lastModified,
             weekRoutine,
           }
         : item,
     );
     await user.save();
-    ctx.body = user.serialize();
+    ctx.status = 200;
   } catch (e) {
     ctx.throw(500, e as Error);
   }
