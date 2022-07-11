@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from '@emotion/styled';
-import { Exercise, addExercise, ExerciseItem } from 'modules/user';
+import { addExercise } from 'modules/user';
+import { Exercise, ExerciseItem } from 'types';
 import Button from 'components/common/Button';
+import SubmitButtons from 'components/common/SubmitButtons';
 import ErrorMessage from 'components/common/ErrorMessage';
 import useAddExercise from 'hooks/useAddExercise';
 import exerciseJSON from '../../data/exercise.json';
@@ -103,21 +105,6 @@ const ConfirmBlock = styled.div`
       font-size: 2rem;
       width: 5rem;
     }
-  }
-`;
-
-const ButtonsBlock = styled.div`
-  display: flex;
-  gap: 0.5rem;
-  .submit {
-    padding: 0.25rem 1rem;
-    background: ${({ theme }) => theme.primary};
-    font-size: 1.25rem;
-  }
-  .close {
-    padding: 0.25rem 1rem;
-    background: ${({ theme }) => theme.background_sub};
-    font-size: 1.25rem;
   }
 `;
 
@@ -257,14 +244,7 @@ const AddExerciseModal = ({
               세트
             </div>
           </ConfirmBlock>
-          <ButtonsBlock>
-            <Button className="submit" onClick={onAddExercise}>
-              추가
-            </Button>
-            <Button className="close" onClick={onClose}>
-              취소
-            </Button>
-          </ButtonsBlock>
+          <SubmitButtons onSubmit={onAddExercise} onClose={onClose} />
           <ErrorMessage message={message} />
         </FooterBlock>
       </AddExerciseBlock>

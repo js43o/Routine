@@ -13,12 +13,6 @@ const PerformListBlock = styled.ul`
   grid-template-columns: repeat(7, 1fr);
   border-radius: 0.5rem;
   overflow: hidden;
-  li:nth-of-type(1) {
-    color: ${({ theme }) => theme.red};
-  }
-  li:nth-of-type(7) {
-    color: ${({ theme }) => theme.blue};
-  }
 `;
 
 const PerformItemBlock = styled.li<{ done?: boolean }>`
@@ -26,7 +20,14 @@ const PerformItemBlock = styled.li<{ done?: boolean }>`
   justify-content: center;
   background: ${({ done, theme }) =>
     done ? theme.primary : theme.background_sub};
+  color: ${({ theme, done }) => done && theme.letter_primary};
   font-weight: bold;
+  &:nth-of-type(1) {
+    color: ${({ theme, done }) => (done ? theme.letter_primary : theme.red)};
+  }
+  &:nth-of-type(7) {
+    color: ${({ theme, done }) => (done ? theme.letter_primary : theme.blue)};
+  }
 `;
 
 const CompleteText = styled.div`

@@ -3,13 +3,13 @@ import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import Template from 'templates/Template';
 import { userSelector } from 'modules/hooks';
-import { CompleteItem } from 'modules/user';
+import { CompleteItem } from 'types';
 import { getDatestr, hideScroll, unhideScroll } from 'lib/methods';
 import { FaPencilAlt } from 'react-icons/fa';
 import RoutineExerciseList from 'components/Routine/ExerciseList';
 import RecordCalendar from 'components/Record/RecordCalendar';
 import ProgressViewer from 'components/Record/ProgressViewer';
-import SetProgressModal from 'components/Record/SetProgressModal';
+import SetProgressModal from 'components/Record/ProgressModal';
 import Button from 'components/common/Button';
 
 const MemoBlock = styled.div`

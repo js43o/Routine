@@ -9,6 +9,7 @@ import { globalStyles } from 'lib/globalStyles';
 import HomePage from 'pages/Home';
 import RoutinePage from 'pages/Routine';
 import RecordPage from 'pages/Record';
+import LoginPage from 'pages/Login';
 
 const AppBlock = styled.div`
   display: flex;
@@ -44,10 +45,6 @@ function App() {
   const theme = useSelector(themeSelector);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(login({ username: 'js43o', password: '123' }));
-  }, []);
-
   return (
     <AppBlock>
       <ThemeProvider theme={theme.colors}>
@@ -56,6 +53,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/routine" element={<RoutinePage />} />
           <Route path="/record" element={<RecordPage />} />
+          <Route path="/login" element={<LoginPage />} />
         </Routes>
       </ThemeProvider>
     </AppBlock>

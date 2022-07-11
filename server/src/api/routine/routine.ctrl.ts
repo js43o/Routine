@@ -7,6 +7,7 @@ const exerciseSchema = Joi.object().keys({
   weight: Joi.number().min(1),
   numberOfTimes: Joi.number().min(1),
   numberOfSets: Joi.number().min(1).max(20),
+  _id: Joi.string(),
 });
 
 const RoutineSchema = Joi.object().keys({
@@ -14,6 +15,7 @@ const RoutineSchema = Joi.object().keys({
   title: Joi.string().required(),
   lastModified: Joi.number().required(),
   weekRoutine: Joi.array().items(Joi.array().items(exerciseSchema)),
+  _id: Joi.string(),
 });
 
 export const addRoutine = async (ctx: DefaultContext) => {
@@ -83,6 +85,7 @@ export const editRoutine = async (ctx: DefaultContext) => {
 
   const result = inputSchema.validate(ctx.request.body);
   if (result.error) {
+    console.log(result.error.message);
     ctx.status = 400;
     ctx.body = result.error;
     return;

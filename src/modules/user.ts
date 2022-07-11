@@ -4,70 +4,13 @@ import {
   SerializedError,
 } from '@reduxjs/toolkit';
 import * as api from 'lib/api';
-
-export type CompleteItem = {
-  date: string;
-  list: ExerciseItem[];
-  memo: string;
-};
-
-export type ProgressItem = {
-  id: 'weight' | 'muscleMass' | 'fatMass';
-  color: string;
-  data: {
-    x: string;
-    y: number;
-  }[];
-};
-
-export type ProgressPayload = {
-  date: string;
-  weight: number;
-  muscleMass: number;
-  fatMass: number;
-};
-
-export type Exercise = {
-  name: string;
-  category: string[];
-  part: string[];
-  imageSrc?: string;
-  description?: string;
-};
-
-export type ExerciseItem = {
-  exercise: string;
-  weight: number;
-  numberOfTimes: number;
-  numberOfSets: number;
-};
-
-export type Routine = {
-  routineId: string;
-  title: string;
-  lastModified: number;
-  weekRoutine: [
-    ExerciseItem[],
-    ExerciseItem[],
-    ExerciseItem[],
-    ExerciseItem[],
-    ExerciseItem[],
-    ExerciseItem[],
-    ExerciseItem[],
-  ];
-};
-
-export type User = {
-  username: string;
-  name: string;
-  gender: string;
-  birth: string;
-  height: number;
-  currentRoutineId: string;
-  completes: CompleteItem[];
-  progress: ProgressItem[];
-  routines: Routine[];
-};
+import {
+  CompleteItem,
+  ExerciseItem,
+  ProgressPayload,
+  Routine,
+  User,
+} from 'types';
 
 type UserStateType = {
   loading: boolean;
@@ -318,9 +261,9 @@ export const userSlice = createSlice({
         state.error = null;
         state.user = action.payload;
       })
-      .addCase(register.rejected, (state) => {
+      .addCase(register.rejected, (state, action) => {
         state.loading = false;
-        state.error = null;
+        state.error = action.error;
       });
     builder
       .addCase(login.pending, (state) => {
@@ -332,9 +275,9 @@ export const userSlice = createSlice({
         state.error = null;
         state.user = action.payload;
       })
-      .addCase(login.rejected, (state) => {
+      .addCase(login.rejected, (state, action) => {
         state.loading = false;
-        state.error = null;
+        state.error = action.error;
       });
     builder
       .addCase(setInfo.pending, (state) => {
@@ -350,9 +293,9 @@ export const userSlice = createSlice({
         user.gender = gender;
         user.height = height;
       })
-      .addCase(setInfo.rejected, (state) => {
+      .addCase(setInfo.rejected, (state, action) => {
         state.loading = false;
-        state.error = null;
+        state.error = action.error;
       });
     builder
       .addCase(setCurrentRoutine.pending, (state) => {

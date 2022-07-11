@@ -1,15 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { ExerciseItem } from './user';
-
-export type PerformItem = {
-  exercise: ExerciseItem;
-  setCheck: boolean[];
-};
-
-export type PerformList = {
-  lastModified: number | null;
-  list: PerformItem[];
-};
+import { ExerciseItem, PerformList } from 'types';
 
 const initialState: PerformList = {
   lastModified: null,

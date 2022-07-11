@@ -1,5 +1,5 @@
 import { Model, Document } from 'mongoose';
-import { User } from '../../../src/modules/user';
+import { User } from '../../../src/types';
 
 export interface IUserDocument extends User, Document {
   hashedPassword: string;

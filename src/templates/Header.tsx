@@ -1,12 +1,12 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { useDispatch, useSelector } from 'react-redux';
-import { MdRefresh } from 'react-icons/md';
 import { BsFillSunFill, BsFillMoonFill } from 'react-icons/bs';
 import { NavLink } from 'react-router-dom';
 import Button from 'components/common/Button';
 import { toggleTheme } from 'modules/theme';
 import { themeSelector } from 'modules/hooks';
+import Title from './Title';
 
 const HeaderBlock = styled.header`
   display: flex;
@@ -18,13 +18,6 @@ const HeaderBlock = styled.header`
   @media (min-width: 430px) {
     flex-direction: row;
   }
-`;
-
-const TitleBlock = styled(NavLink)`
-  font-size: 2.5rem;
-  display: flex;
-  align-items: center;
-  font-family: 'PT Sans Narrow', sans-serif;
 `;
 
 const NavBlock = styled.nav`
@@ -72,10 +65,7 @@ function Header() {
 
   return (
     <HeaderBlock>
-      <TitleBlock to="/">
-        Routine
-        <MdRefresh />
-      </TitleBlock>
+      <Title />
       <NavBlock>
         <NavLinkBlock to="/">홈</NavLinkBlock>
         <NavLinkBlock to="/routine">루틴</NavLinkBlock>

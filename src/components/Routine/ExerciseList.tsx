@@ -1,7 +1,8 @@
 import React, { PointerEvent, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from '@emotion/styled';
-import { ExerciseItem, removeExercise } from 'modules/user';
+import { removeExercise } from 'modules/user';
+import { ExerciseItem } from 'types';
 import useScroll from 'hooks/useExerciseList';
 import { BsPlusCircleDotted } from 'react-icons/bs';
 import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
@@ -60,6 +61,7 @@ const AddExerciseButton = styled(BsPlusCircleDotted)<{ editing: number }>`
   flex-shrink: 0;
   place-items: center;
   border-radius: 50%;
+  color: ${({ theme }) => theme.letter_primary};
   font-size: 2rem;
   visibility: ${({ editing }) => (editing ? '' : 'hidden')};
 `;

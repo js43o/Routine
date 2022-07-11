@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { CompleteItem } from 'modules/user';
+import { CompleteItem } from 'types';
 import Button from 'components/common/Button';
 import { dayidxToDaystr } from 'lib/methods';
 import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
@@ -42,15 +42,18 @@ const CalendarItem = styled.li<{ selected: boolean; performed: boolean }>`
   border: ${({ performed, theme }) =>
     performed ? `2px solid ${theme.primary}` : ''};
   border-radius: 50%;
+  color: ${({ selected, theme }) => selected && theme.letter_primary};
   background: ${({ selected, theme }) => (selected ? theme.primary : '')};
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
   &:nth-of-type(7n + 1) {
-    color: ${({ theme }) => theme.red};
+    color: ${({ selected, theme }) =>
+      selected ? theme.letter_primary : theme.red};
   }
   &:nth-of-type(7n) {
-    color: ${({ theme }) => theme.blue};
+    color: ${({ selected, theme }) =>
+      selected ? theme.letter_primary : theme.blue};
   }
   @media (min-width: 430px) {
     font-size: 1.25rem;

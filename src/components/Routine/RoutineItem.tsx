@@ -5,10 +5,10 @@ import {
   setCurrentRoutine,
   changeRoutineTitle,
   removeRoutine,
-  Routine,
   editRoutine,
 } from 'modules/user';
 import { userSelector } from 'modules/hooks';
+import { Routine } from 'types';
 import Button from 'components/common/Button';
 import { dayidxToDaystr } from 'lib/methods';
 import { BsTriangleFill, BsStar, BsStarFill } from 'react-icons/bs';

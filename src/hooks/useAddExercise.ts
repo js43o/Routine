@@ -1,5 +1,5 @@
 import { useReducer, useCallback } from 'react';
-import { Exercise } from 'modules/user';
+import { Exercise } from 'types';
 
 type State = {
   category: string;

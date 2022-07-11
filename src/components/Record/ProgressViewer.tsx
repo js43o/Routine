@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { Point, ResponsiveLine } from '@nivo/line';
-import { ProgressItem } from 'modules/user';
+import { ProgressItem } from 'types';
 import { getKorProgress } from 'lib/methods';
 
 const CustomTooltip = styled.div`

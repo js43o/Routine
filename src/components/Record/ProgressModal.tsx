@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import { useDispatch, useSelector } from 'react-redux';
-import { addProgress, ProgressItem, removeProgress } from 'modules/user';
+import { addProgress, removeProgress } from 'modules/user';
+import { ProgressItem } from 'types';
 import { userSelector } from 'modules/hooks';
 import { getDatestr } from 'lib/methods';
-import Button from 'components/common/Button';
 import ErrorMessage from 'components/common/ErrorMessage';
+import SubmitButtons from 'components/common/SubmitButtons';
 
-const SetProgressWrapper = styled.div<{ visible: boolean }>`
+const ProgressWrapper = styled.div<{ visible: boolean }>`
   display: flex;
   place-items: center;
   position: fixed;
@@ -22,7 +23,7 @@ const SetProgressWrapper = styled.div<{ visible: boolean }>`
   pointer-events: ${({ visible }) => (visible ? 'auto' : 'none')};
 `;
 
-const SetProgressBlock = styled.div<{ visible: boolean; offset: number }>`
+const ProgressBlock = styled.div<{ visible: boolean; offset: number }>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -105,21 +106,6 @@ const ConfirmBlock = styled.div`
   }
 `;
 
-const ButtonsBlock = styled.div`
-  display: flex;
-  gap: 0.5rem;
-  .submit {
-    padding: 0.25rem 1rem;
-    background: ${({ theme }) => theme.primary};
-    font-size: 1.25rem;
-  }
-  .close {
-    padding: 0.25rem 1rem;
-    background: ${({ theme }) => theme.background_sub};
-    font-size: 1.25rem;
-  }
-`;
-
 type AddProgressModalProps = {
   data: ProgressItem[];
   visible: boolean;
@@ -127,7 +113,7 @@ type AddProgressModalProps = {
   onCloseModal: () => void;
 };
 
-const SetProgressModal = ({
+const ProgressModal = ({
   data,
   visible,
   offset,
@@ -195,8 +181,8 @@ const SetProgressModal = ({
   };
 
   return (
-    <SetProgressWrapper visible={visible}>
-      <SetProgressBlock visible={visible} offset={offset}>
+    <ProgressWrapper visible={visible}>
+      <ProgressBlock visible={visible} offset={offset}>
         <ProgressListBlock>
           <ProgressItemBlock>
             <div>날짜</div>
@@ -253,19 +239,12 @@ const SetProgressModal = ({
               kg
             </div>
           </ConfirmBlock>
-          <ButtonsBlock>
-            <Button className="submit" onClick={onSubmit}>
-              추가
-            </Button>
-            <Button className="close" onClick={onClose}>
-              취소
-            </Button>
-          </ButtonsBlock>
+          <SubmitButtons onSubmit={onSubmit} onClose={onClose} />
         </FooterBlock>
         <ErrorMessage message={message} />
-      </SetProgressBlock>
-    </SetProgressWrapper>
+      </ProgressBlock>
+    </ProgressWrapper>
   );
 };
 
-export default SetProgressModal;
+export default ProgressModal;

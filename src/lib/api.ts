@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Routine, CompleteItem } from 'modules/user';
+import { Routine, CompleteItem } from 'types';
 
 const client = axios.create();
 client.defaults.baseURL = '/api';

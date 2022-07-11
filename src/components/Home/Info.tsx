@@ -1,7 +1,8 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from '@emotion/styled';
-import { setInfo, User } from 'modules/user';
+import { setInfo } from 'modules/user';
+import { User } from 'types';
 import { FaPencilAlt } from 'react-icons/fa';
 import { MdCheck } from 'react-icons/md';
 import Button from 'components/common/Button';
