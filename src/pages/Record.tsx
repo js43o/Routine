@@ -27,7 +27,8 @@ const ProgressHeader = styled.div`
 `;
 
 const RecordPage = () => {
-  const users = useSelector(userSelector).user;
+  const { user } = useSelector(userSelector);
+
   const [currentDate, setCurrentDate] = useState({
     year: new Date().getFullYear(),
     month: new Date().getMonth(),
@@ -61,7 +62,7 @@ const RecordPage = () => {
         });
 
     while (firstDate.getMonth() === currentDate.month) {
-      const r = users.completes.find((c) => c.date === getDatestr(firstDate));
+      const r = user.completes.find((c) => c.date === getDatestr(firstDate));
       tempRecords.push({
         date: getDatestr(firstDate),
         list: r ? r.list : [],
@@ -70,7 +71,7 @@ const RecordPage = () => {
       firstDate.setDate(firstDate.getDate() + 1);
     }
     setRecords(tempRecords);
-  }, [currentDate, users.completes]);
+  }, [currentDate, user.completes]);
 
   const increaseMonth = useCallback(() => {
     if (currentDate.month >= 11) {
@@ -132,7 +133,7 @@ const RecordPage = () => {
   return (
     <Template>
       <SetProgressModal
-        data={users.progress}
+        data={user.progress}
         visible={modal}
         offset={windowWidth.current}
         onCloseModal={onCloseModal}
@@ -170,7 +171,7 @@ const RecordPage = () => {
           <FaPencilAlt />
         </Button>
       </ProgressHeader>
-      <ProgressViewer data={users.progress} />
+      <ProgressViewer data={user.progress} />
     </Template>
   );
 };

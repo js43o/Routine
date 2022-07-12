@@ -54,6 +54,7 @@ const NoUserBlock = styled.div`
 
 const HomePage = () => {
   const { user } = useSelector(userSelector);
+
   const weekDate = getWeekDate(new Date());
   const isCompleted = useMemo(
     () =>

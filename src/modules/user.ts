@@ -68,6 +68,16 @@ export const login = createAsyncThunk(
   },
 );
 
+export const check = createAsyncThunk('CHECK', async () => {
+  const reponse = await api.check();
+  return reponse.data;
+});
+
+export const logout = createAsyncThunk('LOGOUT', async () => {
+  const reponse = await api.logout();
+  return reponse.data;
+});
+
 export const setInfo = createAsyncThunk(
   'SET_INFO',
   async ({
@@ -178,6 +188,9 @@ export const userSlice = createSlice({
   name: 'users',
   initialState,
   reducers: {
+    initializeUser: (state, { payload }: { payload: User }) => {
+      state.user = payload;
+    },
     changeRoutineTitle: (
       state,
       {
@@ -278,6 +291,17 @@ export const userSlice = createSlice({
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error;
+      });
+    builder
+      .addCase(check.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(check.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(check.rejected, (state) => {
+        state.loading = false;
+        state.user = initialUser;
       });
     builder
       .addCase(setInfo.pending, (state) => {
@@ -425,6 +449,7 @@ export const userSlice = createSlice({
 });
 
 export const {
+  initializeUser,
   changeRoutineTitle,
   addExercise,
   removeExercise,

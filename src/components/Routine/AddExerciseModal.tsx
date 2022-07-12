@@ -81,8 +81,10 @@ const ExerciseItemBlock = styled.li<{ isSelected: number }>`
   border-radius: 0.5rem;
   background: ${({ isSelected, theme }) =>
     isSelected ? theme.primary : theme.background_main};
+  color: ${({ isSelected, theme }) => isSelected && theme.letter_primary};
   span {
-    color: ${({ theme }) => theme.letter_sub};
+    color: ${({ isSelected, theme }) =>
+      isSelected ? theme.letter_main : theme.letter_sub};
   }
 `;
 

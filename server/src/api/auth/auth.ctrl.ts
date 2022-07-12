@@ -82,6 +82,7 @@ export const check = async (ctx: DefaultContext) => {
     ctx.status = 401;
     return;
   }
+  ctx.status = 200;
   ctx.body = user;
 };
 

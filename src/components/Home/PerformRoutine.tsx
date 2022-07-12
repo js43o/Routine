@@ -38,6 +38,7 @@ const ExerciseBlock = styled.div<{ completed: boolean }>`
   padding: 0.5rem;
   background: ${({ completed, theme }) =>
     completed ? theme.primary : theme.background_sub};
+  color: ${({ completed, theme }) => completed && theme.letter_primary};
 `;
 
 const SetButton = styled.div<{ available: boolean }>`
@@ -47,9 +48,9 @@ const SetButton = styled.div<{ available: boolean }>`
   place-items: center;
   padding: 0.25rem 0.5rem;
   font-size: 2rem;
-  opacity: ${({ available }) => (available ? 1 : 0.25)};
+  opacity: ${({ available }) => !available && 0.25};
+  cursor: ${({ available }) => available && 'pointer'};
   transition: opacity 0.2s;
-  cursor: pointer;
   b {
     font-size: 0.75rem;
   }
@@ -60,17 +61,19 @@ const CompleteButton = styled.button`
   justify-content: center;
   align-items: center;
   padding: 0.5rem;
-  border: none;
+  border: 1px solid ${({ theme }) => theme.border_main};
   border-radius: 0.5rem;
   background: ${({ theme }) => theme.background_sub};
   font-size: 1.5rem;
   font-weight: bold;
   @media (hover: hover) {
     &:hover {
-      opacity: 0.75;
+      border: 1px solid ${({ theme }) => theme.primary};
+      background: ${({ theme }) => theme.secondary};
     }
   }
   &:active {
+    color: ${({ theme }) => theme.letter_primary};
     background: ${({ theme }) => theme.primary};
   }
   cursor: pointer;

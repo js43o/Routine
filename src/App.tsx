@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react';
-import { Route, Routes } from 'react-router-dom';
-import styled from '@emotion/styled';
+import { useSelector } from 'react-redux';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import { css, Global, ThemeProvider, useTheme } from '@emotion/react';
-import { useSelector, useDispatch } from 'react-redux';
-import { login } from 'modules/user';
+import styled from '@emotion/styled';
 import { themeSelector } from 'modules/hooks';
 import { globalStyles } from 'lib/globalStyles';
 import HomePage from 'pages/Home';
 import RoutinePage from 'pages/Routine';
 import RecordPage from 'pages/Record';
-import LoginPage from 'pages/Login';
+import AuthPage from 'pages/Auth';
+import { userSelector } from './modules/hooks';
 
 const AppBlock = styled.div`
   display: flex;
@@ -43,7 +43,14 @@ const GlobalStyles = () => {
 
 function App() {
   const theme = useSelector(themeSelector);
-  const dispatch = useDispatch();
+  const { user } = useSelector(userSelector);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user.username) {
+      navigate('/login');
+    }
+  }, [user]);
 
   return (
     <AppBlock>
@@ -53,7 +60,8 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/routine" element={<RoutinePage />} />
           <Route path="/record" element={<RecordPage />} />
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<AuthPage type="register" />} />
+          <Route path="/login" element={<AuthPage type="login" />} />
         </Routes>
       </ThemeProvider>
     </AppBlock>

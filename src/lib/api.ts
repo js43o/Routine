@@ -12,6 +12,8 @@ export const login = (username: string, password: string) =>
 
 export const check = () => client.get('/auth/check');
 
+export const logout = () => client.post('/auth/logout');
+
 export const setInfo = (
   username: string,
   name: string,

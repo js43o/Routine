@@ -1,21 +1,20 @@
 import styled from '@emotion/styled';
 import React, { useEffect, useState } from 'react';
-import Button from 'components/common/Button';
-import { Navigate, NavLink } from 'react-router-dom';
+import { useNavigate, NavLink } from 'react-router-dom';
 import Title from 'templates/Title';
-import { login } from 'modules/user';
 import { useDispatch, useSelector } from 'react-redux';
 import { userSelector } from 'modules/hooks';
 import ErrorMessage from 'components/common/ErrorMessage';
+import { login, register } from 'modules/user';
 
-const LoginWrapper = styled.div`
+const AuthWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   align-self: center;
 `;
 
-const LoginBlock = styled.div`
+const AuthBlock = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -31,7 +30,7 @@ const LoginBlock = styled.div`
       font-size: 1rem;
     }
   }
-  #register {
+  .link {
     align-self: end;
   }
 `;
@@ -41,17 +40,23 @@ const SubmitButton = styled.button`
   padding: 0.5rem;
   color: ${({ theme }) => theme.letter_primary};
   background: ${({ theme }) => theme.primary};
+  font-size: 1rem;
 `;
 
-const Login = () => {
+type Authprops = {
+  type: 'register' | 'login';
+};
+
+const Auth = ({ type }: Authprops) => {
   const { user, error } = useSelector(userSelector);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>, type: string) => {
-    if (type === 'username') {
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>, field: string) => {
+    if (field === 'username') {
       setUsername(e.target.value);
     } else {
       setPassword(e.target.value);
@@ -60,15 +65,20 @@ const Login = () => {
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(login({ username, password }));
+    if (type === 'register') dispatch(register({ username, password }));
+    else dispatch(login({ username, password }));
   };
 
-  if (user.username) return <Navigate to="/" />;
+  useEffect(() => {
+    if (user.username) {
+      navigate('/');
+    }
+  }, [user]);
 
   return (
-    <LoginWrapper>
+    <AuthWrapper>
       <Title />
-      <LoginBlock>
+      <AuthBlock>
         <form onSubmit={onSubmit}>
           <input
             type="text"
@@ -84,15 +94,20 @@ const Login = () => {
             maxLength={20}
             onChange={(e) => onChange(e, 'password')}
           />
-          <SubmitButton type="submit">로그인</SubmitButton>
+          <SubmitButton type="submit">
+            {type === 'register' ? '계정 등록' : '로그인'}
+          </SubmitButton>
         </form>
-        <NavLink to="/register" id="register">
-          계정 등록 ▶
+        <NavLink
+          to={type === 'register' ? '/login' : '/register'}
+          className="link"
+        >
+          {type === 'register' ? '로그인 ▶' : '계정 등록 ▶'}
         </NavLink>
-      </LoginBlock>
+      </AuthBlock>
       <ErrorMessage message={error ? '로그인에 실패하였습니다.' : ''} />
-    </LoginWrapper>
+    </AuthWrapper>
   );
 };
 
-export default Login;
+export default Auth;
