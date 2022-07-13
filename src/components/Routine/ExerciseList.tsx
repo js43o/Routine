@@ -19,9 +19,9 @@ const ExerciseListBlock = styled.ul<{ editing: boolean }>`
   display: flex;
   flex-grow: 1;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.25rem;
   width: 0;
-  height: 5rem;
+  height: 4rem;
   padding: 0.5rem 2rem;
   border-radius: 0.5rem;
   background: ${({ editing, theme }) =>
@@ -35,8 +35,10 @@ const ExerciseItemBlock = styled.li<{ editing?: number }>`
   display: flex;
   flex-shrink: 0;
   flex-direction: column;
-  place-items: center;
-  padding: 0.2rem 0.5rem;
+  justify-content: center;
+  align-items: center;
+  height: 3.5rem;
+  padding: 0.5rem;
   border-radius: 0.5rem;
   background: ${({ theme }) => theme.background_main};
   transition: opacity 0.2s;
@@ -88,10 +90,10 @@ const NextScrollButton = styled(Button)<{ isEnd: boolean }>`
 
 type ExerciseListProps = {
   dayRoutine: ExerciseItem[];
-  routineId?: string;
-  dayIdx?: number;
-  editing?: boolean;
-  onOpenModal?: (day: number) => void;
+  routineId: string;
+  dayIdx: number;
+  editing: boolean;
+  onOpenModal: (day: number) => void;
 };
 
 const ExerciseList = ({
@@ -149,10 +151,9 @@ const ExerciseList = ({
             onPointerDown={(e) => onPointerDown(e, i)}
           >
             <b>{s.exercise}</b>
-            <span>{s.weight} kg</span>
-            <span>
-              {s.numberOfTimes} x {s.numberOfSets}
-            </span>
+            <small>
+              {s.weight}kg, {s.numberOfTimes}x{s.numberOfSets}
+            </small>
           </ExerciseItemBlock>
         ))}
         {onOpenModal && (
@@ -178,13 +179,6 @@ const ExerciseList = ({
       </NextScrollButton>
     </ExerciseListWrapper>
   );
-};
-
-ExerciseList.defaultProps = {
-  routineId: '',
-  dayIdx: -1,
-  editing: false,
-  onOpenModal: null,
 };
 
 export default React.memo(ExerciseList);

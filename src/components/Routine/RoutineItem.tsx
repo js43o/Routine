@@ -17,7 +17,7 @@ import { FaPencilAlt, FaTrashAlt } from 'react-icons/fa';
 import RoutineExerciseList from './ExerciseList';
 
 const RoutineItemBlock = styled.li<{ visible: boolean; editing?: boolean }>`
-  height: ${({ visible }) => (visible ? '42rem' : '3rem')};
+  height: ${({ visible }) => (visible ? '33.25rem' : '3rem')};
   padding: 0.5rem;
   border: 1px solid
     ${({ editing, theme }) => (editing ? theme.primary : theme.border_main)};
@@ -156,11 +156,7 @@ const RoutineItem = ({
   }, [routine.lastModified]);
 
   return (
-    <RoutineItemBlock
-      key={routine.routineId}
-      visible={isVisible}
-      editing={isEditing}
-    >
+    <RoutineItemBlock visible={isVisible} editing={isEditing}>
       <div className="header">
         <TitleBlock
           editing={isEditing}

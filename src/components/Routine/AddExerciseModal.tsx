@@ -200,6 +200,7 @@ const AddExerciseModal = ({
                 <ExerciseItemBlock
                   onClick={() => onSelectExercise(exer)}
                   isSelected={addState.selected === exer ? 1 : 0}
+                  key={exer.name}
                 >
                   <b>{exer.name}</b>
                   <div>

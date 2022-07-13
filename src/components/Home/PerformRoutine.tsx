@@ -16,7 +16,7 @@ const PerformRoutineBlock = styled.div`
   flex-direction: column;
   gap: 0.5rem;
   padding: 0.5rem;
-  border: 1px solid ${({ theme }) => theme.background_main};
+  border: 1px solid ${({ theme }) => theme.border_main};
   border-radius: 0.5rem;
 `;
 
@@ -68,7 +68,6 @@ const CompleteButton = styled.button`
   font-weight: bold;
   @media (hover: hover) {
     &:hover {
-      border: 1px solid ${({ theme }) => theme.primary};
       background: ${({ theme }) => theme.secondary};
     }
   }
@@ -83,7 +82,7 @@ const MemoBlock = styled.textarea<{ visible: number }>`
   display: ${({ visible }) => (visible ? 'block' : 'none')};
   max-height: ${({ visible }) => (visible ? '10rem' : '0')};
   padding: 0.5rem;
-  border: none;
+  border: 1px solid ${({ theme }) => theme.border_main};
   border-radius: 0.5rem;
   font-size: 1rem;
   background: ${({ theme }) => theme.memo_body};

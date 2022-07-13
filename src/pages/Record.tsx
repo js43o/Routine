@@ -6,14 +6,15 @@ import { userSelector } from 'modules/hooks';
 import { CompleteItem } from 'types';
 import { getDatestr, hideScroll, unhideScroll } from 'lib/methods';
 import { FaPencilAlt } from 'react-icons/fa';
-import RoutineExerciseList from 'components/Routine/ExerciseList';
 import RecordCalendar from 'components/Record/RecordCalendar';
 import ProgressViewer from 'components/Record/ProgressViewer';
 import SetProgressModal from 'components/Record/ProgressModal';
+import ExerciseHistory from 'components/Record/ExerciseHistory';
 import Button from 'components/common/Button';
 
 const MemoBlock = styled.div`
   background: ${({ theme }) => theme.memo_body};
+  border: 1px solid ${({ theme }) => theme.border_main};
   border-radius: 0.5rem;
   padding: 0.5rem;
 `;
@@ -149,11 +150,8 @@ const RecordPage = () => {
       />
       {selected && selected.list.length > 0 ? (
         <>
-          <span>
-            {selected.date.slice(5, 7)}월 {selected.date.slice(8, 10)}일
-          </span>
           <h2>수행한 운동</h2>
-          <RoutineExerciseList dayRoutine={selected.list} />
+          <ExerciseHistory exercises={selected.list} />
           <h2>메모</h2>
           {selected.memo ? (
             <MemoBlock>{selected.memo}</MemoBlock>

@@ -17,10 +17,7 @@ const jwtMiddleware = async (ctx: Context, next: () => Promise<void>) => {
       token,
       process.env.JWT_SECRET as string,
     ) as Decoded;
-    ctx.state.user = {
-      _id: decoded._id,
-      username: decoded.username,
-    };
+    ctx.state.user = decoded.username;
     // 현재 토큰의 유효기간이 3.5일보다 적을 경우, 토큰 재발급
     const now = Math.floor(Date.now() / 1000);
     if (decoded.exp - now < 60 * 60 * 24 * 3.5) {

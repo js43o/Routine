@@ -5,30 +5,9 @@ import { userSelector } from 'modules/hooks';
 import Template from 'templates/Template';
 import Info from 'components/Home/Info';
 import PerformRoutine from 'components/Home/PerformRoutine';
-import { getDatestr, getWeekDate } from 'lib/methods';
+import { getDatestr } from 'lib/methods';
 import { FaPencilAlt } from 'react-icons/fa';
-
-const PerformListBlock = styled.ul`
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  border-radius: 0.5rem;
-  overflow: hidden;
-`;
-
-const PerformItemBlock = styled.li<{ done?: boolean }>`
-  display: flex;
-  justify-content: center;
-  background: ${({ done, theme }) =>
-    done ? theme.primary : theme.background_sub};
-  color: ${({ theme, done }) => done && theme.letter_primary};
-  font-weight: bold;
-  &:nth-of-type(1) {
-    color: ${({ theme, done }) => (done ? theme.letter_primary : theme.red)};
-  }
-  &:nth-of-type(7) {
-    color: ${({ theme, done }) => (done ? theme.letter_primary : theme.blue)};
-  }
-`;
+import CompleteDayBar from 'components/Home/CompleteDayBar';
 
 const CompleteText = styled.div`
   display: flex;
@@ -54,8 +33,6 @@ const NoUserBlock = styled.div`
 
 const HomePage = () => {
   const { user } = useSelector(userSelector);
-
-  const weekDate = getWeekDate(new Date());
   const isCompleted = useMemo(
     () =>
       user.completes.filter((c) => c.date === getDatestr(new Date())).length >
@@ -78,17 +55,7 @@ const HomePage = () => {
       )}
       <Info user={user}></Info>
       <h1>이번 주 운동 현황</h1>
-      <PerformListBlock>
-        {weekDate.map((w) =>
-          user.completes.filter((c) => c.date === getDatestr(w)).length ? (
-            <PerformItemBlock done key={w.getDay()}>
-              {w.getDate()}
-            </PerformItemBlock>
-          ) : (
-            <PerformItemBlock key={w.getDay()}>{w.getDate()}</PerformItemBlock>
-          ),
-        )}
-      </PerformListBlock>
+      <CompleteDayBar completes={user.completes} />
       <CompleteText>
         <h1>오늘의 운동</h1>
         {isCompleted ? <span>완료</span> : null}

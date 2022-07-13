@@ -160,7 +160,7 @@ export const addRoutine = createAsyncThunk(
     const routine: Routine = {
       routineId,
       title: '새 루틴',
-      lastModified: 0,
+      lastModified: Date.now(),
       weekRoutine: [[], [], [], [], [], [], []],
     };
     await api.addRoutine(username, routine);
