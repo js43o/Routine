@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import {
@@ -10,6 +10,7 @@ import {
 import { userSelector } from 'modules/hooks';
 import { Routine } from 'types';
 import Button from 'components/common/Button';
+import ErrorMessage from 'components/common/ErrorMessage';
 import { dayidxToDaystr } from 'lib/methods';
 import { BsTriangleFill, BsStar, BsStarFill } from 'react-icons/bs';
 import { MdCheck } from 'react-icons/md';
@@ -17,7 +18,7 @@ import { FaPencilAlt, FaTrashAlt } from 'react-icons/fa';
 import RoutineExerciseList from './ExerciseList';
 
 const RoutineItemBlock = styled.li<{ visible: boolean; editing?: boolean }>`
-  height: ${({ visible }) => (visible ? '33.25rem' : '3rem')};
+  height: ${({ visible }) => (visible ? '34.25rem' : '3rem')};
   padding: 0.5rem;
   border: 1px solid
     ${({ editing, theme }) => (editing ? theme.primary : theme.border_main)};
@@ -129,6 +130,7 @@ const RoutineItem = ({
 }: RoutineItemProps) => {
   const { user } = useSelector(userSelector);
   const dispatch = useDispatch();
+  const [error, setError] = useState('');
 
   const onSubmit = (routine: Routine) => {
     onSetEditing();
@@ -136,13 +138,18 @@ const RoutineItem = ({
   };
 
   const onRemoveRoutine = () => {
-    // eslint-disable-next-line no-alert
     if (!window.confirm('정말 삭제하시겠습니까?')) return;
     if (user.currentRoutineId === routine.routineId)
       dispatch(setCurrentRoutine({ username: user.username, routineId: '' }));
     dispatch(
       removeRoutine({ username: user.username, routineId: routine.routineId }),
     );
+  };
+
+  const onError = () => {
+    if (error) return;
+    setError('일일 최대 운동 개수는 20개입니다.');
+    setTimeout(() => setError(''), 3000);
   };
 
   useEffect(() => {
@@ -236,11 +243,13 @@ const RoutineItem = ({
                 routineId={routine.routineId}
                 editing={isEditing}
                 onOpenModal={onOpenModal}
+                onError={onError}
               />
             </div>
           </RoutineDetailItem>
         ))}
       </RoutineDetailBlock>
+      <ErrorMessage message={error} />
     </RoutineItemBlock>
   );
 };

@@ -29,17 +29,14 @@ const initialUser: User = {
   progress: [
     {
       id: 'weight',
-      color: '#123456',
       data: [],
     },
     {
       id: 'muscleMass',
-      color: '#234567',
       data: [],
     },
     {
       id: 'fatMass',
-      color: '#345678',
       data: [],
     },
   ],
@@ -310,12 +307,11 @@ export const userSlice = createSlice({
       .addCase(setInfo.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        const { user } = state;
         const { name, birth, gender, height } = action.payload;
-        user.name = name;
-        user.birth = birth;
-        user.gender = gender;
-        user.height = height;
+        state.user.birth = birth;
+        state.user.name = name;
+        state.user.gender = gender;
+        state.user.height = height;
       })
       .addCase(setInfo.rejected, (state, action) => {
         state.loading = false;
@@ -328,8 +324,7 @@ export const userSlice = createSlice({
       .addCase(setCurrentRoutine.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        const { user } = state;
-        user.currentRoutineId = action.payload;
+        state.user.currentRoutineId = action.payload;
       })
       .addCase(setCurrentRoutine.rejected, (state, action) => {
         state.loading = false;
@@ -342,9 +337,8 @@ export const userSlice = createSlice({
       .addCase(addComplete.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        const { user } = state;
-        if (user) {
-          user.completes.push(action.payload);
+        if (state.user) {
+          state.user.completes.push(action.payload);
         }
       })
       .addCase(addComplete.rejected, (state, action) => {
@@ -358,8 +352,7 @@ export const userSlice = createSlice({
       .addCase(removeComplete.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        const { user } = state;
-        user.completes = user.completes.filter(
+        state.user.completes = state.user.completes.filter(
           (item) => item.date !== action.payload,
         );
       })
@@ -374,12 +367,10 @@ export const userSlice = createSlice({
       .addCase(addProgress.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        const { user } = state;
-        const progress = action.payload;
-        user.progress.map((item) =>
+        state.user.progress.map((item) =>
           item.data.push({
-            x: progress.date,
-            y: progress[item.id],
+            x: action.payload.date,
+            y: action.payload[item.id],
           }),
         );
       })
@@ -394,8 +385,7 @@ export const userSlice = createSlice({
       .addCase(removeProgress.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        const { user } = state;
-        user.progress.forEach((item) => {
+        state.user.progress.forEach((item) => {
           item.data = item.data.filter((i) => i.x !== action.payload);
         });
       })
@@ -410,8 +400,7 @@ export const userSlice = createSlice({
       .addCase(addRoutine.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        const { user } = state;
-        user.routines.push(action.payload);
+        state.user.routines.push(action.payload);
       })
       .addCase(addRoutine.rejected, (state, action) => {
         state.loading = false;
@@ -424,8 +413,7 @@ export const userSlice = createSlice({
       .addCase(removeRoutine.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        const { user } = state;
-        user.routines = user.routines.filter(
+        state.user.routines = state.user.routines.filter(
           (routine) => routine.routineId !== action.payload,
         );
       })

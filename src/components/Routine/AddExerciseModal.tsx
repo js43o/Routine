@@ -66,10 +66,10 @@ const CategoryItemBlock = styled(Button)<{ checked: number }>`
 const ExerciseListBlock = styled.ul`
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.25rem;
   width: 100%;
   height: 100%;
-  padding: 0.5rem;
+  padding: 0.25rem;
   background: ${({ theme }) => theme.background_sub};
   overflow-y: scroll;
 `;
@@ -77,7 +77,7 @@ const ExerciseListBlock = styled.ul`
 const ExerciseItemBlock = styled.li<{ isSelected: number }>`
   display: flex;
   flex-direction: column;
-  padding: 0.5rem;
+  padding: 0.25rem 0.5rem;
   border-radius: 0.5rem;
   background: ${({ isSelected, theme }) =>
     isSelected ? theme.primary : theme.background_main};
@@ -220,6 +220,7 @@ const AddExerciseModal = ({
               <input
                 type="number"
                 min={0}
+                max={999}
                 value={addState.inputs.weight}
                 onChange={(e) => onChangeInput('CHANGE_WEIGHT', e)}
               />
@@ -230,6 +231,7 @@ const AddExerciseModal = ({
               <input
                 type="number"
                 min={0}
+                max={999}
                 value={addState.inputs.numberOfTimes}
                 onChange={(e) => onChangeInput('CHANGE_NUM_OF_TIMES', e)}
               />

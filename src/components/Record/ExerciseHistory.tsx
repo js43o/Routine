@@ -1,11 +1,12 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { ExerciseItem } from 'types';
+import { CompleteItem } from 'types';
 
 const ExerciseHistoryBlock = styled.ul`
   display: flex;
-  gap: 0.25rem;
-  padding: 0.25rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.5rem;
   border: 1px solid ${({ theme }) => theme.border_main};
   border-radius: 0.5rem;
   background: ${({ theme }) => theme.background_sub};
@@ -15,20 +16,24 @@ const ExerciseHistoryItem = styled.li`
   display: flex;
   flex-direction: column;
   place-items: center;
-  padding: 0.5rem;
+  flex-grow: 1;
+  padding: 0.25rem;
   border-radius: 0.5rem;
   background: ${({ theme }) => theme.background_main};
   text-align: center;
 `;
 
 type ExerciseHistoryProps = {
-  exercises: ExerciseItem[];
+  complete: CompleteItem | null;
 };
 
-const ExerciseHistory = ({ exercises }: ExerciseHistoryProps) => {
+const ExerciseHistory = ({ complete }: ExerciseHistoryProps) => {
+  if (!complete || complete.list.length <= 0)
+    return <ExerciseHistoryBlock>수행한 운동이 없습니다.</ExerciseHistoryBlock>;
+
   return (
     <ExerciseHistoryBlock>
-      {exercises.map((exer) => (
+      {complete.list.map((exer) => (
         <ExerciseHistoryItem>
           <b>{exer.exercise}</b>
           <small>

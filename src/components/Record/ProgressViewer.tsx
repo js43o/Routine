@@ -48,7 +48,7 @@ const MyResponsiveLine = ({ data }: { data: ProgressItem[] }) => (
     enableCrosshair
     sliceTooltip={customSliceTooltip}
     lineWidth={4}
-    colors={{ scheme: 'category10' }}
+    colors={{ scheme: 'set2' }}
     pointSize={8}
     pointLabelYOffset={-12}
   />
@@ -57,8 +57,13 @@ const MyResponsiveLine = ({ data }: { data: ProgressItem[] }) => (
 const ProgressViewerBlock = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   gap: 0.5rem;
   height: 20rem;
+  border: 1px solid ${({ theme }) => theme.border_main};
+  border-radius: 0.5rem;
+  text-align: center;
 `;
 
 type ProgressViewerProps = {

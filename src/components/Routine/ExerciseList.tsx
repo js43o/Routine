@@ -73,7 +73,7 @@ const PrevScrollButton = styled(Button)<{ isEnd: boolean }>`
   z-index: 50;
   left: 0;
   height: 100%;
-  color: white;
+  color: ${({ theme }) => theme.letter_primary};
   background: rgba(0, 0, 0, 0.2);
   font-size: 1.75rem;
 `;
@@ -83,7 +83,7 @@ const NextScrollButton = styled(Button)<{ isEnd: boolean }>`
   position: absolute;
   right: 0;
   height: 100%;
-  color: white;
+  color: ${({ theme }) => theme.letter_primary};
   background: rgba(0, 0, 0, 0.2);
   font-size: 1.75rem;
 `;
@@ -94,6 +94,7 @@ type ExerciseListProps = {
   dayIdx: number;
   editing: boolean;
   onOpenModal: (day: number) => void;
+  onError: () => void;
 };
 
 const ExerciseList = ({
@@ -102,10 +103,19 @@ const ExerciseList = ({
   dayIdx = -1,
   editing = false,
   onOpenModal,
+  onError,
 }: ExerciseListProps) => {
   const dispatch = useDispatch();
   const { ref, moveTo, onDragStart } = useScroll();
   const dr = useRef<ExerciseItem[]>(dayRoutine);
+
+  const onAddExercise = () => {
+    if (dayRoutine.length >= 20) {
+      onError();
+      return;
+    }
+    onOpenModal(dayIdx);
+  };
 
   const onPointerDown = (e: PointerEvent, idx: number) => {
     const elem = (e.target as HTMLElement).closest('li') as HTMLLIElement;
@@ -156,15 +166,11 @@ const ExerciseList = ({
             </small>
           </ExerciseItemBlock>
         ))}
-        {onOpenModal && (
-          <Button
-            onClick={
-              dayIdx !== -1 && editing ? () => onOpenModal(dayIdx) : null
-            }
-          >
-            <AddExerciseButton editing={editing ? 1 : 0} />
-          </Button>
-        )}
+        <Button
+          onClick={dayIdx !== -1 && editing ? () => onAddExercise() : null}
+        >
+          <AddExerciseButton editing={editing ? 1 : 0} />
+        </Button>
       </ExerciseListBlock>
       <NextScrollButton
         onClick={() => moveTo('next')}

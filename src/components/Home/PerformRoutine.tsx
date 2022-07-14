@@ -117,25 +117,20 @@ const PerformRoutine = ({
       );
   }, []);
 
-  if (!currentRoutine) return <h4>사용 중인 루틴이 없습니다.</h4>;
+  if (!currentRoutine)
+    return (
+      <PerformRoutineBlock>사용 중인 루틴이 없습니다.</PerformRoutineBlock>
+    );
 
   const day = new Date().getDay();
   const todayRoutine = currentRoutine.weekRoutine[day];
 
   if (!todayRoutine.length) {
-    return (
-      <h4>
-        <i># 오늘은 쉬는 날!</i>
-      </h4>
-    );
+    return <PerformRoutineBlock>오늘은 쉬는 날!</PerformRoutineBlock>;
   }
 
   if (complete)
-    return (
-      <h4>
-        <b>오늘 운동을 완료했습니다.</b>
-      </h4>
-    );
+    return <PerformRoutineBlock>오늘 운동을 완료했습니다.</PerformRoutineBlock>;
 
   const onToggleCheck = (exerIdx: number, setIdx: number) =>
     dispatch(toggleCheck({ exerIdx, setIdx }));

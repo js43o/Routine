@@ -44,7 +44,7 @@ export const globalStyles = css`
     border: none;
     border-top: 1px solid #cccccc;
     background: none;
-    margin: 3rem 0;
+    margin-top: 2rem;
   }
 
   code {

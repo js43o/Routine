@@ -17,6 +17,7 @@ module.exports = {
     'import/no-unresolved': 0,
     'import/no-extraneous-dependencies': 0,
     'no-shadow': 0,
+    'no-alert': 0,
     'no-console': ['warn', { allow: ['error'] }],
     'react/prop-types': 0,
     'react/jsx-filename-extension': [

@@ -25,7 +25,6 @@ const CompleteSchema = new Schema({
 
 const ProgressSchema = new Schema({
   id: String,
-  color: String,
   data: [
     {
       x: String,
@@ -47,9 +46,9 @@ const UserSchema: Schema<IUserDocument> = new Schema({
   progress: {
     type: [ProgressSchema],
     default: [
-      { id: 'weight', color: '', data: [] },
-      { id: 'muscleMass', color: '', data: [] },
-      { id: 'fatMass', color: '', data: [] },
+      { id: 'weight', data: [] },
+      { id: 'muscleMass', data: [] },
+      { id: 'fatMass', data: [] },
     ],
   },
 });

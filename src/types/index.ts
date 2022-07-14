@@ -6,7 +6,6 @@ export type CompleteItem = {
 
 export type ProgressItem = {
   id: 'weight' | 'muscleMass' | 'fatMass';
-  color: string;
   data: {
     x: string;
     y: number;

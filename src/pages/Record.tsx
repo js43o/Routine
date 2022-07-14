@@ -148,20 +148,12 @@ const RecordPage = () => {
         onDateNow={setDateNow}
         onSelect={onSelect}
       />
-      {selected && selected.list.length > 0 ? (
-        <>
-          <h2>수행한 운동</h2>
-          <ExerciseHistory exercises={selected.list} />
-          <h2>메모</h2>
-          {selected.memo ? (
-            <MemoBlock>{selected.memo}</MemoBlock>
-          ) : (
-            <p>작성한 메모가 없습니다.</p>
-          )}
-        </>
-      ) : (
-        <h3>수행한 운동이 없습니다.</h3>
-      )}
+      <h2>수행한 운동</h2>
+      <ExerciseHistory complete={selected} />
+      <h2>메모</h2>
+      <MemoBlock>
+        {(selected && selected.memo) || '작성한 메모가 없습니다.'}
+      </MemoBlock>
       <hr />
       <ProgressHeader>
         <h1>체성분 변화</h1>
