@@ -1,5 +1,5 @@
 import { Model, Document } from 'mongoose';
-import { User } from '../../../src/types';
+import { Exercise, User } from '../../../src/types';
 
 export interface IUserDocument extends User, Document {
   hashedPassword: string;
@@ -11,4 +11,10 @@ export interface IUserDocument extends User, Document {
 
 export interface IUserModel extends Model<IUserDocument> {
   findByUsername: (username: string) => Promise<IUserDocument>;
+}
+
+export interface IExerciseDocument extends Exercise, Document {}
+
+export interface IExerciseModel extends Model<IExerciseDocument> {
+  findByName: (name: string) => Promise<IExerciseDocument>;
 }

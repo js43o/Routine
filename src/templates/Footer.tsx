@@ -43,10 +43,8 @@ const Footer = () => {
   const onCheck = async () => {
     try {
       await dispatch(check());
-      console.log(user.username);
     } catch (e) {
       console.error(e);
-      console.log('로그인 X');
     }
   };
   return (

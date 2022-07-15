@@ -85,7 +85,6 @@ export const editRoutine = async (ctx: DefaultContext) => {
 
   const result = inputSchema.validate(ctx.request.body);
   if (result.error) {
-    console.log(result.error.message);
     ctx.status = 400;
     ctx.body = result.error;
     return;

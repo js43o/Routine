@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from '@emotion/styled';
+import { useInView } from 'react-intersection-observer';
 import { addExercise } from 'modules/user';
 import { Exercise, ExerciseItem } from 'types';
 import Button from 'components/common/Button';
 import SubmitButtons from 'components/common/SubmitButtons';
 import ErrorMessage from 'components/common/ErrorMessage';
 import useAddExercise from 'hooks/useAddExercise';
-import exerciseJSON from '../../data/exercise.json';
+import { getExercises } from 'lib/api';
 
 const AddExerciseWrapper = styled.div<{ visible: boolean }>`
   display: flex;
@@ -125,7 +126,7 @@ const AddExerciseModal = ({
   offset,
   onCloseModal,
 }: AddExerciseProps) => {
-  const exercise: Exercise[] = exerciseJSON;
+  const [message, setMessage] = useState('');
   const dispatch = useDispatch();
   const {
     addState,
@@ -134,7 +135,10 @@ const AddExerciseModal = ({
     onChangeInput,
     checkInputs,
   } = useAddExercise();
-  const [message, setMessage] = useState('');
+  const [ref, inView] = useInView();
+  const [exercises, setExercises] = useState<Exercise[]>([]);
+  const page = useRef(1);
+  const maxPage = useRef<number | null>(null);
 
   const onAddExercise = () => {
     if (!routineId || day === null) return;
@@ -157,6 +161,29 @@ const AddExerciseModal = ({
     setMessage('');
     onCloseModal();
   };
+
+  const onLoadExercise = async () => {
+    if (!inView || (maxPage.current && maxPage.current < page.current)) return;
+    try {
+      const response = await getExercises(page.current, addState.category);
+      setExercises([...exercises, ...response.data]);
+      maxPage.current = +response.headers['last-page'];
+      page.current += 1;
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    onLoadExercise();
+  }, [inView, exercises]);
+
+  useEffect(() => {
+    setExercises([]);
+    page.current = 1;
+    maxPage.current = null;
+    addState.selected = null;
+  }, [addState.category]);
 
   return (
     <AddExerciseWrapper visible={visible}>
@@ -189,29 +216,21 @@ const AddExerciseModal = ({
           </CategoryItemBlock>
         </CategoryListBlock>
         <ExerciseListBlock>
-          {exercise
-            .filter((exer) =>
-              addState.category === 'all'
-                ? true
-                : exer.category.includes(addState.category),
-            )
-            .map(
-              (exer) => (
-                <ExerciseItemBlock
-                  onClick={() => onSelectExercise(exer)}
-                  isSelected={addState.selected === exer ? 1 : 0}
-                  key={exer.name}
-                >
-                  <b>{exer.name}</b>
-                  <div>
-                    {exer.part.map((item) => (
-                      <span>#{item} </span>
-                    ))}
-                  </div>
-                </ExerciseItemBlock>
-              ),
-              [addState.category, addState.selected],
-            )}
+          {exercises.map((exer) => (
+            <ExerciseItemBlock
+              onClick={() => onSelectExercise(exer)}
+              isSelected={addState.selected === exer ? 1 : 0}
+              key={exer.name}
+            >
+              <b>{exer.name}</b>
+              <div>
+                {exer.part.map((item) => (
+                  <span>#{item} </span>
+                ))}
+              </div>
+            </ExerciseItemBlock>
+          ))}
+          <div ref={ref} />
         </ExerciseListBlock>
         <FooterBlock>
           <ConfirmBlock>

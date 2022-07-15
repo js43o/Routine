@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { IUserDocument, IUserModel } from './types';
 
-const ExerciseSchema = new Schema({
+const ExerciseItemSchema = new Schema({
   exercise: String,
   weight: Number,
   numberOfTimes: Number,
@@ -14,12 +14,12 @@ const RoutineSchema = new Schema({
   routineId: String,
   title: String,
   lastModified: Number,
-  weekRoutine: [[ExerciseSchema]],
+  weekRoutine: [[ExerciseItemSchema]],
 });
 
 const CompleteSchema = new Schema({
   date: String,
-  list: [ExerciseSchema],
+  list: [ExerciseItemSchema],
   memo: String,
 });
 
