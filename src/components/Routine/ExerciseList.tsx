@@ -94,7 +94,7 @@ type ExerciseListProps = {
   dayIdx: number;
   editing: boolean;
   onOpenModal: (day: number) => void;
-  onError: () => void;
+  onError: (error: string) => void;
 };
 
 const ExerciseList = ({
@@ -111,7 +111,7 @@ const ExerciseList = ({
 
   const onAddExercise = () => {
     if (dayRoutine.length >= 20) {
-      onError();
+      onError('추가 가능한 최대 운동 종목 수는 20개입니다.');
       return;
     }
     onOpenModal(dayIdx);

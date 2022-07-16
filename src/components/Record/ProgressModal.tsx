@@ -5,7 +5,7 @@ import { addProgress, removeProgress } from 'modules/user';
 import { ProgressItem } from 'types';
 import { userSelector } from 'modules/hooks';
 import { getDatestr } from 'lib/methods';
-import ErrorMessage from 'components/common/ErrorMessage';
+import useErrorMessage from 'hooks/useErrorMessage';
 import SubmitButtons from 'components/common/SubmitButtons';
 
 const ProgressWrapper = styled.div<{ visible: boolean }>`
@@ -86,22 +86,41 @@ const ProgressItemBlock = styled.div`
 
 const FooterBlock = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem;
+  flex-direction: column;
+  place-items: center;
+  .error {
+    justify-self: end;
+  }
 `;
 
 const ConfirmBlock = styled.div`
   display: flex;
+  justify-content: center;
+  align-items: center;
   gap: 0.5rem;
-  div {
-    display: grid;
+  padding: 0.5rem;
+  .weight,
+  .muscleMass,
+  .fatMass {
+    display: flex;
+    flex-direction: column;
     place-items: center;
     input {
-      font-size: 2rem;
-      width: 5rem;
+      font-size: 1.5rem;
+      width: 3.5rem;
+      @media (min-width: 430px) {
+        font-size: 2rem;
+        width: 4rem;
+      }
+    }
+  }
+  .buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    @media (min-width: 430px) {
+      flex-direction: row;
+      font-size: 1.25rem;
     }
   }
 `;
@@ -126,7 +145,7 @@ const ProgressModal = ({
   });
   const { user } = useSelector(userSelector);
   const dispatch = useDispatch();
-  const [message, setMessage] = useState('');
+  const { onError, ErrorMessage } = useErrorMessage();
 
   const onChange = (
     type: 'weight' | 'muscleMass' | 'fatMass',
@@ -138,14 +157,14 @@ const ProgressModal = ({
 
   const onSubmit = () => {
     if (!input.weight || !input.muscleMass || !input.fatMass) {
-      setMessage('입력값을 확인해주세요.');
+      onError('입력값을 확인해주세요.');
       return;
     }
     if (
       data[0].data.length > 0 &&
       data[0].data[data[0].data.length - 1].x === getDatestr(new Date())
     ) {
-      setMessage('이미 오늘 기록을 추가했습니다.');
+      onError('이미 오늘 기록을 추가했습니다.');
       return;
     }
 
@@ -165,19 +184,19 @@ const ProgressModal = ({
       muscleMass: 0,
       fatMass: 0,
     });
-    setMessage('');
+    onError('');
   };
 
   const onClose = () => {
     onCloseModal();
-    setMessage('');
+    onError('');
   };
 
   const onRemove = (date: string) => {
     // eslint-disable-next-line no-alert
     if (!window.confirm('정말 삭제하시겠습니까?')) return;
     dispatch(removeProgress({ username: user.username, date }));
-    setMessage('');
+    onError('');
   };
 
   return (
@@ -195,7 +214,7 @@ const ProgressModal = ({
               className="button"
               onClick={() => onRemove(data[0].data[i].x)}
             >
-              <b>{data[0].data[i].x}</b>
+              <b>{data[0].data[i].x.slice(2)}</b>
               <div>{data[0].data[i].y}kg</div>
               <div>{data[1].data[i].y}kg</div>
               <div>{data[2].data[i].y}kg</div>
@@ -238,10 +257,10 @@ const ProgressModal = ({
               />
               kg
             </div>
+            <SubmitButtons onSubmit={onSubmit} onClose={onClose} />
           </ConfirmBlock>
-          <SubmitButtons onSubmit={onSubmit} onClose={onClose} />
         </FooterBlock>
-        <ErrorMessage message={message} />
+        <ErrorMessage />
       </ProgressBlock>
     </ProgressWrapper>
   );

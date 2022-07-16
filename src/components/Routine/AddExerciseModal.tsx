@@ -6,7 +6,7 @@ import { addExercise } from 'modules/user';
 import { Exercise, ExerciseItem } from 'types';
 import Button from 'components/common/Button';
 import SubmitButtons from 'components/common/SubmitButtons';
-import ErrorMessage from 'components/common/ErrorMessage';
+import useErrorMessage from 'hooks/useErrorMessage';
 import useAddExercise from 'hooks/useAddExercise';
 import { getExercises } from 'lib/api';
 
@@ -91,22 +91,41 @@ const ExerciseItemBlock = styled.li<{ isSelected: number }>`
 
 const FooterBlock = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem;
+  flex-direction: column;
+  place-items: center;
+  .error {
+    justify-self: end;
+  }
 `;
 
 const ConfirmBlock = styled.div`
   display: flex;
+  justify-content: center;
+  align-items: center;
   gap: 0.5rem;
-  div {
-    display: grid;
+  padding: 0.5rem;
+  .weight,
+  .numOfTimes,
+  .numOfSets {
+    display: flex;
+    flex-direction: column;
     place-items: center;
     input {
-      font-size: 2rem;
-      width: 5rem;
+      font-size: 1.5rem;
+      width: 3rem;
+      @media (min-width: 430px) {
+        font-size: 2rem;
+        width: 4rem;
+      }
+    }
+  }
+  .buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    @media (min-width: 430px) {
+      flex-direction: row;
+      font-size: 1.25rem;
     }
   }
 `;
@@ -126,7 +145,6 @@ const AddExerciseModal = ({
   offset,
   onCloseModal,
 }: AddExerciseProps) => {
-  const [message, setMessage] = useState('');
   const dispatch = useDispatch();
   const {
     addState,
@@ -135,6 +153,7 @@ const AddExerciseModal = ({
     onChangeInput,
     checkInputs,
   } = useAddExercise();
+  const { onError, ErrorMessage } = useErrorMessage();
   const [ref, inView] = useInView();
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const page = useRef(1);
@@ -142,11 +161,13 @@ const AddExerciseModal = ({
 
   const onAddExercise = () => {
     if (!routineId || day === null) return;
+
     const error = checkInputs();
     if (error) {
-      setMessage(error);
+      onError(error);
       return;
     }
+
     const exercise: ExerciseItem = {
       exercise: (addState.selected as Exercise).name,
       weight: addState.inputs.weight,
@@ -158,7 +179,7 @@ const AddExerciseModal = ({
   };
 
   const onClose = () => {
-    setMessage('');
+    onError('');
     onCloseModal();
   };
 
@@ -267,9 +288,9 @@ const AddExerciseModal = ({
               />
               세트
             </div>
+            <SubmitButtons onSubmit={onAddExercise} onClose={onClose} />
           </ConfirmBlock>
-          <SubmitButtons onSubmit={onAddExercise} onClose={onClose} />
-          <ErrorMessage message={message} />
+          <ErrorMessage />
         </FooterBlock>
       </AddExerciseBlock>
     </AddExerciseWrapper>

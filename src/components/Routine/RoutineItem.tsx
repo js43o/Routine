@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import {
@@ -10,7 +10,7 @@ import {
 import { userSelector } from 'modules/hooks';
 import { Routine } from 'types';
 import Button from 'components/common/Button';
-import ErrorMessage from 'components/common/ErrorMessage';
+import useErrorMessage from 'hooks/useErrorMessage';
 import { dayidxToDaystr } from 'lib/methods';
 import { BsTriangleFill, BsStar, BsStarFill } from 'react-icons/bs';
 import { MdCheck } from 'react-icons/md';
@@ -130,7 +130,7 @@ const RoutineItem = ({
 }: RoutineItemProps) => {
   const { user } = useSelector(userSelector);
   const dispatch = useDispatch();
-  const [error, setError] = useState('');
+  const { onError, ErrorMessage } = useErrorMessage();
 
   const onSubmit = (routine: Routine) => {
     onSetEditing();
@@ -144,12 +144,6 @@ const RoutineItem = ({
     dispatch(
       removeRoutine({ username: user.username, routineId: routine.routineId }),
     );
-  };
-
-  const onError = () => {
-    if (error) return;
-    setError('일일 최대 운동 개수는 20개입니다.');
-    setTimeout(() => setError(''), 3000);
   };
 
   useEffect(() => {
@@ -249,7 +243,7 @@ const RoutineItem = ({
           </RoutineDetailItem>
         ))}
       </RoutineDetailBlock>
-      <ErrorMessage message={error} />
+      <ErrorMessage />
     </RoutineItemBlock>
   );
 };

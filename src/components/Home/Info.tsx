@@ -7,7 +7,7 @@ import { FaPencilAlt } from 'react-icons/fa';
 import { MdCheck } from 'react-icons/md';
 import Button from 'components/common/Button';
 import { getDatestr } from 'lib/methods';
-import ErrorMessage from 'components/common/ErrorMessage';
+import useErrorMessage from 'hooks/useErrorMessage';
 
 const InfoBlock = styled.div<{ editing: boolean }>`
   display: flex;
@@ -77,7 +77,6 @@ type InfoBlockProps = {
 
 const Info = ({ user }: InfoBlockProps) => {
   const dispatch = useDispatch();
-  const [message, setMessage] = useState('');
   const [editing, setEditing] = useState(false);
   const [inputState, inputDispatch] = useReducer(reducer, {
     name: user.name,
@@ -85,10 +84,13 @@ const Info = ({ user }: InfoBlockProps) => {
     birth: user.birth,
     height: `${user.height}`,
   });
+  const { onError, ErrorMessage } = useErrorMessage();
+
   const onToggleEditing = () => {
     setEditing(!editing);
-    setMessage('');
+    onError('');
   };
+
   const onChange = (type: string, e: React.ChangeEvent<HTMLInputElement>) => {
     if (type === 'HEIGHT' && e.target.value.length > 3) return;
     inputDispatch({
@@ -96,9 +98,11 @@ const Info = ({ user }: InfoBlockProps) => {
       payload: e.target.value,
     });
   };
+
   const onToggleRadio = (e: React.ChangeEvent<HTMLInputElement>) => {
     inputDispatch({ type: 'GENDER', payload: e.target.value });
   };
+
   const onSubmit = async () => {
     if (
       !inputState.name ||
@@ -106,7 +110,7 @@ const Info = ({ user }: InfoBlockProps) => {
       inputState.birth.length < 8 ||
       +inputState.height < 100
     ) {
-      setMessage('입력값을 확인해주세요');
+      onError('입력값을 확인해주세요');
       return;
     }
     dispatch(
@@ -119,7 +123,7 @@ const Info = ({ user }: InfoBlockProps) => {
       }),
     );
     onToggleEditing();
-    setMessage('');
+    onError('');
   };
 
   useEffect(() => {
@@ -208,7 +212,7 @@ const Info = ({ user }: InfoBlockProps) => {
           <div>키: {user.height}cm</div>
         </>
       )}
-      <ErrorMessage message={message} />
+      <ErrorMessage />
     </InfoBlock>
   );
 };

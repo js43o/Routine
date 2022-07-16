@@ -3,9 +3,6 @@ import React from 'react';
 import Button from './Button';
 
 const ButtonsBlock = styled.div`
-  display: flex;
-  gap: 0.5rem;
-  font-size: 1.25rem;
   .submit {
     padding: 0.25rem 1rem;
     color: ${({ theme }) => theme.letter_primary};
@@ -25,7 +22,7 @@ type SubmitButtonsType = {
 
 export const SubmitButtons = ({ onSubmit, onClose }: SubmitButtonsType) => {
   return (
-    <ButtonsBlock>
+    <ButtonsBlock className="buttons">
       <Button className="submit" onClick={onSubmit}>
         추가
       </Button>

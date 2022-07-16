@@ -5,7 +5,7 @@ import { initialPerform, toggleCheck, checkAll } from 'modules/perform';
 import { addComplete } from 'modules/user';
 import { userSelector, performSelector } from 'modules/hooks';
 import { getDatestr } from 'lib/methods';
-import ErrorMessage from 'components/common/ErrorMessage';
+import useErrorMessage from 'hooks/useErrorMessage';
 import {
   MdRadioButtonUnchecked,
   MdOutlineCheckCircleOutline,
@@ -100,7 +100,7 @@ const PerformRoutine = ({
   const { user } = useSelector(userSelector);
   const performs = useSelector(performSelector);
   const dispatch = useDispatch();
-  const [message, setMessage] = useState('');
+  const { onError, ErrorMessage } = useErrorMessage();
   const [memo, setMemo] = useState('');
 
   const currentRoutine = user.routines.find(
@@ -146,7 +146,7 @@ const PerformRoutine = ({
 
   const onComplete = () => {
     if (!isCompleted()) {
-      setMessage('남은 운동이 있습니다.');
+      onError('남은 운동이 있습니다.');
       return;
     }
     dispatch(
@@ -199,7 +199,7 @@ const PerformRoutine = ({
         value={memo}
       ></MemoBlock>
       <CompleteButton onClick={onComplete}>운동완료</CompleteButton>
-      <ErrorMessage message={message} />
+      <ErrorMessage />
     </PerformRoutineBlock>
   );
 };

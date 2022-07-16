@@ -4,7 +4,7 @@ import { useNavigate, NavLink } from 'react-router-dom';
 import Title from 'templates/Title';
 import { useDispatch, useSelector } from 'react-redux';
 import { userSelector } from 'modules/hooks';
-import ErrorMessage from 'components/common/ErrorMessage';
+import useErrorMessage from 'hooks/useErrorMessage';
 import { login, register } from 'modules/user';
 
 const AuthWrapper = styled.div`
@@ -50,6 +50,7 @@ type Authprops = {
 const Auth = ({ type }: Authprops) => {
   const { user, error } = useSelector(userSelector);
   const dispatch = useDispatch();
+  const { onError, ErrorMessage } = useErrorMessage();
   const navigate = useNavigate();
 
   const [username, setUsername] = useState('');
@@ -74,6 +75,12 @@ const Auth = ({ type }: Authprops) => {
       navigate('/');
     }
   }, [user]);
+
+  useEffect(() => {
+    if (error) {
+      onError('로그인에 실패하였습니다.');
+    }
+  }, [error]);
 
   return (
     <AuthWrapper>
@@ -105,7 +112,7 @@ const Auth = ({ type }: Authprops) => {
           {type === 'register' ? '로그인 ▶' : '계정 등록 ▶'}
         </NavLink>
       </AuthBlock>
-      <ErrorMessage message={error ? '로그인에 실패하였습니다.' : ''} />
+      <ErrorMessage />
     </AuthWrapper>
   );
 };
