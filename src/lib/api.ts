@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { Routine, CompleteItem, Exercise } from 'types';
-import qs from 'qs';
 
 const client = axios.create();
 client.defaults.baseURL = '/api';
@@ -52,12 +51,8 @@ export const addProgress = (
 export const removeProgress = (username: string, progressDate: string) =>
   client.post('/progress/remove', { username, progressDate });
 
-export const getExercises = (page: number, category?: string) => {
-  const queryString = qs.stringify({
-    page,
-    category,
-  });
-  return client.get<Exercise[]>(`/exercise?${queryString}`);
+export const getExercises = () => {
+  return client.get<Exercise[]>('/exercise');
 };
 
 export default client;

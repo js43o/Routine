@@ -40,17 +40,9 @@ const Footer = () => {
     }
   };
 
-  const onCheck = async () => {
-    try {
-      await dispatch(check());
-    } catch (e) {
-      console.error(e);
-    }
-  };
   return (
     <FooterBlock>
       <TextButton onClick={onLogout}>로그아웃</TextButton>
-      <TextButton onClick={onCheck}>로그인 체크</TextButton>
     </FooterBlock>
   );
 };

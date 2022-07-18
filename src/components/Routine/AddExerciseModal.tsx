@@ -1,7 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from '@emotion/styled';
-import { useInView } from 'react-intersection-observer';
 import { addExercise } from 'modules/user';
 import { Exercise, ExerciseItem } from 'types';
 import Button from 'components/common/Button';
@@ -9,6 +8,7 @@ import SubmitButtons from 'components/common/SubmitButtons';
 import useErrorMessage from 'hooks/useErrorMessage';
 import useAddExercise from 'hooks/useAddExercise';
 import { getExercises } from 'lib/api';
+import LoadingIndicator from 'components/common/LoadingIndicator';
 
 const AddExerciseWrapper = styled.div<{ visible: boolean }>`
   display: flex;
@@ -28,13 +28,13 @@ const AddExerciseWrapper = styled.div<{ visible: boolean }>`
 const AddExerciseBlock = styled.div<{ visible: boolean; offset: number }>`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  z-index: 100;
+  justify-content: space-between;
+  position: fixed;
   top: ${({ visible }) => (visible ? '5%' : '100%')};
   left: 5%;
-  position: fixed;
-  max-width: 430px;
+  z-index: 100;
   width: 90%;
+  max-width: 430px;
   height: 90%;
   border: 1px solid ${({ theme }) => theme.border_main};
   border-radius: 0.5rem;
@@ -42,26 +42,39 @@ const AddExerciseBlock = styled.div<{ visible: boolean; offset: number }>`
   background: ${({ theme }) => theme.background_main};
   overflow: hidden;
   transition: top 0.5s;
-  h2 {
-    align-self: center;
+  input {
+    width: 100%;
+    font-size: 1.125rem;
   }
   @media (min-width: 540px) {
     left: ${({ offset }) => offset / 2 - 215}px;
   }
 `;
 
+const HeaderBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+  place-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-bottom: 1px solid ${({ theme }) => theme.border_main};
+`;
+
 const CategoryListBlock = styled.ul`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 0.5rem;
-  padding: 1rem;
   width: 100%;
 `;
 
 const CategoryItemBlock = styled(Button)<{ checked: number }>`
-  padding: 0.25rem;
+  padding: 0.125rem;
   border: 1px solid
-    ${({ checked, theme }) => (checked ? theme.primary : theme.border_main)};
+    ${({ checked, theme }) => (checked ? 'transparent' : theme.border_main)};
+  background: ${({ checked, theme }) =>
+    checked ? theme.primary : theme.background_main};
+  color: ${({ checked, theme }) =>
+    checked ? theme.letter_primary : theme.letter_main};
 `;
 
 const ExerciseListBlock = styled.ul`
@@ -93,6 +106,7 @@ const FooterBlock = styled.div`
   display: flex;
   flex-direction: column;
   place-items: center;
+  border-top: 1px solid ${({ theme }) => theme.border_main};
   .error {
     justify-self: end;
   }
@@ -112,7 +126,7 @@ const ConfirmBlock = styled.div`
     place-items: center;
     input {
       font-size: 1.5rem;
-      width: 3rem;
+      width: 3.5rem;
       @media (min-width: 430px) {
         font-size: 2rem;
         width: 4rem;
@@ -146,6 +160,9 @@ const AddExerciseModal = ({
   onCloseModal,
 }: AddExerciseProps) => {
   const dispatch = useDispatch();
+  const [exercises, setExercises] = useState<Exercise[]>([]);
+  const [name, setName] = useState('');
+
   const {
     addState,
     onSetCategory,
@@ -154,10 +171,6 @@ const AddExerciseModal = ({
     checkInputs,
   } = useAddExercise();
   const { onError, ErrorMessage } = useErrorMessage();
-  const [ref, inView] = useInView();
-  const [exercises, setExercises] = useState<Exercise[]>([]);
-  const page = useRef(1);
-  const maxPage = useRef<number | null>(null);
 
   const onAddExercise = () => {
     if (!routineId || day === null) return;
@@ -183,76 +196,90 @@ const AddExerciseModal = ({
     onCloseModal();
   };
 
-  const onLoadExercise = async () => {
-    if (!inView || (maxPage.current && maxPage.current < page.current)) return;
-    try {
-      const response = await getExercises(page.current, addState.category);
-      setExercises([...exercises, ...response.data]);
-      maxPage.current = +response.headers['last-page'];
-      page.current += 1;
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setName(e.target.value);
 
   useEffect(() => {
-    onLoadExercise();
-  }, [inView, exercises]);
-
-  useEffect(() => {
-    setExercises([]);
-    page.current = 1;
-    maxPage.current = null;
-    addState.selected = null;
-  }, [addState.category]);
+    const loadExercise = async () => {
+      try {
+        const response = await getExercises();
+        setExercises(response.data);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    loadExercise();
+  }, []);
 
   return (
     <AddExerciseWrapper visible={visible}>
       <AddExerciseBlock visible={visible} offset={offset}>
-        <h2>운동 목록</h2>
-        <CategoryListBlock>
-          <CategoryItemBlock
-            checked={addState.category === 'all' ? 1 : 0}
-            onClick={() => onSetCategory('all')}
-          >
-            전체
-          </CategoryItemBlock>
-          <CategoryItemBlock
-            checked={addState.category === 'upper' ? 1 : 0}
-            onClick={() => onSetCategory('upper')}
-          >
-            상체
-          </CategoryItemBlock>
-          <CategoryItemBlock
-            checked={addState.category === 'lower' ? 1 : 0}
-            onClick={() => onSetCategory('lower')}
-          >
-            하체
-          </CategoryItemBlock>
-          <CategoryItemBlock
-            checked={addState.category === 'core' ? 1 : 0}
-            onClick={() => onSetCategory('core')}
-          >
-            코어
-          </CategoryItemBlock>
-        </CategoryListBlock>
-        <ExerciseListBlock>
-          {exercises.map((exer) => (
-            <ExerciseItemBlock
-              onClick={() => onSelectExercise(exer)}
-              isSelected={addState.selected === exer ? 1 : 0}
-              key={exer.name}
+        <HeaderBlock>
+          <h2>운동 목록</h2>
+          <CategoryListBlock>
+            <CategoryItemBlock
+              checked={addState.category === 'all' ? 1 : 0}
+              onClick={() => onSetCategory('all')}
             >
-              <b>{exer.name}</b>
-              <div>
-                {exer.part.map((item) => (
-                  <span>#{item} </span>
-                ))}
-              </div>
-            </ExerciseItemBlock>
-          ))}
-          <div ref={ref} />
-        </ExerciseListBlock>
+              전체
+            </CategoryItemBlock>
+            <CategoryItemBlock
+              checked={addState.category === 'upper' ? 1 : 0}
+              onClick={() => onSetCategory('upper')}
+            >
+              상체
+            </CategoryItemBlock>
+            <CategoryItemBlock
+              checked={addState.category === 'lower' ? 1 : 0}
+              onClick={() => onSetCategory('lower')}
+            >
+              하체
+            </CategoryItemBlock>
+            <CategoryItemBlock
+              checked={addState.category === 'core' ? 1 : 0}
+              onClick={() => onSetCategory('core')}
+            >
+              코어
+            </CategoryItemBlock>
+          </CategoryListBlock>
+          <input
+            type="text"
+            onChange={onChangeName}
+            value={name}
+            placeholder="이름으로 찾기..."
+          />
+        </HeaderBlock>
+        {exercises.length > 0 ? (
+          <ExerciseListBlock>
+            {exercises
+              .filter((exer) =>
+                addState.category === 'all'
+                  ? 1
+                  : exer.category.includes(addState.category),
+              )
+              .filter((exer) =>
+                exer.name
+                  .replaceAll(' ', '')
+                  .includes(name.replaceAll(' ', '')),
+              )
+              .map((exer) => (
+                <ExerciseItemBlock
+                  onClick={() => onSelectExercise(exer)}
+                  isSelected={addState.selected === exer ? 1 : 0}
+                  key={exer.name}
+                >
+                  <b>{exer.name}</b>
+                  <div>
+                    {exer.part.map((item) => (
+                      <span key={item}>#{item} </span>
+                    ))}
+                  </div>
+                </ExerciseItemBlock>
+              ))}
+          </ExerciseListBlock>
+        ) : (
+          <LoadingIndicator />
+        )}
         <FooterBlock>
           <ConfirmBlock>
             <div className="weight">
