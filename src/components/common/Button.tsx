@@ -6,10 +6,13 @@ type ButtonProps = {
   [x: string]: unknown;
 };
 
-const ButtonBlock = styled.div`
-  display: grid;
-  place-items: center;
+const ButtonBlock = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-radius: 0.5rem;
+  background: none;
+  font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
   @media (hover: hover) {

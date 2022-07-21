@@ -58,7 +58,7 @@ const ExerciseItemBlock = styled.li<{ editing?: number }>`
   }
 `;
 
-const AddExerciseButton = styled(BsPlusCircleDotted)<{ editing: number }>`
+const AddExerciseButton = styled(Button)<{ editing: number }>`
   display: flex;
   flex-shrink: 0;
   place-items: center;
@@ -68,24 +68,21 @@ const AddExerciseButton = styled(BsPlusCircleDotted)<{ editing: number }>`
   visibility: ${({ editing }) => (editing ? '' : 'hidden')};
 `;
 
-const PrevScrollButton = styled(Button)<{ isEnd: boolean }>`
+const ScrollButton = styled(Button)<{ isEnd: boolean }>`
   position: absolute;
   z-index: 50;
-  left: 0;
   height: 100%;
   color: ${({ theme }) => theme.letter_primary};
   background: rgba(0, 0, 0, 0.2);
   font-size: 1.75rem;
 `;
 
-const NextScrollButton = styled(Button)<{ isEnd: boolean }>`
-  z-index: 50;
-  position: absolute;
+const PrevScrollButton = styled(ScrollButton)`
+  left: 0;
+`;
+
+const NextScrollButton = styled(ScrollButton)`
   right: 0;
-  height: 100%;
-  color: ${({ theme }) => theme.letter_primary};
-  background: rgba(0, 0, 0, 0.2);
-  font-size: 1.75rem;
 `;
 
 type ExerciseListProps = {
@@ -166,11 +163,12 @@ const ExerciseList = ({
             </small>
           </ExerciseItemBlock>
         ))}
-        <Button
+        <AddExerciseButton
           onClick={dayIdx !== -1 && editing ? () => onAddExercise() : null}
+          editing={editing ? 1 : 0}
         >
-          <AddExerciseButton editing={editing ? 1 : 0} />
-        </Button>
+          <BsPlusCircleDotted />
+        </AddExerciseButton>
       </ExerciseListBlock>
       <NextScrollButton
         onClick={() => moveTo('next')}

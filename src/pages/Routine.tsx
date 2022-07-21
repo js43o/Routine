@@ -11,10 +11,11 @@ import Button from 'components/common/Button';
 import { BsPlusCircle } from 'react-icons/bs';
 import { v4 as uuidv4 } from 'uuid';
 
-const AddRoutineButton = styled.div`
+const AddRoutineButton = styled(Button)`
   display: flex;
   flex-direction: column;
   flex-grow: 0;
+  width: 100%;
   place-items: center;
   padding: 0.5rem;
   margin-top: 1rem;
@@ -91,17 +92,15 @@ const RoutinePage = () => {
           />
         ))}
       </RoutineListBlock>
-      <AddRoutineButton>
-        <Button
-          onClick={() => {
-            const routineId = uuidv4();
-            dispatch(addRoutine({ username: user.username, routineId }));
-            onSetEditing(routineId);
-          }}
-        >
-          <BsPlusCircle />
-          <b>루틴 추가</b>
-        </Button>
+      <AddRoutineButton
+        onClick={() => {
+          const routineId = uuidv4();
+          dispatch(addRoutine({ username: user.username, routineId }));
+          onSetEditing(routineId);
+        }}
+      >
+        <BsPlusCircle />
+        <b>루틴 추가</b>
       </AddRoutineButton>
     </Template>
   );

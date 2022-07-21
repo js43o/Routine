@@ -35,7 +35,8 @@ const ProgressSchema = new Schema({
 
 const UserSchema: Schema<IUserDocument> = new Schema({
   username: { type: String, required: true },
-  hashedPassword: { type: String, required: true },
+  hashedPassword: { type: String, default: '' },
+  snsProvider: { type: String, default: '' },
   name: { type: String, default: '' },
   gender: { type: String, default: '' },
   birth: { type: String, default: '' },

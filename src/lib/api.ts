@@ -10,6 +10,9 @@ export const register = (username: string, password: string) =>
 export const login = (username: string, password: string) =>
   client.post('/auth/login', { username, password });
 
+export const kakaoLogin = (code: string) =>
+  client.post('/auth/kakao', { code });
+
 export const check = () => client.get('/auth/check');
 
 export const logout = () => client.post('/auth/logout');

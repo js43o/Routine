@@ -12,8 +12,7 @@ import { Routine } from 'types';
 import Button from 'components/common/Button';
 import useErrorMessage from 'hooks/useErrorMessage';
 import { dayidxToDaystr } from 'lib/methods';
-import { BsTriangleFill, BsStar, BsStarFill } from 'react-icons/bs';
-import { MdCheck } from 'react-icons/md';
+import { BsTriangleFill, BsCheckLg, BsStar, BsStarFill } from 'react-icons/bs';
 import { FaPencilAlt, FaTrashAlt } from 'react-icons/fa';
 import RoutineExerciseList from './ExerciseList';
 
@@ -33,8 +32,10 @@ const RoutineItemBlock = styled.li<{ visible: boolean; editing?: boolean }>`
     .buttons {
       display: flex;
       place-items: center;
-      gap: 0.75rem;
-      font-size: 1.5rem;
+      gap: 0.5rem;
+      button {
+        font-size: 1.5rem;
+      }
     }
   }
 `;
@@ -95,20 +96,20 @@ const RoutineDetailItem = styled.li`
   }
 `;
 
-const RemoveRoutineButton = styled(FaTrashAlt)`
+const RemoveRoutineButton = styled(Button)`
   color: ${({ theme }) => theme.red};
 `;
 
-const SetCurrentRoutineButton = styled(BsStar)``;
+const SetCurrentRoutineButton = styled(Button)``;
 
-const UnsetCurrentRoutineButton = styled(BsStarFill)`
+const UnsetCurrentRoutineButton = styled(Button)`
   color: ${({ theme }) => theme.yellow};
 `;
 
-const CheckButton = styled(MdCheck)`
-  margin: -0.25rem;
+const EditButton = styled(Button)``;
+
+const CheckButton = styled(Button)`
   color: ${({ theme }) => theme.primary};
-  font-size: 2rem;
 `;
 
 type RoutineItemProps = {
@@ -188,42 +189,44 @@ const RoutineItem = ({
         </TitleBlock>
         <div className="buttons">
           {user.currentRoutineId === routine.routineId ? (
-            <Button>
-              <UnsetCurrentRoutineButton
-                onClick={() =>
-                  dispatch(
-                    setCurrentRoutine({
-                      username: user.username,
-                      routineId: '',
-                    }),
-                  )
-                }
-              />
-            </Button>
+            <UnsetCurrentRoutineButton
+              onClick={() =>
+                dispatch(
+                  setCurrentRoutine({
+                    username: user.username,
+                    routineId: '',
+                  }),
+                )
+              }
+            >
+              <BsStarFill />
+            </UnsetCurrentRoutineButton>
           ) : (
-            <Button>
-              <SetCurrentRoutineButton
-                onClick={() =>
-                  dispatch(
-                    setCurrentRoutine({
-                      username: user.username,
-                      routineId: routine.routineId,
-                    }),
-                  )
-                }
-              />
-            </Button>
+            <SetCurrentRoutineButton
+              onClick={() =>
+                dispatch(
+                  setCurrentRoutine({
+                    username: user.username,
+                    routineId: routine.routineId,
+                  }),
+                )
+              }
+            >
+              <BsStar />
+            </SetCurrentRoutineButton>
           )}
-          <Button>
-            {isEditing ? (
-              <CheckButton onClick={() => onSubmit(routine)} />
-            ) : (
-              <FaPencilAlt onClick={() => onSetEditing(routine.routineId)} />
-            )}
-          </Button>
-          <Button>
-            <RemoveRoutineButton onClick={onRemoveRoutine} />
-          </Button>
+          {isEditing ? (
+            <CheckButton onClick={() => onSubmit(routine)}>
+              <BsCheckLg />
+            </CheckButton>
+          ) : (
+            <EditButton onClick={() => onSetEditing(routine.routineId)}>
+              <FaPencilAlt />
+            </EditButton>
+          )}
+          <RemoveRoutineButton onClick={onRemoveRoutine}>
+            <FaTrashAlt />
+          </RemoveRoutineButton>
         </div>
       </div>
       <RoutineDetailBlock>

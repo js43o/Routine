@@ -65,6 +65,14 @@ export const login = createAsyncThunk(
   },
 );
 
+export const kakaoLogin = createAsyncThunk(
+  'KAKAO_LOGIN',
+  async ({ code }: { code: string }) => {
+    const response = await api.kakaoLogin(code);
+    return response.data;
+  },
+);
+
 export const check = createAsyncThunk('CHECK', async () => {
   const reponse = await api.check();
   return reponse.data;
@@ -286,6 +294,20 @@ export const userSlice = createSlice({
         state.user = action.payload;
       })
       .addCase(login.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error;
+      });
+    builder
+      .addCase(kakaoLogin.pending, (state) => {
+        state.loading = true;
+        state.user = initialUser;
+      })
+      .addCase(kakaoLogin.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.user = action.payload;
+      })
+      .addCase(kakaoLogin.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error;
       });

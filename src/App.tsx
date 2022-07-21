@@ -9,6 +9,7 @@ import HomePage from 'pages/Home';
 import RoutinePage from 'pages/Routine';
 import RecordPage from 'pages/Record';
 import AuthPage from 'pages/Auth';
+import KakaoPage from 'pages/Kakao';
 import { userSelector } from './modules/hooks';
 
 const AppBlock = styled.div`
@@ -47,7 +48,10 @@ function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!user.username) {
+    if (
+      window.location.pathname !== '/fitness-app/auth/kakao/redirect' &&
+      !user.username
+    ) {
       navigate('/login');
     }
   }, [user]);
@@ -62,6 +66,7 @@ function App() {
           <Route path="/record" element={<RecordPage />} />
           <Route path="/register" element={<AuthPage type="register" />} />
           <Route path="/login" element={<AuthPage type="login" />} />
+          <Route path="/auth/kakao/redirect" element={<KakaoPage />} />
         </Routes>
       </ThemeProvider>
     </AppBlock>

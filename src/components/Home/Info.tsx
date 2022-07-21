@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import { setInfo } from 'modules/user';
 import { User } from 'types';
 import { FaPencilAlt } from 'react-icons/fa';
-import { MdCheck } from 'react-icons/md';
+import { BsCheckLg } from 'react-icons/bs';
 import Button from 'components/common/Button';
 import { getDatestr } from 'lib/methods';
 import useErrorMessage from 'hooks/useErrorMessage';
@@ -29,7 +29,7 @@ const InfoBlock = styled.div<{ editing: boolean }>`
   }
 `;
 
-const EditButton = styled.div`
+const EditButton = styled(Button)`
   position: absolute;
   top: 0;
   right: 0;
@@ -38,10 +38,14 @@ const EditButton = styled.div`
   font-size: 1.5rem;
 `;
 
-const CheckButton = styled(MdCheck)`
+const CheckButton = styled(Button)`
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.5rem;
+  margin: 0;
   color: ${({ theme }) => theme.primary};
-  font-size: 2rem;
-  margin: -0.25rem;
+  font-size: 1.5rem;
 `;
 
 type InputState = {
@@ -137,11 +141,9 @@ const Info = ({ user }: InfoBlockProps) => {
     <InfoBlock editing={editing}>
       {editing ? (
         <>
-          <EditButton onClick={onSubmit}>
-            <Button>
-              <CheckButton />
-            </Button>
-          </EditButton>
+          <CheckButton onClick={onSubmit}>
+            <BsCheckLg />
+          </CheckButton>
           <div>
             이름:
             <input
@@ -202,9 +204,7 @@ const Info = ({ user }: InfoBlockProps) => {
       ) : (
         <>
           <EditButton onClick={onToggleEditing}>
-            <Button>
-              <FaPencilAlt />
-            </Button>
+            <FaPencilAlt />
           </EditButton>
           <div>이름: {user.name}</div>
           <div>성별: {user.gender}</div>

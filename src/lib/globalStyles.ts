@@ -28,6 +28,7 @@ export const globalStyles = css`
   button,
   input,
   textarea {
+    font-size: 1rem;
     border: 1px solid transparent;
     border-radius: 0.25rem;
     font-family: 'Noto Sans KR', sans-serif;

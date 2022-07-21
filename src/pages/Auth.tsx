@@ -1,11 +1,12 @@
-import styled from '@emotion/styled';
 import React, { useEffect, useState } from 'react';
-import { useNavigate, NavLink } from 'react-router-dom';
-import Title from 'templates/Title';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, NavLink } from 'react-router-dom';
+import styled from '@emotion/styled';
 import { userSelector } from 'modules/hooks';
+import Title from 'templates/Title';
 import useErrorMessage from 'hooks/useErrorMessage';
 import { login, register } from 'modules/user';
+import Button from 'components/common/Button';
 
 const AuthWrapper = styled.div`
   display: flex;
@@ -26,21 +27,28 @@ const AuthBlock = styled.div`
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    input {
-      font-size: 1rem;
-    }
   }
   .link {
     align-self: end;
   }
 `;
 
-const SubmitButton = styled.button`
+const KakaoLoginButton = styled(Button)`
+  gap: 0.5rem;
   width: 100%;
+  padding: 0.5rem;
+  color: black;
+  background: ${({ theme }) => theme.yellow};
+  img {
+    margin-top: 0.2rem;
+    width: 1rem;
+  }
+`;
+
+const SubmitButton = styled(Button)`
   padding: 0.5rem;
   color: ${({ theme }) => theme.letter_primary};
   background: ${({ theme }) => theme.primary};
-  font-size: 1rem;
 `;
 
 type Authprops = {
@@ -52,6 +60,7 @@ const Auth = ({ type }: Authprops) => {
   const dispatch = useDispatch();
   const { onError, ErrorMessage } = useErrorMessage();
   const navigate = useNavigate();
+  const { REACT_APP_KAKAO_API, REACT_APP_KAKAO_REDIRECT } = process.env;
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -111,6 +120,19 @@ const Auth = ({ type }: Authprops) => {
         >
           {type === 'register' ? '로그인 ▶' : '계정 등록 ▶'}
         </NavLink>
+        {type === 'login' && (
+          <a
+            href={`https://kauth.kakao.com/oauth/authorize?client_id=${REACT_APP_KAKAO_API}&redirect_uri=${REACT_APP_KAKAO_REDIRECT}&response_type=code`}
+          >
+            <KakaoLoginButton>
+              <img
+                src={`${process.env.PUBLIC_URL}/kakao.png`}
+                alt="kakao_logo"
+              ></img>
+              <span>카카오 로그인</span>
+            </KakaoLoginButton>
+          </a>
+        )}
       </AuthBlock>
       <ErrorMessage />
     </AuthWrapper>
