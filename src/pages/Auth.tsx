@@ -7,6 +7,7 @@ import Title from 'templates/Title';
 import useErrorMessage from 'hooks/useErrorMessage';
 import { login, register } from 'modules/user';
 import Button from 'components/common/Button';
+import { validateAuth } from 'lib/methods';
 
 const AuthWrapper = styled.div`
   display: flex;
@@ -15,7 +16,7 @@ const AuthWrapper = styled.div`
   align-self: center;
 `;
 
-const AuthBlock = styled.div`
+const AuthBlock = styled.div<{ type: string }>`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -27,6 +28,7 @@ const AuthBlock = styled.div`
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    width: ${({ type }) => type === 'register' && '20rem'};
   }
   .link {
     align-self: end;
@@ -75,8 +77,15 @@ const Auth = ({ type }: Authprops) => {
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (type === 'register') dispatch(register({ username, password }));
-    else dispatch(login({ username, password }));
+    if (type === 'register') {
+      if (!validateAuth(username, 'id') || !validateAuth(password, 'pw')) {
+        onError('입력값이 조건을 충족하지 않습니다.');
+        return;
+      }
+      dispatch(register({ username, password }));
+    } else {
+      dispatch(login({ username, password }));
+    }
   };
 
   useEffect(() => {
@@ -86,27 +95,37 @@ const Auth = ({ type }: Authprops) => {
   }, [user]);
 
   useEffect(() => {
-    if (error) {
+    if (!error) return;
+
+    if (type === 'login') {
       onError('로그인에 실패하였습니다.');
+    } else {
+      onError('잠시 후 다시 시도해주세요.');
     }
   }, [error]);
 
   return (
     <AuthWrapper>
       <Title />
-      <AuthBlock>
+      <AuthBlock type={type}>
         <form onSubmit={onSubmit}>
           <input
             type="text"
             id="username"
-            placeholder="아이디"
+            placeholder={
+              type === 'login' ? '아이디' : '아이디 (영문/숫자 5-20자)'
+            }
             maxLength={20}
             onChange={(e) => onChange(e, 'username')}
           />
           <input
             type="password"
             id="password"
-            placeholder="패스워드"
+            placeholder={
+              type === 'login'
+                ? '패스워드'
+                : '패스워드 (영문/숫자/특수문자 8-20자)'
+            }
             maxLength={20}
             onChange={(e) => onChange(e, 'password')}
           />

@@ -43,3 +43,9 @@ export const unhideScroll = () => {
   document.body.style.overflow = '';
   document.body.style.paddingRight = '';
 };
+
+export const validateAuth = (str: string, type: 'id' | 'pw') => {
+  const idRegExp = /[A-Za-z\d_-]{5,20}/;
+  const pwRegExp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]){8,20}/;
+  return type === 'id' ? idRegExp.test(str) : pwRegExp.test(str);
+};

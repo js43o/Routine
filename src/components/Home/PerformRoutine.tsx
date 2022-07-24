@@ -10,6 +10,7 @@ import {
   MdRadioButtonUnchecked,
   MdOutlineCheckCircleOutline,
 } from 'react-icons/md';
+import { BsStar } from 'react-icons/bs';
 
 const PerformRoutineBlock = styled.div`
   display: flex;
@@ -18,6 +19,12 @@ const PerformRoutineBlock = styled.div`
   padding: 0.5rem;
   border: 1px solid ${({ theme }) => theme.border_main};
   border-radius: 0.5rem;
+  .empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
 `;
 
 const PerformExerciseBlock = styled.div`
@@ -119,7 +126,16 @@ const PerformRoutine = ({
 
   if (!currentRoutine)
     return (
-      <PerformRoutineBlock>사용 중인 루틴이 없습니다.</PerformRoutineBlock>
+      <PerformRoutineBlock>
+        <div className="empty">
+          <p>
+            사용 중인 루틴이 없습니다.
+            <br />
+            <b>루틴</b> 페이지에서 운동 루틴을 추가한 후<br />
+            <BsStar />를 눌러 사용할 루틴을 지정해주세요.
+          </p>
+        </div>
+      </PerformRoutineBlock>
     );
 
   const day = new Date().getDay();

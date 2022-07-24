@@ -39,7 +39,7 @@ export const darkTheme: Theme = {
     letter_sub: '#aaaaaa',
     letter_primary: '#eeeeee',
     primary: '#8000ff',
-    secondary: '#000cff',
+    secondary: '#8c92ff',
     memo_body: '#171f41',
     red: '#ff5978',
     yellow: '#ffd900',
