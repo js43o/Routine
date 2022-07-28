@@ -19,6 +19,10 @@ const MemoBlock = styled.div`
   padding: 0.5rem;
 `;
 
+const AddProgressBlock = styled(Button)`
+  font-size: 1.5rem;
+`;
+
 const ProgressHeader = styled.div`
   display: flex;
   gap: 0.5rem;
@@ -157,9 +161,9 @@ const RecordPage = () => {
       <hr />
       <ProgressHeader>
         <h1>체성분 변화</h1>
-        <Button onClick={onOpenModal}>
+        <AddProgressBlock onClick={onOpenModal}>
           <FaPencilAlt />
-        </Button>
+        </AddProgressBlock>
       </ProgressHeader>
       <ProgressViewer data={user.progress} />
     </Template>

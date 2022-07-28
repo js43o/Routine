@@ -3,6 +3,7 @@ import {
   createSlice,
   SerializedError,
 } from '@reduxjs/toolkit';
+import { AxiosError } from 'axios';
 import * as api from 'lib/api';
 import {
   CompleteItem,
@@ -15,6 +16,7 @@ import {
 type UserStateType = {
   loading: boolean;
   error: SerializedError | null;
+  authErrorCode: number;
   user: User;
 };
 
@@ -46,22 +48,43 @@ const initialUser: User = {
 const initialState: UserStateType = {
   loading: false,
   error: null,
+  authErrorCode: 0,
   user: initialUser,
 };
 
 export const register = createAsyncThunk(
   'REGISTER',
-  async ({ username, password }: { username: string; password: string }) => {
-    const response = await api.register(username, password);
-    return response.data;
+  async (
+    { username, password }: { username: string; password: string },
+    { rejectWithValue },
+  ) => {
+    try {
+      const response = await api.register(username, password);
+      return response.data;
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        return rejectWithValue(e.response?.status || '');
+      }
+      return e;
+    }
   },
 );
 
 export const login = createAsyncThunk(
   'LOGIN',
-  async ({ username, password }: { username: string; password: string }) => {
-    const response = await api.login(username, password);
-    return response.data;
+  async (
+    { username, password }: { username: string; password: string },
+    { rejectWithValue },
+  ) => {
+    try {
+      const response = await api.login(username, password);
+      return response.data;
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        return rejectWithValue(e.response?.status || '');
+      }
+      return e;
+    }
   },
 );
 
@@ -277,11 +300,13 @@ export const userSlice = createSlice({
       .addCase(register.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
+        state.authErrorCode = 0;
         state.user = action.payload;
       })
       .addCase(register.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error;
+        state.authErrorCode = action.payload as number;
       });
     builder
       .addCase(login.pending, (state) => {
@@ -291,11 +316,13 @@ export const userSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
+        state.authErrorCode = 0;
         state.user = action.payload;
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error;
+        state.authErrorCode = action.payload as number;
       });
     builder
       .addCase(kakaoLogin.pending, (state) => {
@@ -305,6 +332,7 @@ export const userSlice = createSlice({
       .addCase(kakaoLogin.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
+        state.authErrorCode = 0;
         state.user = action.payload;
       })
       .addCase(kakaoLogin.rejected, (state, action) => {

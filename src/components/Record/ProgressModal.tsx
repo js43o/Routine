@@ -34,6 +34,7 @@ const ProgressBlock = styled.div<{ visible: boolean; offset: number }>`
   max-width: 480px;
   width: 90%;
   max-height: 90%;
+  padding: 0.5rem;
   border: 1px solid ${({ theme }) => theme.border_main};
   border-radius: 0.5rem;
   margin: 0 auto;
@@ -52,7 +53,6 @@ const ProgressListBlock = styled.ul`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  padding: 1rem;
   width: 100%;
 `;
 
@@ -63,9 +63,11 @@ const ProgressItemBlock = styled.div`
   border: 1px solid ${({ theme }) => theme.border_main};
   border-radius: 0.25rem;
   text-align: center;
-  div {
+  white-space: nowrap;
+  div + div {
     display: flex;
     flex-direction: column;
+    border-left: 1px solid ${({ theme }) => theme.border_main};
   }
   &:first-of-type {
     background: ${({ theme }) => theme.background_sub};
@@ -98,7 +100,6 @@ const ConfirmBlock = styled.div`
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem;
   .weight,
   .muscleMass,
   .fatMass {
@@ -195,7 +196,6 @@ const ProgressModal = ({
   };
 
   const onRemove = (date: string) => {
-    // eslint-disable-next-line no-alert
     if (!window.confirm('정말 삭제하시겠습니까?')) return;
     dispatch(removeProgress({ username: user.username, date }));
     onError('');
@@ -216,7 +216,9 @@ const ProgressModal = ({
               className="button"
               onClick={() => onRemove(data[0].data[i].x)}
             >
-              <b>{data[0].data[i].x.slice(2)}</b>
+              <div>
+                <b>{data[0].data[i].x.slice(2).replaceAll('-', '.')}</b>
+              </div>
               <div>{data[0].data[i].y}kg</div>
               <div>{data[1].data[i].y}kg</div>
               <div>{data[2].data[i].y}kg</div>

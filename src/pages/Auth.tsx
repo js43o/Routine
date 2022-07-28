@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, NavLink } from 'react-router-dom';
 import styled from '@emotion/styled';
@@ -7,13 +7,29 @@ import Title from 'templates/Title';
 import useErrorMessage from 'hooks/useErrorMessage';
 import { login, register } from 'modules/user';
 import Button from 'components/common/Button';
-import { validateAuth } from 'lib/methods';
+import useAuth from 'hooks/useAuth';
+import LoadingIndicator from 'components/common/LoadingIndicator';
 
 const AuthWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   align-self: center;
+  .error_wrapper {
+    height: 1rem;
+  }
+`;
+
+const LoadingBlock = styled.div<{ visible: boolean }>`
+  display: ${({ visible }) => (visible ? 'flex' : 'none')};
+  justify-content: center;
+  place-items: center;
+  position: absolute;
+  z-index: 100;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
 `;
 
 const AuthBlock = styled.div<{ type: string }>`
@@ -28,10 +44,17 @@ const AuthBlock = styled.div<{ type: string }>`
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    width: ${({ type }) => type === 'register' && '20rem'};
+    label {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      font-size: 0.85rem;
+      color: ${({ theme }) => theme.letter_sub};
+    }
   }
   .link {
     align-self: end;
+    font-weight: bold;
   }
 `;
 
@@ -58,35 +81,63 @@ type Authprops = {
 };
 
 const Auth = ({ type }: Authprops) => {
-  const { user, error } = useSelector(userSelector);
+  const { loading, error, authErrorCode, user } = useSelector(userSelector);
   const dispatch = useDispatch();
-  const { onError, ErrorMessage } = useErrorMessage();
   const navigate = useNavigate();
   const { REACT_APP_KAKAO_API, REACT_APP_KAKAO_REDIRECT } = process.env;
 
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>, field: string) => {
-    if (field === 'username') {
-      setUsername(e.target.value);
-    } else {
-      setPassword(e.target.value);
-    }
-  };
+  const {
+    state: {
+      inputs: { username, password, passwordConfirm },
+    },
+    onChangeInput,
+    onCheckInputs,
+  } = useAuth();
+  const { onError, resetError, ErrorMessage } = useErrorMessage();
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (type === 'register') {
-      if (!validateAuth(username, 'id') || !validateAuth(password, 'pw')) {
-        onError('입력값이 조건을 충족하지 않습니다.');
+      if (
+        !onCheckInputs(username, 'username') ||
+        !onCheckInputs(password, 'password')
+      ) {
+        onError('입력값이 조건을 만족하지 않습니다.');
+        return;
+      }
+      if (password !== passwordConfirm) {
+        onError('비밀번호가 일치하지 않습니다.');
         return;
       }
       dispatch(register({ username, password }));
     } else {
+      if (!username || !password) {
+        onError('아이디/비밀번호를 입력하세요.');
+        return;
+      }
       dispatch(login({ username, password }));
     }
   };
+
+  useEffect(() => {
+    if (!error) return;
+
+    switch (authErrorCode) {
+      case 401:
+        onError('로그인 정보가 일치하지 않습니다.');
+        break;
+      case 409:
+        onError('이미 해당 아이디가 존재합니다.');
+        break;
+      default:
+        onError('잠시 후 다시 시도해주세요.');
+        break;
+    }
+  }, [error]);
+
+  useEffect(() => {
+    resetError();
+  }, [type]);
 
   useEffect(() => {
     if (user.username) {
@@ -94,51 +145,53 @@ const Auth = ({ type }: Authprops) => {
     }
   }, [user]);
 
-  useEffect(() => {
-    if (!error) return;
-
-    if (type === 'login') {
-      onError('로그인에 실패하였습니다.');
-    } else {
-      onError('잠시 후 다시 시도해주세요.');
-    }
-  }, [error]);
-
   return (
     <AuthWrapper>
+      <LoadingBlock visible={loading}>
+        <LoadingIndicator white />
+      </LoadingBlock>
       <Title />
       <AuthBlock type={type}>
         <form onSubmit={onSubmit}>
-          <input
-            type="text"
-            id="username"
-            placeholder={
-              type === 'login' ? '아이디' : '아이디 (영문/숫자 5-20자)'
-            }
-            maxLength={20}
-            onChange={(e) => onChange(e, 'username')}
-          />
-          <input
-            type="password"
-            id="password"
-            placeholder={
-              type === 'login'
-                ? '패스워드'
-                : '패스워드 (영문/숫자/특수문자 8-20자)'
-            }
-            maxLength={20}
-            onChange={(e) => onChange(e, 'password')}
-          />
+          <label htmlFor="username">
+            <input
+              type="text"
+              id="username"
+              placeholder="아이디"
+              maxLength={20}
+              value={username}
+              onChange={(e) => onChangeInput('USERNAME', e)}
+            />
+            {type === 'register' &&
+              '※ 영문 소문자/숫자 포함 5-20자 (특수기호 (-),(_) 허용)'}
+          </label>
+          <label htmlFor="password">
+            <input
+              type="password"
+              id="password"
+              placeholder="비밀번호"
+              maxLength={20}
+              value={password}
+              onChange={(e) => onChangeInput('PASSWORD', e)}
+            />
+            {type === 'register' && '※ 영문 대소문자/숫자/특수문자 포함 8-20자'}
+          </label>
+          {type === 'register' && (
+            <label htmlFor="passwordConfirm">
+              <input
+                type="password"
+                id="passwordConfirm"
+                placeholder="비밀번호 확인"
+                maxLength={20}
+                value={passwordConfirm}
+                onChange={(e) => onChangeInput('PASSWORD_CONFIRM', e)}
+              />
+            </label>
+          )}
           <SubmitButton type="submit">
             {type === 'register' ? '계정 등록' : '로그인'}
           </SubmitButton>
         </form>
-        <NavLink
-          to={type === 'register' ? '/login' : '/register'}
-          className="link"
-        >
-          {type === 'register' ? '로그인 ▶' : '계정 등록 ▶'}
-        </NavLink>
         {type === 'login' && (
           <a
             href={`https://kauth.kakao.com/oauth/authorize?client_id=${REACT_APP_KAKAO_API}&redirect_uri=${REACT_APP_KAKAO_REDIRECT}&response_type=code`}
@@ -152,8 +205,16 @@ const Auth = ({ type }: Authprops) => {
             </KakaoLoginButton>
           </a>
         )}
+        <NavLink
+          to={type === 'register' ? '/login' : '/register'}
+          className="link"
+        >
+          {type === 'register' ? '로그인 ▶' : '계정 등록 ▶'}
+        </NavLink>
       </AuthBlock>
-      <ErrorMessage />
+      <div className="error_wrapper">
+        <ErrorMessage />
+      </div>
     </AuthWrapper>
   );
 };

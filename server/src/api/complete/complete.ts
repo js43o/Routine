@@ -8,6 +8,7 @@ export const addComplete = async (ctx: DefaultContext) => {
     weight: Joi.number().min(1),
     numberOfTimes: Joi.number().min(1),
     numberOfSets: Joi.number().min(1).max(20),
+    _id: Joi.string(),
   });
 
   const inputSchema = Joi.object().keys({

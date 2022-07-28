@@ -3,19 +3,19 @@ import { useDispatch } from 'react-redux';
 import styled from '@emotion/styled';
 import { removeExercise } from 'modules/user';
 import { ExerciseItem } from 'types';
-import useScroll from 'hooks/useExerciseList';
+import useScroll from 'hooks/useDayRoutine';
 import { BsPlusCircleDotted } from 'react-icons/bs';
 import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
 import Button from 'components/common/Button';
 
-const ExerciseListWrapper = styled.div`
+const DayRoutineWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   position: relative;
 `;
 
-const ExerciseListBlock = styled.ul<{ editing: boolean }>`
+const DayRoutineBlock = styled.ul<{ editing: boolean }>`
   display: flex;
   flex-grow: 1;
   align-items: center;
@@ -85,7 +85,7 @@ const NextScrollButton = styled(ScrollButton)`
   right: 0;
 `;
 
-type ExerciseListProps = {
+type DayRoutineProps = {
   dayRoutine: ExerciseItem[];
   routineId: string;
   dayIdx: number;
@@ -94,14 +94,14 @@ type ExerciseListProps = {
   onError: (error: string) => void;
 };
 
-const ExerciseList = ({
+const DayRoutine = ({
   dayRoutine,
   routineId = '',
   dayIdx = -1,
   editing = false,
   onOpenModal,
   onError,
-}: ExerciseListProps) => {
+}: DayRoutineProps) => {
   const dispatch = useDispatch();
   const { ref, moveTo, onDragStart } = useScroll();
   const dr = useRef<ExerciseItem[]>(dayRoutine);
@@ -144,14 +144,14 @@ const ExerciseList = ({
   }, [dayRoutine]);
 
   return (
-    <ExerciseListWrapper>
+    <DayRoutineWrapper>
       <PrevScrollButton
         onPointerDown={() => moveTo('prev')}
         isEnd={ref.current?.scrollLeft === 0}
       >
         <MdNavigateBefore />
       </PrevScrollButton>
-      <ExerciseListBlock ref={ref} editing={editing}>
+      <DayRoutineBlock ref={ref} editing={editing}>
         {dayRoutine.map((s, i) => (
           <ExerciseItemBlock
             editing={editing ? 1 : 0}
@@ -169,7 +169,7 @@ const ExerciseList = ({
         >
           <BsPlusCircleDotted />
         </AddExerciseButton>
-      </ExerciseListBlock>
+      </DayRoutineBlock>
       <NextScrollButton
         onClick={() => moveTo('next')}
         isEnd={
@@ -181,8 +181,8 @@ const ExerciseList = ({
       >
         <MdNavigateNext />
       </NextScrollButton>
-    </ExerciseListWrapper>
+    </DayRoutineWrapper>
   );
 };
 
-export default React.memo(ExerciseList);
+export default React.memo(DayRoutine);

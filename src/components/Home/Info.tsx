@@ -114,7 +114,7 @@ const Info = ({ user }: InfoBlockProps) => {
       inputState.birth.length < 8 ||
       +inputState.height < 100
     ) {
-      onError('입력값을 확인해주세요');
+      onError('입력값을 확인해주세요.');
       return;
     }
     dispatch(

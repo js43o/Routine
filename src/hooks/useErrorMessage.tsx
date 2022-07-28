@@ -19,11 +19,12 @@ const ErrorMessageBlock = styled.div`
   place-items: center;
   color: red;
   height: 1rem;
-  margin-bottom: 0.25rem;
+  margin: 0.25rem 0;
   &.shaking {
     animation: ${shaking} linear 0.1s 0s 3;
   }
 `;
+let timer: NodeJS.Timeout;
 
 const useErrorMessage = () => {
   const [error, setError] = useState('');
@@ -31,16 +32,26 @@ const useErrorMessage = () => {
   const onError = (message: string) => {
     if (error) return;
     setError(message);
-    setTimeout(() => setError(''), 2000);
+    timer = setTimeout(() => {
+      setError('');
+    }, 2000);
   };
 
-  const ErrorMessage = () => (
-    <ErrorMessageBlock className={error && 'shaking'}>
-      {error}
-    </ErrorMessageBlock>
-  );
+  const resetError = () => {
+    setError('');
+    clearTimeout(timer);
+  };
 
-  return { error, onError, ErrorMessage };
+  const ErrorMessage = () =>
+    error ? (
+      <ErrorMessageBlock className={error && 'shaking'}>
+        {error}
+      </ErrorMessageBlock>
+    ) : (
+      <> </>
+    );
+
+  return { error, onError, resetError, ErrorMessage };
 };
 
 export default useErrorMessage;

@@ -14,9 +14,9 @@ import useErrorMessage from 'hooks/useErrorMessage';
 import { dayidxToDaystr } from 'lib/methods';
 import { BsTriangleFill, BsCheckLg, BsStar, BsStarFill } from 'react-icons/bs';
 import { FaPencilAlt, FaTrashAlt } from 'react-icons/fa';
-import RoutineExerciseList from './ExerciseList';
+import RoutineExerciseList from './DayRoutine';
 
-const RoutineItemBlock = styled.li<{ visible: boolean; editing?: boolean }>`
+const WeekRoutineBlock = styled.li<{ visible: boolean; editing?: boolean }>`
   height: ${({ visible }) => (visible ? '34.25rem' : '3rem')};
   padding: 0.5rem;
   border: 1px solid
@@ -112,7 +112,7 @@ const CheckButton = styled(Button)`
   color: ${({ theme }) => theme.primary};
 `;
 
-type RoutineItemProps = {
+type WeekRoutineProps = {
   routine: Routine;
   isVisible: boolean;
   isEditing: boolean;
@@ -121,14 +121,14 @@ type RoutineItemProps = {
   onSetEditing: (id?: string) => void;
 };
 
-const RoutineItem = ({
+const WeekRoutine = ({
   routine,
   isVisible = false,
   isEditing = false,
   onOpenModal,
   onSetVisible,
   onSetEditing,
-}: RoutineItemProps) => {
+}: WeekRoutineProps) => {
   const { user } = useSelector(userSelector);
   const dispatch = useDispatch();
   const { onError, ErrorMessage } = useErrorMessage();
@@ -158,7 +158,7 @@ const RoutineItem = ({
   }, [routine.lastModified]);
 
   return (
-    <RoutineItemBlock visible={isVisible} editing={isEditing}>
+    <WeekRoutineBlock visible={isVisible} editing={isEditing}>
       <div className="header">
         <TitleBlock
           editing={isEditing}
@@ -247,8 +247,8 @@ const RoutineItem = ({
         ))}
       </RoutineDetailBlock>
       <ErrorMessage />
-    </RoutineItemBlock>
+    </WeekRoutineBlock>
   );
 };
 
-export default React.memo(RoutineItem);
+export default React.memo(WeekRoutine);

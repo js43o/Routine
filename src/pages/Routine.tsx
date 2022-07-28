@@ -5,7 +5,7 @@ import Template from 'templates/Template';
 import { addRoutine } from 'modules/user';
 import { userSelector } from 'modules/hooks';
 import { hideScroll, unhideScroll } from 'lib/methods';
-import RoutineItem from 'components/Routine/RoutineItem';
+import RoutineItem from 'components/Routine/WeekRoutine';
 import AddExercise from 'components/Routine/AddExerciseModal';
 import Button from 'components/common/Button';
 import { BsPlusCircle } from 'react-icons/bs';
