@@ -172,7 +172,7 @@ const AddExerciseModal = ({
     onChangeInput,
     checkInputs,
   } = useAddExercise();
-  const { onError, ErrorMessage } = useErrorMessage();
+  const { onError, resetError, ErrorMessage } = useErrorMessage();
 
   const onAddExercise = () => {
     if (!routineId || day === null) return;
@@ -194,7 +194,7 @@ const AddExerciseModal = ({
   };
 
   const onClose = () => {
-    onError('');
+    resetError();
     onCloseModal();
   };
 

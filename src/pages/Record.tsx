@@ -33,7 +33,6 @@ const ProgressHeader = styled.div`
 
 const RecordPage = () => {
   const { user } = useSelector(userSelector);
-
   const [currentDate, setCurrentDate] = useState({
     year: new Date().getFullYear(),
     month: new Date().getMonth(),
@@ -138,9 +137,9 @@ const RecordPage = () => {
   return (
     <Template>
       <SetProgressModal
-        data={user.progress}
         visible={modal}
         offset={windowWidth.current}
+        data={user.progress}
         onCloseModal={onCloseModal}
       />
       <RecordCalendar

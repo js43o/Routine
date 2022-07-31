@@ -43,7 +43,6 @@ export const globalStyles = css`
 
   hr {
     border: none;
-    border-top: 1px solid #cccccc;
     background: none;
     margin-top: 2rem;
   }

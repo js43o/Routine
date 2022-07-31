@@ -88,11 +88,11 @@ const Info = ({ user }: InfoBlockProps) => {
     birth: user.birth,
     height: `${user.height}`,
   });
-  const { onError, ErrorMessage } = useErrorMessage();
+  const { onError, resetError, ErrorMessage } = useErrorMessage();
 
   const onToggleEditing = () => {
     setEditing(!editing);
-    onError('');
+    resetError();
   };
 
   const onChange = (type: string, e: React.ChangeEvent<HTMLInputElement>) => {
@@ -127,7 +127,7 @@ const Info = ({ user }: InfoBlockProps) => {
       }),
     );
     onToggleEditing();
-    onError('');
+    resetError();
   };
 
   useEffect(() => {

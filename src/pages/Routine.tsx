@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import Template from 'templates/Template';
@@ -10,6 +10,7 @@ import AddExercise from 'components/Routine/AddExerciseModal';
 import Button from 'components/common/Button';
 import { BsPlusCircle } from 'react-icons/bs';
 import { v4 as uuidv4 } from 'uuid';
+import useErrorMessage from 'hooks/useErrorMessage';
 
 const AddRoutineButton = styled(Button)`
   display: flex;
@@ -37,13 +38,14 @@ const RoutinePage = () => {
   const dispatch = useDispatch();
 
   const [modal, setModal] = useState(false);
-  const [windowWidth, setWindowWidth] = useState(document.body.offsetWidth);
+  const windowWidth = useRef(document.body.offsetWidth);
   const [visible, setVisible] = useState<string | null>(null);
   const [editing, setEditing] = useState<string | null>(null);
   const [day, setDay] = useState<number | null>(null);
+  const { onError, ErrorMessage } = useErrorMessage();
 
   const onOpenModal = useCallback((day: number) => {
-    setWindowWidth(document.body.offsetWidth);
+    windowWidth.current = document.body.offsetWidth;
     setDay(day);
     setModal(true);
     hideScroll();
@@ -69,13 +71,23 @@ const RoutinePage = () => {
     setEditing(null);
   }, []);
 
+  const onAddRoutine = () => {
+    if (user.routines.length >= 10) {
+      onError('추가 가능한 루틴 수는 최대 10개입니다.');
+      return;
+    }
+    const routineId = uuidv4();
+    dispatch(addRoutine({ username: user.username, routineId }));
+    onSetEditing(routineId);
+  };
+
   return (
     <Template>
       <AddExercise
         routineId={editing}
         day={day}
         visible={modal}
-        offset={windowWidth}
+        offset={windowWidth.current}
         onCloseModal={onCloseModal}
       />
       <h1>루틴 목록</h1>
@@ -92,16 +104,11 @@ const RoutinePage = () => {
           />
         ))}
       </RoutineListBlock>
-      <AddRoutineButton
-        onClick={() => {
-          const routineId = uuidv4();
-          dispatch(addRoutine({ username: user.username, routineId }));
-          onSetEditing(routineId);
-        }}
-      >
+      <AddRoutineButton onClick={onAddRoutine}>
         <BsPlusCircle />
         <b>루틴 추가</b>
       </AddRoutineButton>
+      <ErrorMessage />
     </Template>
   );
 };

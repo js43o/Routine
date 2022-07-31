@@ -23,8 +23,6 @@ export type Exercise = {
   name: string;
   category: string[];
   part: string[];
-  imageSrc?: string;
-  description?: string;
 };
 
 export type ExerciseItem = {

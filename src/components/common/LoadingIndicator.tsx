@@ -32,7 +32,7 @@ const LoadingIndicator = ({ white }: LoadingIndicatorProps) => {
   return (
     <LoadingIndicatorBlock white={white}>
       <AiOutlineLoading className="indicator" />
-      <span>불러오는 중...</span>
+      <span>처리 중...</span>
     </LoadingIndicatorBlock>
   );
 };

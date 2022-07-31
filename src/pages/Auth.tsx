@@ -8,7 +8,6 @@ import useErrorMessage from 'hooks/useErrorMessage';
 import { login, register } from 'modules/user';
 import Button from 'components/common/Button';
 import useAuth from 'hooks/useAuth';
-import LoadingIndicator from 'components/common/LoadingIndicator';
 
 const AuthWrapper = styled.div`
   display: flex;
@@ -18,18 +17,6 @@ const AuthWrapper = styled.div`
   .error_wrapper {
     height: 1rem;
   }
-`;
-
-const LoadingBlock = styled.div<{ visible: boolean }>`
-  display: ${({ visible }) => (visible ? 'flex' : 'none')};
-  justify-content: center;
-  place-items: center;
-  position: absolute;
-  z-index: 100;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
 `;
 
 const AuthBlock = styled.div<{ type: string }>`
@@ -81,7 +68,7 @@ type Authprops = {
 };
 
 const Auth = ({ type }: Authprops) => {
-  const { loading, error, authErrorCode, user } = useSelector(userSelector);
+  const { error, authErrorCode, user } = useSelector(userSelector);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { REACT_APP_KAKAO_API, REACT_APP_KAKAO_REDIRECT } = process.env;
@@ -147,9 +134,6 @@ const Auth = ({ type }: Authprops) => {
 
   return (
     <AuthWrapper>
-      <LoadingBlock visible={loading}>
-        <LoadingIndicator white />
-      </LoadingBlock>
       <Title />
       <AuthBlock type={type}>
         <form onSubmit={onSubmit}>

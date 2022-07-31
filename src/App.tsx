@@ -5,12 +5,28 @@ import { css, Global, ThemeProvider, useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 import { themeSelector } from 'modules/hooks';
 import { globalStyles } from 'lib/globalStyles';
+import LoadingIndicator from 'components/common/LoadingIndicator';
 import HomePage from 'pages/Home';
 import RoutinePage from 'pages/Routine';
 import RecordPage from 'pages/Record';
 import AuthPage from 'pages/Auth';
 import KakaoPage from 'pages/Kakao';
 import { userSelector } from './modules/hooks';
+
+const LoadingBlock = styled.div<{ visible: boolean }>`
+  display: flex;
+  justify-content: center;
+  place-items: center;
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: ${({ visible }) => (visible ? 1 : 0)};
+  pointer-events: none;
+  transition: opacity 0.2s;
+`;
 
 const AppBlock = styled.div`
   display: flex;
@@ -31,6 +47,9 @@ const GlobalStyles = () => {
           background: ${theme.body};
           color: ${theme.letter_main};
         }
+        hr {
+          border-top: 1px solid ${theme.border_main};
+        }
         input,
         textArea,
         button {
@@ -43,8 +62,8 @@ const GlobalStyles = () => {
 };
 
 function App() {
+  const { loading, user } = useSelector(userSelector);
   const theme = useSelector(themeSelector);
-  const { user } = useSelector(userSelector);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -58,6 +77,9 @@ function App() {
 
   return (
     <AppBlock>
+      <LoadingBlock visible={loading}>
+        <LoadingIndicator white />
+      </LoadingBlock>
       <ThemeProvider theme={theme.colors}>
         <GlobalStyles />
         <Routes>

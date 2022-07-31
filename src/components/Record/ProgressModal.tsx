@@ -148,13 +148,16 @@ const ProgressModal = ({
   });
   const { user } = useSelector(userSelector);
   const dispatch = useDispatch();
-  const { onError, ErrorMessage } = useErrorMessage();
+  const { onError, resetError, ErrorMessage } = useErrorMessage();
 
   const onChange = (
     type: 'weight' | 'muscleMass' | 'fatMass',
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     if (e.target.value.length > 3) return;
+    if (e.target.value.length > 1 && e.target.value[0] === '0') {
+      e.target.value = e.target.value.slice(1);
+    }
     setInput({ ...input, [type]: e.target.value });
   };
 
@@ -176,9 +179,9 @@ const ProgressModal = ({
         username: user.username,
         progress: {
           date: getDatestr(new Date()),
-          weight: input.weight,
-          muscleMass: input.muscleMass,
-          fatMass: input.fatMass,
+          weight: +input.weight,
+          muscleMass: +input.muscleMass,
+          fatMass: +input.fatMass,
         },
       }),
     );
@@ -187,18 +190,18 @@ const ProgressModal = ({
       muscleMass: 0,
       fatMass: 0,
     });
-    onError('');
+    resetError();
   };
 
   const onClose = () => {
     onCloseModal();
-    onError('');
+    resetError();
   };
 
   const onRemove = (date: string) => {
     if (!window.confirm('정말 삭제하시겠습니까?')) return;
     dispatch(removeProgress({ username: user.username, date }));
-    onError('');
+    resetError();
   };
 
   return (
