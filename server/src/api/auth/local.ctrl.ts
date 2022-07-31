@@ -4,8 +4,9 @@ import User from '../../models/user';
 
 export const register = async (ctx: DefaultContext) => {
   const inputSchema = Joi.object().keys({
-    username: Joi.string().alphanum().min(3).max(20).required(),
-    password: Joi.string().required(),
+    username: Joi.string().alphanum().min(5).max(20).required(),
+    password: Joi.string().min(8).max(20).required(),
+    nickname: Joi.string().min(1).max(10).required(),
   });
   const result = inputSchema.validate(ctx.request.body);
   if (result.error) {
@@ -14,7 +15,7 @@ export const register = async (ctx: DefaultContext) => {
     return;
   }
 
-  const { username, password } = ctx.request.body;
+  const { username, password, nickname } = ctx.request.body;
   try {
     const exists = await User.findByUsername(username);
     if (exists) {
@@ -24,6 +25,7 @@ export const register = async (ctx: DefaultContext) => {
 
     const user = new User({
       username,
+      nickname,
     });
     await user.setPassword(password);
     await user.save();
@@ -42,7 +44,7 @@ export const register = async (ctx: DefaultContext) => {
 
 export const login = async (ctx: DefaultContext) => {
   const inputSchema = Joi.object().keys({
-    username: Joi.string().alphanum().min(3).max(20).required(),
+    username: Joi.string().alphanum().min(5).max(20).required(),
     password: Joi.string().required(),
   });
   const result = inputSchema.validate(ctx.request.body);
@@ -93,11 +95,9 @@ export const logout = async (ctx: DefaultContext) => {
 
 export const setInfo = async (ctx: DefaultContext) => {
   const inputSchema = Joi.object().keys({
-    username: Joi.string().alphanum().min(3).max(20).required(),
-    name: Joi.string().max(20).required(),
-    gender: Joi.string().max(20).required(),
-    birth: Joi.string().max(20).required(),
-    height: Joi.number().min(100).max(300),
+    username: Joi.string().alphanum().min(5).max(20).required(),
+    nickname: Joi.string().min(1).max(10).required(),
+    intro: Joi.string().allow(''),
   });
 
   const result = inputSchema.validate(ctx.request.body);
@@ -107,7 +107,7 @@ export const setInfo = async (ctx: DefaultContext) => {
     return;
   }
 
-  const { username, name, gender, birth, height } = ctx.request.body;
+  const { username, nickname, intro } = ctx.request.body;
   try {
     const user = await User.findByUsername(username);
     if (!user) {
@@ -115,12 +115,8 @@ export const setInfo = async (ctx: DefaultContext) => {
       return;
     }
 
-    [user.name, user.gender, user.birth, user.height] = [
-      name,
-      gender,
-      birth,
-      height,
-    ];
+    user.nickname = nickname;
+    user.intro = intro;
     await user.save();
     ctx.status = 200;
   } catch (e) {
@@ -130,7 +126,7 @@ export const setInfo = async (ctx: DefaultContext) => {
 
 export const setCurrentRoutine = async (ctx: DefaultContext) => {
   const inputSchema = Joi.object().keys({
-    username: Joi.string().alphanum().min(3).max(20).required(),
+    username: Joi.string().alphanum().min(5).max(20).required(),
     routineId: Joi.string().allow(''),
   });
 

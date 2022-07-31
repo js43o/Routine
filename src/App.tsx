@@ -47,6 +47,12 @@ const GlobalStyles = () => {
           background: ${theme.body};
           color: ${theme.letter_main};
         }
+        h1,
+        h2,
+        h3,
+        h4 {
+          border-bottom: 2px solid ${theme.border_main};
+        }
         hr {
           border-top: 1px solid ${theme.border_main};
         }

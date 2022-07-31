@@ -22,10 +22,8 @@ type UserStateType = {
 
 const initialUser: User = {
   username: '',
-  name: '',
-  gender: '',
-  birth: '',
-  height: 0,
+  nickname: '',
+  intro: '',
   currentRoutineId: '',
   completes: [],
   progress: [
@@ -55,11 +53,15 @@ const initialState: UserStateType = {
 export const register = createAsyncThunk(
   'REGISTER',
   async (
-    { username, password }: { username: string; password: string },
+    {
+      username,
+      password,
+      nickname,
+    }: { username: string; password: string; nickname: string },
     { rejectWithValue },
   ) => {
     try {
-      const response = await api.register(username, password);
+      const response = await api.register(username, password, nickname);
       return response.data;
     } catch (e) {
       if (e instanceof AxiosError) {
@@ -110,19 +112,15 @@ export const setInfo = createAsyncThunk(
   'SET_INFO',
   async ({
     username,
-    name,
-    gender,
-    birth,
-    height,
+    nickname,
+    intro,
   }: {
     username: string;
-    name: string;
-    gender: string;
-    birth: string;
-    height: number;
+    nickname: string;
+    intro: string;
   }) => {
-    await api.setInfo(username, name, gender, birth, height);
-    return { name, gender, birth, height };
+    await api.setInfo(username, nickname, intro);
+    return { nickname, intro };
   },
 );
 
@@ -357,11 +355,9 @@ export const userSlice = createSlice({
       .addCase(setInfo.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        const { name, birth, gender, height } = action.payload;
-        state.user.birth = birth;
-        state.user.name = name;
-        state.user.gender = gender;
-        state.user.height = height;
+        const { nickname, intro } = action.payload;
+        state.user.nickname = nickname;
+        state.user.intro = intro;
       })
       .addCase(setInfo.rejected, (state, action) => {
         state.loading = false;

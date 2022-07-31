@@ -1,49 +1,34 @@
 import { useReducer, useCallback } from 'react';
 
 type State = {
-  inputs: {
-    username: string;
-    password: string;
-    passwordConfirm: string;
-  };
+  username: string;
+  password: string;
+  passwordConfirm: string;
+  nickname: string;
 };
 
 const initialState: State = {
-  inputs: {
-    username: '',
-    password: '',
-    passwordConfirm: '',
-  },
+  username: '',
+  password: '',
+  passwordConfirm: '',
+  nickname: '',
 };
 
 type Action =
   | {
-      type: 'CHANGE_USERNAME' | 'CHANGE_PASSWORD' | 'CHANGE_PASSWORD_CONFIRM';
-      payload: string;
+      type: 'INITIALIZE';
     }
   | {
-      type: 'INITIALIZE';
+      type: 'CHANGE_FIELD';
+      payload: { field: string; value: string };
     };
 
 const reducer = (state: State, action: Action) => {
   switch (action.type) {
     case 'INITIALIZE':
       return initialState;
-    case 'CHANGE_USERNAME':
-      return {
-        ...state,
-        inputs: { ...state.inputs, username: action.payload },
-      };
-    case 'CHANGE_PASSWORD':
-      return {
-        ...state,
-        inputs: { ...state.inputs, password: action.payload },
-      };
-    case 'CHANGE_PASSWORD_CONFIRM':
-      return {
-        ...state,
-        inputs: { ...state.inputs, passwordConfirm: action.payload },
-      };
+    case 'CHANGE_FIELD':
+      return { ...state, [action.payload.field]: action.payload.value };
     default:
       return state;
   }
@@ -54,21 +39,35 @@ const useAuth = () => {
 
   const onChangeInput = useCallback(
     (
-      type: 'USERNAME' | 'PASSWORD' | 'PASSWORD_CONFIRM',
+      field: 'username' | 'password' | 'passwordConfirm' | 'nickname',
       e: React.ChangeEvent<HTMLInputElement>,
     ) => {
       dispatch({
-        type: `CHANGE_${type}`,
-        payload: e.target.value,
+        type: 'CHANGE_FIELD',
+        payload: {
+          field,
+          value: e.target.value,
+        },
       });
     },
     [],
   );
 
-  const onCheckInputs = (str: string, type: 'username' | 'password') =>
-    type === 'username'
-      ? /[A-Za-z\d_-]{5,20}/.test(str)
-      : /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]){8,20}/.test(str);
+  const onCheckInputs = (
+    str: string,
+    type: 'username' | 'password' | 'nickname',
+  ) => {
+    switch (type) {
+      case 'username':
+        return /^[A-Za-z\d_-]{5,20}/.test(str);
+      case 'password':
+        return /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]){8,20}/.test(str);
+      case 'nickname':
+        return /^[ㄱ-ㅎ가-힇A-Za-z\d]{1,10}/.test(str);
+      default:
+        return false;
+    }
+  };
 
   return {
     state,

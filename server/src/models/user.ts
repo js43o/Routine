@@ -37,10 +37,8 @@ const UserSchema: Schema<IUserDocument> = new Schema({
   username: { type: String, required: true },
   hashedPassword: { type: String, default: '' },
   snsProvider: { type: String, default: '' },
-  name: { type: String, default: '' },
-  gender: { type: String, default: '' },
-  birth: { type: String, default: '' },
-  height: { type: Number, default: 0 },
+  nickname: { type: String, default: '' },
+  intro: { type: String, default: '' },
   currentRoutineId: { type: String, default: '' },
   routines: [RoutineSchema],
   completes: [CompleteSchema],
@@ -72,7 +70,6 @@ UserSchema.methods.serialize = function () {
       }),
     ),
   );
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const data: any = {};
   for (const key in json) {
     if (key === 'hashedPassword') continue;

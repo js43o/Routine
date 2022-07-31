@@ -12,6 +12,7 @@ export const kakaoLogin = async (ctx: DefaultContext) => {
       const user = new User({
         username: id,
         snsProvider: 'kakao',
+        nickname: `사용자#${id}`,
       });
       await user.save();
     }

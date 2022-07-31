@@ -74,9 +74,7 @@ const Auth = ({ type }: Authprops) => {
   const { REACT_APP_KAKAO_API, REACT_APP_KAKAO_REDIRECT } = process.env;
 
   const {
-    state: {
-      inputs: { username, password, passwordConfirm },
-    },
+    state: { username, password, passwordConfirm, nickname },
     onChangeInput,
     onCheckInputs,
   } = useAuth();
@@ -87,7 +85,8 @@ const Auth = ({ type }: Authprops) => {
     if (type === 'register') {
       if (
         !onCheckInputs(username, 'username') ||
-        !onCheckInputs(password, 'password')
+        !onCheckInputs(password, 'password') ||
+        !onCheckInputs(nickname, 'nickname')
       ) {
         onError('입력값이 조건을 만족하지 않습니다.');
         return;
@@ -96,7 +95,7 @@ const Auth = ({ type }: Authprops) => {
         onError('비밀번호가 일치하지 않습니다.');
         return;
       }
-      dispatch(register({ username, password }));
+      dispatch(register({ username, password, nickname }));
     } else {
       if (!username || !password) {
         onError('아이디/비밀번호를 입력하세요.');
@@ -144,7 +143,7 @@ const Auth = ({ type }: Authprops) => {
               placeholder="아이디"
               maxLength={20}
               value={username}
-              onChange={(e) => onChangeInput('USERNAME', e)}
+              onChange={(e) => onChangeInput('username', e)}
             />
             {type === 'register' &&
               '※ 영문 소문자/숫자 포함 5-20자 (특수기호 (-),(_) 허용)'}
@@ -156,21 +155,34 @@ const Auth = ({ type }: Authprops) => {
               placeholder="비밀번호"
               maxLength={20}
               value={password}
-              onChange={(e) => onChangeInput('PASSWORD', e)}
+              onChange={(e) => onChangeInput('password', e)}
             />
-            {type === 'register' && '※ 영문 대소문자/숫자/특수문자 포함 8-20자'}
           </label>
           {type === 'register' && (
-            <label htmlFor="passwordConfirm">
-              <input
-                type="password"
-                id="passwordConfirm"
-                placeholder="비밀번호 확인"
-                maxLength={20}
-                value={passwordConfirm}
-                onChange={(e) => onChangeInput('PASSWORD_CONFIRM', e)}
-              />
-            </label>
+            <>
+              <label htmlFor="passwordConfirm">
+                <input
+                  type="password"
+                  id="passwordConfirm"
+                  placeholder="비밀번호 확인"
+                  maxLength={20}
+                  value={passwordConfirm}
+                  onChange={(e) => onChangeInput('passwordConfirm', e)}
+                />
+                ※ 영문 대소문자/숫자/특수문자 포함 8-20자
+              </label>
+              <label htmlFor="nickname">
+                <input
+                  type="text"
+                  id="nickname"
+                  placeholder="닉네임"
+                  maxLength={10}
+                  value={nickname}
+                  onChange={(e) => onChangeInput('nickname', e)}
+                />
+                ※ 한글/영문 대소문자/숫자 1-10자
+              </label>
+            </>
           )}
           <SubmitButton type="submit">
             {type === 'register' ? '계정 등록' : '로그인'}

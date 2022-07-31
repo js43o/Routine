@@ -20,6 +20,8 @@ const ContentBlock = styled.div`
   padding: 1rem;
   border-radius: 0.5rem;
   flex-grow: 1;
+  @media (min-width: 430px) {
+  }
 `;
 
 type TemplateProps = {

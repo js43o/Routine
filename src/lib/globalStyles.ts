@@ -25,6 +25,14 @@ export const globalStyles = css`
     height: 100%;
   }
 
+  h1,
+  h2,
+  h3,
+  h4 {
+    display: inline-block;
+    text-align: center;
+  }
+
   button,
   input,
   textarea {

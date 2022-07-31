@@ -3,15 +3,14 @@ import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import { userSelector } from 'modules/hooks';
 import Template from 'templates/Template';
-import Info from 'components/Home/Info';
 import PerformRoutine from 'components/Home/PerformRoutine';
 import { getDatestr } from 'lib/methods';
-import { FaPencilAlt } from 'react-icons/fa';
 import CompleteDayBar from 'components/Home/CompleteDayBar';
+import Profile from 'components/Home/Profile';
 
 const CompleteText = styled.div`
   display: flex;
-  place-items: center;
+  align-items: center;
   span {
     padding: 0.25rem 0.5rem;
     border-radius: 0.5rem;
@@ -19,15 +18,6 @@ const CompleteText = styled.div`
     color: black;
     background: ${({ theme }) => theme.yellow};
     font-weight: bold;
-  }
-`;
-
-const NoUserBlock = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin: 0.5rem 0;
-  h1 {
-    margin-bottom: 0;
   }
 `;
 
@@ -42,18 +32,7 @@ const HomePage = () => {
 
   return (
     <Template>
-      {user.name ? (
-        <h1>안녕하세요, {user.name}님!</h1>
-      ) : (
-        <NoUserBlock>
-          <p>
-            사용자 정보가 없습니다.
-            <br />
-            우측의 <FaPencilAlt />을 눌러 정보를 입력해주세요.
-          </p>
-        </NoUserBlock>
-      )}
-      <Info user={user}></Info>
+      <Profile user={user} />
       <h1>이번 주 운동 현황</h1>
       <CompleteDayBar completes={user.completes} />
       <CompleteText>

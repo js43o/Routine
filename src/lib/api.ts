@@ -4,8 +4,11 @@ import { Routine, CompleteItem, Exercise } from 'types';
 const client = axios.create();
 client.defaults.baseURL = '/api';
 
-export const register = (username: string, password: string) =>
-  client.post('/auth/register', { username, password });
+export const register = (
+  username: string,
+  password: string,
+  nickname: string,
+) => client.post('/auth/register', { username, password, nickname });
 
 export const login = (username: string, password: string) =>
   client.post('/auth/login', { username, password });
@@ -17,13 +20,8 @@ export const check = () => client.get('/auth/check');
 
 export const logout = () => client.post('/auth/logout');
 
-export const setInfo = (
-  username: string,
-  name: string,
-  gender: string,
-  birth: string,
-  height: number,
-) => client.post('/auth/set_info', { username, name, gender, birth, height });
+export const setInfo = (username: string, nickname: string, intro: string) =>
+  client.post('/auth/info', { username, nickname, intro });
 
 export const setCurrentRoutine = (username: string, routineId: string) =>
   client.post('/auth/set_current_routine', { username, routineId });

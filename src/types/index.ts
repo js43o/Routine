@@ -49,10 +49,9 @@ export type Routine = {
 
 export type User = {
   username: string;
-  name: string;
-  gender: string;
-  birth: string;
-  height: number;
+  nickname: string;
+  profileImage?: string;
+  intro: string;
   currentRoutineId: string;
   completes: CompleteItem[];
   progress: ProgressItem[];
