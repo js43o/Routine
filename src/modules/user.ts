@@ -132,6 +132,15 @@ export const setCurrentRoutine = createAsyncThunk(
   },
 );
 
+export const uploadProfileImage = createAsyncThunk(
+  'SET_PROFILE_IMAGE',
+  async ({ username, image }: { username: string; image: FormData }) => {
+    const response = await api.uploadProfileImage(image);
+    console.log('Data:', response.data);
+    return response.data.url;
+  },
+);
+
 export const addComplete = createAsyncThunk(
   'ADD_COMPLETE',
   async ({
@@ -373,6 +382,19 @@ export const userSlice = createSlice({
         state.user.currentRoutineId = action.payload;
       })
       .addCase(setCurrentRoutine.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error;
+      });
+    builder
+      .addCase(uploadProfileImage.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(uploadProfileImage.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.user.profileImage = action.payload;
+      })
+      .addCase(uploadProfileImage.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error;
       });

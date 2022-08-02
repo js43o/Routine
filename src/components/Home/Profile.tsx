@@ -5,7 +5,7 @@ import { FaPencilAlt } from 'react-icons/fa';
 import { BsCheckLg } from 'react-icons/bs';
 import Button from 'components/common/Button';
 import { useDispatch } from 'react-redux';
-import { setInfo } from 'modules/user';
+import { setInfo, uploadProfileImage } from 'modules/user';
 import useErrorMessage from 'hooks/useErrorMessage';
 
 const ProfileBlock = styled.div`
@@ -21,7 +21,7 @@ const ProfileBlock = styled.div`
   }
 `;
 
-const ImageBlock = styled.div`
+const ImageBlock = styled.label`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -30,12 +30,22 @@ const ImageBlock = styled.div`
   background: ${({ theme }) => theme.background_sub};
   border-radius: 50%;
   cursor: pointer;
+  input {
+    display: none;
+  }
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  overflow: hidden;
 `;
 
 const InfoBlock = styled.div`
   display: flex;
   flex-direction: column;
   font-size: 2rem;
+  text-align: center;
   span {
     font-size: 1.25rem;
   }
@@ -47,6 +57,9 @@ const InfoBlock = styled.div`
       font-size: 1.25rem;
       width: 12rem;
     }
+  }
+  @media (min-width: 430px) {
+    text-align: left;
   }
 `;
 
@@ -68,7 +81,7 @@ const Profile = ({ user }: ProfileProps) => {
   const [edit, setEdit] = useState(false);
   const { onError, resetError, ErrorMessage } = useErrorMessage();
 
-  const onSubmit = () => {
+  const onSubmitInfo = () => {
     if (!/^[ㄱ-ㅎ가-힇A-Za-z\d]{1,10}/.test(nickname)) {
       onError('닉네임은 1-10자의 한글/영문/숫자입니다.');
       return;
@@ -78,10 +91,25 @@ const Profile = ({ user }: ProfileProps) => {
     setEdit(false);
   };
 
+  const onSubmitImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    if (!e.target.files) return;
+
+    const formData = new FormData();
+    formData.append('image', e.target.files[0]);
+    dispatch(uploadProfileImage({ username: user.username, image: formData }));
+  };
+
   return (
     <>
       <ProfileBlock>
-        <ImageBlock>
+        <ImageBlock htmlFor="profileImage">
+          <input
+            id="profileImage"
+            type="file"
+            accept="image/*"
+            onChange={(e) => onSubmitImage(e)}
+          />
           {user.profileImage ? (
             <img src={user.profileImage} alt="profile_image" />
           ) : (
@@ -114,7 +142,7 @@ const Profile = ({ user }: ProfileProps) => {
           </InfoBlock>
         )}
         {edit ? (
-          <CheckButton onClick={onSubmit}>
+          <CheckButton onClick={onSubmitInfo}>
             <BsCheckLg />
           </CheckButton>
         ) : (

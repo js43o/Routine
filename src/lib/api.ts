@@ -21,10 +21,13 @@ export const check = () => client.get('/auth/check');
 export const logout = () => client.post('/auth/logout');
 
 export const setInfo = (username: string, nickname: string, intro: string) =>
-  client.post('/auth/info', { username, nickname, intro });
+  client.post('/user/info', { username, nickname, intro });
 
 export const setCurrentRoutine = (username: string, routineId: string) =>
-  client.post('/auth/set_current_routine', { username, routineId });
+  client.post('/user/curroutine', { username, routineId });
+
+export const uploadProfileImage = (image: FormData) =>
+  client.post('/user/image', image);
 
 export const addRoutine = (username: string, routine: Routine) =>
   client.post('/routine/add', { username, routine });
