@@ -25,7 +25,6 @@ export const setInfo = async (ctx: DefaultContext) => {
       ctx.status = 401;
       return;
     }
-
     user.nickname = nickname;
     user.intro = intro;
     await user.save();
@@ -75,3 +74,31 @@ export const upload = multer({
   }),
   limits: { fileSize: 3 * 1024 * 1024 },
 });
+
+export const setProfileImageSrc = async (ctx: DefaultContext) => {
+  const inputSchema = Joi.object().keys({
+    username: Joi.string().alphanum().min(5).max(20).required(),
+    src: Joi.string().allow(''),
+  });
+
+  const result = inputSchema.validate(ctx.request.body);
+  if (result.error) {
+    ctx.status = 400;
+    ctx.body = result.error;
+    return;
+  }
+
+  const { username, src } = ctx.request.body;
+  try {
+    const user = await User.findByUsername(username);
+    if (!user) {
+      ctx.status = 401;
+      return;
+    }
+    user.profileImage = src;
+    await user.save();
+    ctx.status = 200;
+  } catch (e) {
+    ctx.throw(500, e as Error);
+  }
+};

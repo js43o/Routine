@@ -7,12 +7,13 @@ export const kakaoLogin = async (ctx: DefaultContext) => {
   try {
     const access_token = await getKakaoToken(code);
     const id = await getKakaoInfo(access_token);
-    const user = await User.findByUsername(id);
+
+    let user = await User.findByUsername(id);
     if (!user) {
-      const user = new User({
+      user = new User({
         username: id,
         snsProvider: 'kakao',
-        nickname: `사용자#${id}`,
+        nickname: `사용자-${id}`.slice(0, 10),
       });
       await user.save();
     }

@@ -78,16 +78,6 @@ export const login = async (ctx: DefaultContext) => {
   }
 };
 
-export const check = async (ctx: DefaultContext) => {
-  const { user } = ctx.state;
-  if (!user) {
-    ctx.status = 401;
-    return;
-  }
-  ctx.status = 200;
-  ctx.body = user;
-};
-
 export const logout = async (ctx: DefaultContext) => {
   ctx.cookies.set('access_token');
   ctx.status = 204;

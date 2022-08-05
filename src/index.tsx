@@ -13,7 +13,7 @@ document.ondragstart = () => false;
 document.onselectstart = () => false;
 document.oncontextmenu = () => false;
 
-const persistor = persistStore(store);
+export const persistor = persistStore(store);
 
 ReactDOM.render(
   <Provider store={store}>

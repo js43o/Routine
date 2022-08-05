@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from '@emotion/styled';
-import { check, logout } from 'modules/user';
+import { logout } from 'modules/user';
 import { useNavigate } from 'react-router-dom';
 import { userSelector } from 'modules/hooks';
+import { persistor } from 'index';
 
 const FooterBlock = styled.div`
   display: flex;
@@ -32,7 +33,7 @@ const Footer = () => {
   const onLogout = async () => {
     try {
       await dispatch(logout());
-      await dispatch(check());
+      await persistor.purge();
     } catch (e) {
       if (e) {
         console.error(e);

@@ -16,5 +16,6 @@ user.post('/curroutine', userCtrl.setCurrentRoutine);
 user.post('/image', userCtrl.upload.single('image'), (ctx) => {
   ctx.body = { url: `/img/${ctx.request.file.filename}` };
 });
+user.post('/curimage', userCtrl.setProfileImageSrc);
 
 export default user;

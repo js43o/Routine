@@ -29,6 +29,9 @@ export const setCurrentRoutine = (username: string, routineId: string) =>
 export const uploadProfileImage = (image: FormData) =>
   client.post('/user/image', image);
 
+export const setProfileImageSrc = (username: string, src: string) =>
+  client.post('/user/curimage', { username, src });
+
 export const addRoutine = (username: string, routine: Routine) =>
   client.post('/routine/add', { username, routine });
 

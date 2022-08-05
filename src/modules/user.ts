@@ -1,9 +1,13 @@
 import {
   createAsyncThunk,
   createSlice,
+  isFulfilled,
+  isPending,
+  isRejected,
   SerializedError,
 } from '@reduxjs/toolkit';
 import { AxiosError } from 'axios';
+import { PURGE } from 'redux-persist';
 import * as api from 'lib/api';
 import {
   CompleteItem,
@@ -98,11 +102,6 @@ export const kakaoLogin = createAsyncThunk(
   },
 );
 
-export const check = createAsyncThunk('CHECK', async () => {
-  const reponse = await api.check();
-  return reponse.data;
-});
-
 export const logout = createAsyncThunk('LOGOUT', async () => {
   const reponse = await api.logout();
   return reponse.data;
@@ -132,11 +131,11 @@ export const setCurrentRoutine = createAsyncThunk(
   },
 );
 
-export const uploadProfileImage = createAsyncThunk(
+export const setProfileImage = createAsyncThunk(
   'SET_PROFILE_IMAGE',
   async ({ username, image }: { username: string; image: FormData }) => {
     const response = await api.uploadProfileImage(image);
-    console.log('Data:', response.data);
+    await api.setProfileImageSrc(username, response.data.url);
     return response.data.url;
   },
 );
@@ -232,14 +231,12 @@ export const userSlice = createSlice({
         payload: { routineId, value },
       }: { payload: { routineId: string; value: string } },
     ) => {
-      const { user } = state;
-      const r = user.routines.find((s) => s.routineId === routineId);
+      const r = state.user.routines.find((s) => s.routineId === routineId);
       if (!r) return;
       r.title = value;
     },
     addRoutine: (state, { payload }: { payload: Routine }) => {
-      const { user } = state;
-      user.routines.push(payload);
+      state.user.routines.push(payload);
     },
     addExercise: (
       state,
@@ -249,8 +246,7 @@ export const userSlice = createSlice({
         payload: { routineId: string; day: number; exercise: ExerciseItem };
       },
     ) => {
-      const { user } = state;
-      const r = user.routines.find((s) => s.routineId === routineId);
+      const r = state.user.routines.find((s) => s.routineId === routineId);
       if (!r) return;
       const d = r.weekRoutine[day];
       if (!d) return;
@@ -263,8 +259,7 @@ export const userSlice = createSlice({
         payload: { routineId, day, idx },
       }: { payload: { routineId: string; day: number; idx: number } },
     ) => {
-      const { user } = state;
-      const r = user.routines.find((s) => s.routineId === routineId);
+      const r = state.user.routines.find((s) => s.routineId === routineId);
       if (!r) return;
       const d = r.weekRoutine[day];
       if (!d) return;
@@ -284,8 +279,7 @@ export const userSlice = createSlice({
         };
       },
     ) => {
-      const { user } = state;
-      const r = user.routines.find((s) => s.routineId === routineId);
+      const r = state.user.routines.find((s) => s.routineId === routineId);
       if (!r) return;
       const d = r.weekRoutine[day];
       if (!d) return;
@@ -299,208 +293,83 @@ export const userSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    builder.addCase(PURGE, () => initialState);
     builder
-      .addCase(register.pending, (state) => {
-        state.loading = true;
-        state.user = initialUser;
-      })
       .addCase(register.fulfilled, (state, action) => {
-        state.loading = false;
-        state.error = null;
-        state.authErrorCode = 0;
         state.user = action.payload;
       })
       .addCase(register.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error;
+        state.user = initialUser;
         state.authErrorCode = action.payload as number;
       });
     builder
-      .addCase(login.pending, (state) => {
-        state.loading = true;
-        state.user = initialUser;
-      })
       .addCase(login.fulfilled, (state, action) => {
-        state.loading = false;
-        state.error = null;
-        state.authErrorCode = 0;
         state.user = action.payload;
       })
       .addCase(login.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error;
+        state.user = initialUser;
         state.authErrorCode = action.payload as number;
       });
     builder
-      .addCase(kakaoLogin.pending, (state) => {
-        state.loading = true;
-        state.user = initialUser;
-      })
       .addCase(kakaoLogin.fulfilled, (state, action) => {
-        state.loading = false;
-        state.error = null;
-        state.authErrorCode = 0;
         state.user = action.payload;
       })
-      .addCase(kakaoLogin.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error;
-      });
-    builder
-      .addCase(check.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(check.fulfilled, (state) => {
-        state.loading = false;
-      })
-      .addCase(check.rejected, (state) => {
-        state.loading = false;
+      .addCase(kakaoLogin.rejected, (state) => {
         state.user = initialUser;
       });
-    builder
-      .addCase(setInfo.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(setInfo.fulfilled, (state, action) => {
-        state.loading = false;
-        state.error = null;
-        const { nickname, intro } = action.payload;
-        state.user.nickname = nickname;
-        state.user.intro = intro;
-      })
-      .addCase(setInfo.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error;
+    builder.addCase(setInfo.fulfilled, (state, action) => {
+      state.user.nickname = action.payload.nickname;
+      state.user.intro = action.payload.intro;
+    });
+    builder.addCase(setCurrentRoutine.fulfilled, (state, action) => {
+      state.user.currentRoutineId = action.payload;
+    });
+    builder.addCase(setProfileImage.fulfilled, (state, action) => {
+      state.user.profileImage = action.payload;
+    });
+    builder.addCase(addComplete.fulfilled, (state, action) => {
+      if (state.user) {
+        state.user.completes.push(action.payload);
+      }
+    });
+    builder.addCase(removeComplete.fulfilled, (state, action) => {
+      state.user.completes = state.user.completes.filter(
+        (item) => item.date !== action.payload,
+      );
+    });
+    builder.addCase(addProgress.fulfilled, (state, action) => {
+      state.user.progress.map((item) =>
+        item.data.push({
+          x: action.payload.date,
+          y: action.payload[item.id],
+        }),
+      );
+    });
+    builder.addCase(removeProgress.fulfilled, (state, action) => {
+      state.user.progress.forEach((item) => {
+        item.data = item.data.filter((i) => i.x !== action.payload);
       });
-    builder
-      .addCase(setCurrentRoutine.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(setCurrentRoutine.fulfilled, (state, action) => {
-        state.loading = false;
-        state.error = null;
-        state.user.currentRoutineId = action.payload;
-      })
-      .addCase(setCurrentRoutine.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error;
-      });
-    builder
-      .addCase(uploadProfileImage.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(uploadProfileImage.fulfilled, (state, action) => {
-        state.loading = false;
-        state.error = null;
-        state.user.profileImage = action.payload;
-      })
-      .addCase(uploadProfileImage.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error;
-      });
-    builder
-      .addCase(addComplete.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(addComplete.fulfilled, (state, action) => {
-        state.loading = false;
-        state.error = null;
-        if (state.user) {
-          state.user.completes.push(action.payload);
-        }
-      })
-      .addCase(addComplete.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error;
-      });
-    builder
-      .addCase(removeComplete.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(removeComplete.fulfilled, (state, action) => {
-        state.loading = false;
-        state.error = null;
-        state.user.completes = state.user.completes.filter(
-          (item) => item.date !== action.payload,
-        );
-      })
-      .addCase(removeComplete.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error;
-      });
-    builder
-      .addCase(addProgress.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(addProgress.fulfilled, (state, action) => {
-        state.loading = false;
-        state.error = null;
-        state.user.progress.map((item) =>
-          item.data.push({
-            x: action.payload.date,
-            y: action.payload[item.id],
-          }),
-        );
-      })
-      .addCase(addProgress.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error;
-      });
-    builder
-      .addCase(removeProgress.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(removeProgress.fulfilled, (state, action) => {
-        state.loading = false;
-        state.error = null;
-        state.user.progress.forEach((item) => {
-          item.data = item.data.filter((i) => i.x !== action.payload);
-        });
-      })
-      .addCase(removeProgress.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error;
-      });
-    builder
-      .addCase(addRoutine.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(addRoutine.fulfilled, (state, action) => {
-        state.loading = false;
-        state.error = null;
-        state.user.routines.push(action.payload);
-      })
-      .addCase(addRoutine.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error;
-      });
-    builder
-      .addCase(removeRoutine.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(removeRoutine.fulfilled, (state, action) => {
-        state.loading = false;
-        state.error = null;
-        state.user.routines = state.user.routines.filter(
-          (routine) => routine.routineId !== action.payload,
-        );
-      })
-      .addCase(removeRoutine.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error;
-      });
-    builder
-      .addCase(editRoutine.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(editRoutine.fulfilled, (state) => {
-        state.loading = false;
-        state.error = null;
-      })
-      .addCase(editRoutine.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error;
-      });
+    });
+    builder.addCase(addRoutine.fulfilled, (state, action) => {
+      state.user.routines.push(action.payload);
+    });
+    builder.addCase(removeRoutine.fulfilled, (state, action) => {
+      state.user.routines = state.user.routines.filter(
+        (routine) => routine.routineId !== action.payload,
+      );
+    });
+    builder.addMatcher(isPending, (state) => {
+      state.loading = true;
+      state.authErrorCode = 0;
+      state.error = null;
+    });
+    builder.addMatcher(isFulfilled, (state) => {
+      state.loading = false;
+    });
+    builder.addMatcher(isRejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error;
+    });
   },
 });
 

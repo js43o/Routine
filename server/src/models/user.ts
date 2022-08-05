@@ -39,6 +39,7 @@ const UserSchema: Schema<IUserDocument> = new Schema({
   snsProvider: { type: String, default: '' },
   nickname: { type: String, default: '' },
   intro: { type: String, default: '' },
+  profileImage: { type: String, default: '' },
   currentRoutineId: { type: String, default: '' },
   routines: [RoutineSchema],
   completes: [CompleteSchema],
