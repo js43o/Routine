@@ -2,11 +2,15 @@ import { DefaultContext } from 'koa';
 import Joi from 'joi';
 import User from '../../models/user';
 
+const USERNAME_SCHEMA = Joi.string().alphanum().min(5).max(20).required();
+const PASSWORD_SCHEMA = Joi.string().min(8).max(20).required();
+const NICKNAME_SCHEMA = Joi.string().min(1).max(10).required();
+
 export const register = async (ctx: DefaultContext) => {
   const inputSchema = Joi.object().keys({
-    username: Joi.string().alphanum().min(5).max(20).required(),
-    password: Joi.string().min(8).max(20).required(),
-    nickname: Joi.string().min(1).max(10).required(),
+    username: USERNAME_SCHEMA,
+    password: PASSWORD_SCHEMA,
+    nickname: NICKNAME_SCHEMA,
   });
   const result = inputSchema.validate(ctx.request.body);
   if (result.error) {
@@ -44,8 +48,8 @@ export const register = async (ctx: DefaultContext) => {
 
 export const login = async (ctx: DefaultContext) => {
   const inputSchema = Joi.object().keys({
-    username: Joi.string().alphanum().min(5).max(20).required(),
-    password: Joi.string().required(),
+    username: USERNAME_SCHEMA,
+    password: PASSWORD_SCHEMA,
   });
   const result = inputSchema.validate(ctx.request.body);
   if (result.error) {
@@ -81,4 +85,29 @@ export const login = async (ctx: DefaultContext) => {
 export const logout = async (ctx: DefaultContext) => {
   ctx.cookies.set('access_token');
   ctx.status = 204;
+};
+
+export const deregister = async (ctx: DefaultContext) => {
+  const inputSchema = Joi.object().keys({
+    username: USERNAME_SCHEMA,
+  });
+  const result = inputSchema.validate(ctx.request.body);
+  if (result.error) {
+    ctx.status = 400;
+    ctx.body = result.error;
+    return;
+  }
+
+  const { username } = ctx.request.body;
+  try {
+    const user = await User.findByUsername(username);
+    if (!user) {
+      ctx.status = 404;
+      return;
+    }
+    User.findByIdAndDelete(user._id).exec();
+    ctx.status = 204;
+  } catch (e) {
+    ctx.throw(500, e as Error);
+  }
 };

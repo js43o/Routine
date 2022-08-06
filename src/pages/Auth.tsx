@@ -101,14 +101,23 @@ const Auth = ({ type }: Authprops) => {
         onError('아이디/비밀번호를 입력하세요.');
         return;
       }
+      if (
+        !onCheckInputs(username, 'username') ||
+        !onCheckInputs(password, 'password')
+      ) {
+        onError('입력값이 조건을 만족하지 않습니다.');
+        return;
+      }
       dispatch(login({ username, password }));
     }
   };
 
   useEffect(() => {
     if (!error) return;
-
     switch (authErrorCode) {
+      case 400:
+        onError('잘못된 입력입니다.');
+        break;
       case 401:
         onError('로그인 정보가 일치하지 않습니다.');
         break;

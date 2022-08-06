@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { css, Global, ThemeProvider, useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+import { persistor } from 'index';
 import { themeSelector } from 'modules/hooks';
 import { globalStyles } from 'lib/globalStyles';
 import LoadingIndicator from 'components/common/LoadingIndicator';
@@ -68,7 +69,7 @@ const GlobalStyles = () => {
 };
 
 function App() {
-  const { loading, user } = useSelector(userSelector);
+  const { loading, error, user } = useSelector(userSelector);
   const theme = useSelector(themeSelector);
   const navigate = useNavigate();
 
@@ -80,6 +81,14 @@ function App() {
       navigate('/login');
     }
   }, [user]);
+
+  useEffect(() => {
+    if (error && error.code === 'ERR_BAD_REQUEST') {
+      alert('서버와의 연결이 끊겼습니다.\n다시 로그인해주세요.');
+      persistor.purge();
+      navigate('/login');
+    }
+  }, [error]);
 
   return (
     <AppBlock>

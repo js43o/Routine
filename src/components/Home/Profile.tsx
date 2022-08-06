@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { User } from 'types';
 import { FaPencilAlt } from 'react-icons/fa';
@@ -108,6 +108,11 @@ const Profile = ({ user }: ProfileProps) => {
     formData.append('image', e.target.files[0]);
     dispatch(setProfileImage({ username: user.username, image: formData }));
   };
+
+  useEffect(() => {
+    setNickname(user.nickname);
+    setIntro(user.intro);
+  }, [user]);
 
   return (
     <>

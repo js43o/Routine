@@ -14,11 +14,18 @@ export const login = (username: string, password: string) =>
   client.post('/auth/login', { username, password });
 
 export const kakaoLogin = (code: string) =>
-  client.post('/auth/kakao', { code });
+  client.post('/auth/kakao/login', { code });
+
+export const kakaoLogout = () => client.post('/auth/kakao/logout');
+
+export const kakaoDeregister = () => client.post('/auth/kakao/deregister');
 
 export const check = () => client.get('/auth/check');
 
 export const logout = () => client.post('/auth/logout');
+
+export const deregister = (username: string) =>
+  client.post('/auth/deregister', { username });
 
 export const setInfo = (username: string, nickname: string, intro: string) =>
   client.post('/user/info', { username, nickname, intro });

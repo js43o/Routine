@@ -27,6 +27,8 @@ type UserStateType = {
 const initialUser: User = {
   username: '',
   nickname: '',
+  snsProvider: '',
+  profileImage: '',
   intro: '',
   currentRoutineId: '',
   completes: [],
@@ -94,6 +96,17 @@ export const login = createAsyncThunk(
   },
 );
 
+export const logout = createAsyncThunk('LOGOUT', async () => {
+  await api.logout();
+});
+
+export const deregister = createAsyncThunk(
+  'DEREGISTER',
+  async ({ username }: { username: string }) => {
+    await api.deregister(username);
+  },
+);
+
 export const kakaoLogin = createAsyncThunk(
   'KAKAO_LOGIN',
   async ({ code }: { code: string }) => {
@@ -102,10 +115,16 @@ export const kakaoLogin = createAsyncThunk(
   },
 );
 
-export const logout = createAsyncThunk('LOGOUT', async () => {
-  const reponse = await api.logout();
-  return reponse.data;
+export const kakaoLogout = createAsyncThunk('KAKAO_LOGOUT', async () => {
+  await api.kakaoLogout();
 });
+
+export const kakaoDeregister = createAsyncThunk(
+  'KAKAO_DEREGISTER',
+  async () => {
+    await api.kakaoDeregister();
+  },
+);
 
 export const setInfo = createAsyncThunk(
   'SET_INFO',
@@ -293,83 +312,81 @@ export const userSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(PURGE, () => initialState);
     builder
+      .addCase(PURGE, () => initialState)
       .addCase(register.fulfilled, (state, action) => {
         state.user = action.payload;
       })
       .addCase(register.rejected, (state, action) => {
         state.user = initialUser;
         state.authErrorCode = action.payload as number;
-      });
-    builder
+      })
       .addCase(login.fulfilled, (state, action) => {
         state.user = action.payload;
       })
       .addCase(login.rejected, (state, action) => {
         state.user = initialUser;
         state.authErrorCode = action.payload as number;
-      });
-    builder
+      })
       .addCase(kakaoLogin.fulfilled, (state, action) => {
         state.user = action.payload;
       })
       .addCase(kakaoLogin.rejected, (state) => {
         state.user = initialUser;
+      })
+      .addCase(setInfo.fulfilled, (state, action) => {
+        state.user.nickname = action.payload.nickname;
+        state.user.intro = action.payload.intro;
+      })
+      .addCase(setCurrentRoutine.fulfilled, (state, action) => {
+        state.user.currentRoutineId = action.payload;
+      })
+      .addCase(setProfileImage.fulfilled, (state, action) => {
+        state.user.profileImage = action.payload;
+      })
+      .addCase(addComplete.fulfilled, (state, action) => {
+        if (state.user) {
+          state.user.completes.push(action.payload);
+        }
+      })
+      .addCase(removeComplete.fulfilled, (state, action) => {
+        state.user.completes = state.user.completes.filter(
+          (item) => item.date !== action.payload,
+        );
+      })
+      .addCase(addProgress.fulfilled, (state, action) => {
+        state.user.progress.map((item) =>
+          item.data.push({
+            x: action.payload.date,
+            y: action.payload[item.id],
+          }),
+        );
+      })
+      .addCase(removeProgress.fulfilled, (state, action) => {
+        state.user.progress.forEach((item) => {
+          item.data = item.data.filter((i) => i.x !== action.payload);
+        });
+      })
+      .addCase(addRoutine.fulfilled, (state, action) => {
+        state.user.routines.push(action.payload);
+      })
+      .addCase(removeRoutine.fulfilled, (state, action) => {
+        state.user.routines = state.user.routines.filter(
+          (routine) => routine.routineId !== action.payload,
+        );
+      })
+      .addMatcher(isPending, (state) => {
+        state.loading = true;
+        state.authErrorCode = 0;
+        state.error = null;
+      })
+      .addMatcher(isFulfilled, (state) => {
+        state.loading = false;
+      })
+      .addMatcher(isRejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error;
       });
-    builder.addCase(setInfo.fulfilled, (state, action) => {
-      state.user.nickname = action.payload.nickname;
-      state.user.intro = action.payload.intro;
-    });
-    builder.addCase(setCurrentRoutine.fulfilled, (state, action) => {
-      state.user.currentRoutineId = action.payload;
-    });
-    builder.addCase(setProfileImage.fulfilled, (state, action) => {
-      state.user.profileImage = action.payload;
-    });
-    builder.addCase(addComplete.fulfilled, (state, action) => {
-      if (state.user) {
-        state.user.completes.push(action.payload);
-      }
-    });
-    builder.addCase(removeComplete.fulfilled, (state, action) => {
-      state.user.completes = state.user.completes.filter(
-        (item) => item.date !== action.payload,
-      );
-    });
-    builder.addCase(addProgress.fulfilled, (state, action) => {
-      state.user.progress.map((item) =>
-        item.data.push({
-          x: action.payload.date,
-          y: action.payload[item.id],
-        }),
-      );
-    });
-    builder.addCase(removeProgress.fulfilled, (state, action) => {
-      state.user.progress.forEach((item) => {
-        item.data = item.data.filter((i) => i.x !== action.payload);
-      });
-    });
-    builder.addCase(addRoutine.fulfilled, (state, action) => {
-      state.user.routines.push(action.payload);
-    });
-    builder.addCase(removeRoutine.fulfilled, (state, action) => {
-      state.user.routines = state.user.routines.filter(
-        (routine) => routine.routineId !== action.payload,
-      );
-    });
-    builder.addMatcher(isPending, (state) => {
-      state.loading = true;
-      state.authErrorCode = 0;
-      state.error = null;
-    });
-    builder.addMatcher(isFulfilled, (state) => {
-      state.loading = false;
-    });
-    builder.addMatcher(isRejected, (state, action) => {
-      state.loading = false;
-      state.error = action.error;
-    });
   },
 });
 

@@ -50,7 +50,8 @@ export type Routine = {
 export type User = {
   username: string;
   nickname: string;
-  profileImage?: string;
+  snsProvider: string;
+  profileImage: string;
   intro: string;
   currentRoutineId: string;
   completes: CompleteItem[];
