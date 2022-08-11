@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import {
@@ -17,7 +17,9 @@ import { FaPencilAlt, FaTrashAlt } from 'react-icons/fa';
 import RoutineExerciseList from './DayRoutine';
 
 const WeekRoutineBlock = styled.li<{ visible: boolean; editing?: boolean }>`
-  height: ${({ visible }) => (visible ? '34.25rem' : '3rem')};
+  display: flex;
+  flex-direction: column;
+  height: ${({ visible }) => (visible ? '35rem' : '48px')};
   padding: 0.5rem;
   border: 1px solid
     ${({ editing, theme }) => (editing ? theme.primary : theme.border_main)};
@@ -26,7 +28,7 @@ const WeekRoutineBlock = styled.li<{ visible: boolean; editing?: boolean }>`
   transition: border 0.2s, height 0.5s;
   .header {
     display: flex;
-    justify-content: space-between;
+    justify-content: start;
     align-items: center;
     gap: 0.5rem;
     .buttons {
@@ -41,7 +43,7 @@ const WeekRoutineBlock = styled.li<{ visible: boolean; editing?: boolean }>`
 `;
 
 const TitleBlock = styled.div<{ editing: boolean }>`
-  height: 2rem;
+  height: 34px;
   display: flex;
   place-items: center;
   gap: 0.5rem;
@@ -146,16 +148,6 @@ const WeekRoutine = ({
       removeRoutine({ username: user.username, routineId: routine.routineId }),
     );
   };
-
-  useEffect(() => {
-    if (user.currentRoutineId === routine.routineId)
-      dispatch(
-        setCurrentRoutine({
-          username: user.username,
-          routineId: routine.routineId,
-        }),
-      );
-  }, [routine.lastModified]);
 
   return (
     <WeekRoutineBlock visible={isVisible} editing={isEditing}>

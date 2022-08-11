@@ -77,63 +77,6 @@ const RecordPage = () => {
     setRecords(tempRecords);
   }, [currentDate, user.completes]);
 
-  const increaseMonth = useCallback(() => {
-    if (currentDate.month >= 11) {
-      setCurrentDate({
-        year: currentDate.year + 1,
-        month: 0,
-      });
-    } else
-      setCurrentDate({
-        ...currentDate,
-        month: currentDate.month + 1,
-      });
-  }, [currentDate]);
-
-  const decreaseMonth = useCallback(() => {
-    if (currentDate.month <= 0) {
-      setCurrentDate({
-        year: currentDate.year - 1,
-        month: 11,
-      });
-    } else
-      setCurrentDate({
-        ...currentDate,
-        month: currentDate.month - 1,
-      });
-  }, [currentDate]);
-
-  const setDateNow = useCallback(
-    () =>
-      setCurrentDate({
-        year: new Date().getFullYear(),
-        month: new Date().getMonth(),
-      }),
-    [],
-  );
-
-  const onSelect = useCallback(
-    (e: React.MouseEvent) => {
-      const elem = (e.target as HTMLLIElement).closest('li');
-      if (!elem || !elem.textContent) return;
-
-      const info = records.find(
-        (r) =>
-          r.date ===
-          getDatestr(
-            new Date(
-              currentDate.year,
-              currentDate.month,
-              +(elem.textContent as string),
-            ),
-          ),
-      );
-      if (!info) return;
-      setSelected(info);
-    },
-    [records, currentDate],
-  );
-
   return (
     <Template>
       <SetProgressModal
@@ -143,13 +86,11 @@ const RecordPage = () => {
         onCloseModal={onCloseModal}
       />
       <RecordCalendar
-        date={currentDate}
+        currentDate={currentDate}
         records={records}
         selectedDate={selected ? selected.date : null}
-        onIncrease={increaseMonth}
-        onDecrease={decreaseMonth}
-        onDateNow={setDateNow}
-        onSelect={onSelect}
+        setCurrentDate={setCurrentDate}
+        setSelected={setSelected}
       />
       <h2>수행한 운동</h2>
       <ExerciseHistory complete={selected} />

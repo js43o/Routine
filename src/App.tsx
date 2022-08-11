@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Route, Routes, useNavigate } from 'react-router-dom';
-import { css, Global, ThemeProvider, useTheme } from '@emotion/react';
+import { ThemeProvider } from '@emotion/react';
 import styled from '@emotion/styled';
 import { persistor } from 'index';
 import { themeSelector } from 'modules/hooks';
-import { globalStyles } from 'lib/globalStyles';
+import GlobalStyles from 'lib/GlobalStyles';
 import LoadingIndicator from 'components/common/LoadingIndicator';
 import HomePage from 'pages/Home';
 import RoutinePage from 'pages/Routine';
@@ -37,36 +37,6 @@ const AppBlock = styled.div`
     padding: 1rem;
   }
 `;
-
-const GlobalStyles = () => {
-  const theme = useTheme();
-  return (
-    <Global
-      styles={css`
-        ${globalStyles};
-        body {
-          background: ${theme.body};
-          color: ${theme.letter_main};
-        }
-        h1,
-        h2,
-        h3,
-        h4 {
-          border-bottom: 2px solid ${theme.border_main};
-        }
-        hr {
-          border-top: 1px solid ${theme.border_main};
-        }
-        input,
-        textArea,
-        button {
-          color: ${theme.letter_main};
-          background: ${theme.background_sub};
-        }
-      `}
-    />
-  );
-};
 
 function App() {
   const { loading, error, user } = useSelector(userSelector);

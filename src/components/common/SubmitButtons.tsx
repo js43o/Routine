@@ -1,5 +1,5 @@
-import styled from '@emotion/styled';
 import React from 'react';
+import styled from '@emotion/styled';
 import Button from './Button';
 
 const ButtonsBlock = styled.div`
@@ -16,17 +16,16 @@ const ButtonsBlock = styled.div`
 `;
 
 type SubmitButtonsType = {
-  onSubmit: () => void;
-  onClose: () => void;
+  onClose: () => void | null;
 };
 
-export const SubmitButtons = ({ onSubmit, onClose }: SubmitButtonsType) => {
+export const SubmitButtons = ({ onClose }: SubmitButtonsType) => {
   return (
     <ButtonsBlock className="buttons">
-      <Button className="submit" onClick={onSubmit}>
+      <Button type="submit" className="submit">
         추가
       </Button>
-      <Button className="close" onClick={onClose}>
+      <Button type="button" className="close" onClick={onClose}>
         취소
       </Button>
     </ButtonsBlock>

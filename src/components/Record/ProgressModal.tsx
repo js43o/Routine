@@ -95,7 +95,7 @@ const FooterBlock = styled.div`
   }
 `;
 
-const ConfirmBlock = styled.div`
+const ConfirmBlock = styled.form`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -161,7 +161,8 @@ const ProgressModal = ({
     setInput({ ...input, [type]: e.target.value });
   };
 
-  const onSubmit = () => {
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     if (!input.weight || !input.muscleMass || !input.fatMass) {
       onError('입력값을 확인해주세요.');
       return;
@@ -230,7 +231,7 @@ const ProgressModal = ({
         </ProgressListBlock>
         <h2>새로운 기록 추가</h2>
         <FooterBlock>
-          <ConfirmBlock>
+          <ConfirmBlock onSubmit={onSubmit}>
             <div className="weight">
               <b>체중</b>
               <input
@@ -264,7 +265,7 @@ const ProgressModal = ({
               />
               kg
             </div>
-            <SubmitButtons onSubmit={onSubmit} onClose={onClose} />
+            <SubmitButtons onClose={onClose} />
           </ConfirmBlock>
         </FooterBlock>
         <ErrorMessage />

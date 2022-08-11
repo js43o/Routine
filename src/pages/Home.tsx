@@ -30,6 +30,8 @@ const HomePage = () => {
     [user.completes],
   );
 
+  if (!user.username) return <Template> </Template>;
+
   return (
     <Template>
       <Profile user={user} />

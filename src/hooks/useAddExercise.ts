@@ -64,9 +64,9 @@ const useAddExercise = () => {
       type: 'CHANGE_WEIGHT' | 'CHANGE_NUM_OF_TIMES' | 'CHANGE_NUM_OF_SETS',
       e: React.ChangeEvent<HTMLInputElement>,
     ) => {
-      if (e.target.value.length > 1 && e.target.value[0] === '0') {
+      if (e.target.value.length > 1 && e.target.value[0] === '0')
         e.target.value = e.target.value.slice(1);
-      }
+
       if (e.target.value.length > 3) return;
       dispatch({
         type,

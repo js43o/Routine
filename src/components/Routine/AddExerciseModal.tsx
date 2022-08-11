@@ -112,12 +112,12 @@ const FooterBlock = styled.div`
   }
 `;
 
-const ConfirmBlock = styled.div`
+const ConfirmBlock = styled.form`
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem;
+  padding-top: 0.5rem;
   .weight,
   .numOfTimes,
   .numOfSets {
@@ -174,7 +174,8 @@ const AddExerciseModal = ({
   } = useAddExercise();
   const { onError, resetError, ErrorMessage } = useErrorMessage();
 
-  const onAddExercise = () => {
+  const onAddExercise = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     if (!routineId || day === null) return;
 
     const error = checkInputs();
@@ -283,7 +284,7 @@ const AddExerciseModal = ({
           <LoadingIndicator />
         )}
         <FooterBlock>
-          <ConfirmBlock>
+          <ConfirmBlock onSubmit={onAddExercise}>
             <div className="weight">
               <b>중량</b>
               <input
@@ -317,7 +318,7 @@ const AddExerciseModal = ({
               />
               세트
             </div>
-            <SubmitButtons onSubmit={onAddExercise} onClose={onClose} />
+            <SubmitButtons onClose={onClose} />
           </ConfirmBlock>
           <ErrorMessage />
         </FooterBlock>

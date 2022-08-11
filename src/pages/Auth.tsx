@@ -35,13 +35,13 @@ const AuthBlock = styled.div<{ type: string }>`
       display: flex;
       flex-direction: column;
       position: relative;
-      font-size: 0.85rem;
-      color: ${({ theme }) => theme.letter_sub};
+      small {
+        color: ${({ theme }) => theme.letter_sub};
+      }
     }
   }
   .link {
     align-self: end;
-    font-weight: bold;
   }
 `;
 
@@ -146,50 +146,53 @@ const Auth = ({ type }: Authprops) => {
       <AuthBlock type={type}>
         <form onSubmit={onSubmit}>
           <label htmlFor="username">
+            아이디
             <input
               type="text"
               id="username"
-              placeholder="아이디"
               maxLength={20}
               value={username}
               onChange={(e) => onChangeInput('username', e)}
             />
-            {type === 'register' &&
-              '※ 영문 소문자/숫자 포함 5-20자 (특수기호 (-),(_) 허용)'}
+            {type === 'register' && (
+              <small>
+                ※ 영문 소문자/숫자 포함 5-20자 (특수기호 (-),(_) 허용)
+              </small>
+            )}
           </label>
           <label htmlFor="password">
+            비밀번호
             <input
               type="password"
               id="password"
-              placeholder="비밀번호"
               maxLength={20}
               value={password}
               onChange={(e) => onChangeInput('password', e)}
             />
+            <small>※ 영문 대소문자/숫자/특수문자 포함 8-20자</small>
           </label>
           {type === 'register' && (
             <>
               <label htmlFor="passwordConfirm">
+                비밀번호 재확인
                 <input
                   type="password"
                   id="passwordConfirm"
-                  placeholder="비밀번호 확인"
                   maxLength={20}
                   value={passwordConfirm}
                   onChange={(e) => onChangeInput('passwordConfirm', e)}
                 />
-                ※ 영문 대소문자/숫자/특수문자 포함 8-20자
               </label>
               <label htmlFor="nickname">
+                닉네임
                 <input
                   type="text"
                   id="nickname"
-                  placeholder="닉네임"
                   maxLength={10}
                   value={nickname}
                   onChange={(e) => onChangeInput('nickname', e)}
                 />
-                ※ 한글/영문 대소문자/숫자 1-10자
+                <small>※ 한글/영문 대소문자/숫자 1-10자</small>
               </label>
             </>
           )}

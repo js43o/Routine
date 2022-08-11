@@ -1,15 +1,17 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { CompleteItem } from 'types';
 import Button from 'components/common/Button';
-import { dayidxToDaystr } from 'lib/methods';
+import { dayidxToDaystr, getDatestr } from 'lib/methods';
 import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
 import { FaRegCalendarCheck } from 'react-icons/fa';
+import { BsCheckLg } from 'react-icons/bs';
 
 const RecordCalendarBlock = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 0.5rem;
   margin-bottom: 2rem;
 `;
 
@@ -75,6 +77,27 @@ const CalendarHeader = styled.div`
       transform: translateY(10%);
     }
   }
+  form {
+    display: flex;
+    font-size: 2rem;
+    input {
+      font-size: 1.5rem;
+      &.year {
+        width: 5.25rem;
+      }
+      &.month {
+        width: 3.5rem;
+      }
+    }
+    button {
+      font-size: 1.5rem;
+      margin-left: 0.5rem;
+    }
+  }
+`;
+
+const DateIndicator = styled(Button)`
+  font-size: 2rem;
 `;
 
 const PrevButton = styled(MdNavigateBefore)`
@@ -97,43 +120,164 @@ const NextButton = styled(MdNavigateNext)`
   }
 `;
 
+const CheckButton = styled(Button)`
+  color: ${({ theme }) => theme.primary};
+`;
+
 type RecordCalendarProps = {
-  date: {
+  currentDate: {
     year: number;
     month: number;
   };
   records: CompleteItem[];
   selectedDate: string | null;
-  onIncrease: () => void;
-  onDecrease: () => void;
-  onDateNow: () => void;
-  onSelect: (e: React.MouseEvent) => void;
+  setCurrentDate: React.Dispatch<
+    React.SetStateAction<{
+      year: number;
+      month: number;
+    }>
+  >;
+  setSelected: React.Dispatch<React.SetStateAction<CompleteItem | null>>;
 };
 
 const RecordCalendar = ({
-  date,
+  currentDate,
   records,
   selectedDate,
-  onIncrease,
-  onDecrease,
-  onDateNow,
-  onSelect,
+  setCurrentDate,
+  setSelected,
 }: RecordCalendarProps) => {
+  const [edit, setEdit] = useState(false);
+  const [input, setInput] = useState({
+    year: currentDate.year,
+    month: currentDate.month + 1,
+  });
+  const onChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    field: 'year' | 'month',
+  ) => {
+    e.preventDefault();
+    const text = e.target.value;
+
+    if (
+      (field === 'year' && text.length > 4) ||
+      (field === 'month' && text.length > 2)
+    )
+      return;
+
+    setInput({
+      ...input,
+      [field]: +text,
+    });
+  };
+
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setCurrentDate({ year: input.year, month: input.month - 1 });
+    setEdit(false);
+  };
+
+  const increaseMonth = () => {
+    if (currentDate.month >= 11) {
+      setCurrentDate({
+        year: currentDate.year + 1,
+        month: 0,
+      });
+    } else
+      setCurrentDate({
+        ...currentDate,
+        month: currentDate.month + 1,
+      });
+  };
+
+  const decreaseMonth = () => {
+    if (currentDate.month <= 0) {
+      setCurrentDate({
+        year: currentDate.year - 1,
+        month: 11,
+      });
+    } else
+      setCurrentDate({
+        ...currentDate,
+        month: currentDate.month - 1,
+      });
+  };
+
+  const setDateNow = () =>
+    setCurrentDate({
+      year: new Date().getFullYear(),
+      month: new Date().getMonth(),
+    });
+
+  const onSelect = (e: React.MouseEvent) => {
+    const elem = (e.target as HTMLLIElement).closest('li');
+    if (!elem || !elem.textContent) return;
+
+    const info = records.find(
+      (r) =>
+        r.date ===
+        getDatestr(
+          new Date(
+            currentDate.year,
+            currentDate.month,
+            +(elem.textContent as string),
+          ),
+        ),
+    );
+    if (!info) return;
+    setSelected(info);
+  };
+
+  useEffect(() => {
+    setInput({
+      year: currentDate.year,
+      month: currentDate.month + 1,
+    });
+  }, [currentDate]);
+
   return (
     <RecordCalendarBlock>
       <CalendarHeader>
-        <Button onClick={onDecrease}>
+        <Button onClick={decreaseMonth}>
           <PrevButton />
         </Button>
-        <div className="title">
-          <h1>
-            {date.year}.{date.month < 9 ? `0${date.month + 1}` : date.month + 1}
-          </h1>
-          <Button onClick={onDateNow}>
-            <FaRegCalendarCheck />
-          </Button>
-        </div>
-        <Button onClick={onIncrease}>
+        {edit ? (
+          <form onSubmit={onSubmit}>
+            <input
+              className="year"
+              type="number"
+              value={input.year}
+              onChange={(e) => onChange(e, 'year')}
+              min={1900}
+              max={9999}
+            />
+            .
+            <input
+              className="month"
+              type="number"
+              value={input.month}
+              onChange={(e) => onChange(e, 'month')}
+              min={1}
+              max={12}
+            />
+            <CheckButton type="submit">
+              <BsCheckLg />
+            </CheckButton>
+          </form>
+        ) : (
+          <div className="title">
+            <DateIndicator onClick={() => setEdit(true)}>
+              {currentDate.year}.
+              {currentDate.month < 9
+                ? `0${currentDate.month + 1}`
+                : currentDate.month + 1}
+            </DateIndicator>
+            <Button onClick={setDateNow}>
+              <FaRegCalendarCheck />
+            </Button>
+          </div>
+        )}
+        <Button onClick={increaseMonth}>
           <NextButton />
         </Button>
       </CalendarHeader>
