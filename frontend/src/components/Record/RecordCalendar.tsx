@@ -157,13 +157,15 @@ const RecordCalendar = ({
     field: 'year' | 'month',
   ) => {
     e.preventDefault();
-    const text = e.target.value;
+    let text = e.target.value;
 
     if (
       (field === 'year' && text.length > 4) ||
       (field === 'month' && text.length > 2)
     )
       return;
+
+    if (text.length > 1 && text[0] === '0') text = text.slice(1);
 
     setInput({
       ...input,
