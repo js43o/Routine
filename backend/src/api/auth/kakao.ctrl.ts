@@ -1,6 +1,6 @@
 import { DefaultContext } from 'koa';
-import User from '../../models/user';
 import axios from 'axios';
+import User from '../../models/user';
 
 export const kakaoLogin = async (ctx: DefaultContext) => {
   const { code } = ctx.request.body;

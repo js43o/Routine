@@ -1,8 +1,9 @@
-import { DefaultContext, Next, Request } from 'koa';
+import { DefaultContext } from 'koa';
+import multer from '@koa/multer';
 import Joi from 'joi';
 import User from '../../models/user';
-import multer from '@koa/multer';
 import path from 'path';
+import fs from 'fs';
 
 export const setInfo = async (ctx: DefaultContext) => {
   const inputSchema = Joi.object().keys({
@@ -95,6 +96,10 @@ export const setProfileImageSrc = async (ctx: DefaultContext) => {
       ctx.status = 401;
       return;
     }
+    const exists = path.resolve(
+      __dirname + `/../../../uploads/${path.basename(user.profileImage)}`,
+    );
+    if (fs.existsSync(exists)) fs.unlinkSync(exists);
     user.profileImage = src;
     await user.save();
     ctx.status = 200;

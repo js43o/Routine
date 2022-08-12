@@ -1,7 +1,7 @@
 import { DefaultContext } from 'koa';
 import Joi from 'joi';
 import User from '../../models/user';
-import { ProgressItem } from '../../../../src/types';
+import { ProgressItem } from '../../../../frontend/src/types';
 
 export const addProgress = async (ctx: DefaultContext) => {
   const inputSchema = Joi.object().keys({

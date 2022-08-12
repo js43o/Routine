@@ -1,4 +1,3 @@
-import Joi from 'joi';
 import mongoose, { Schema } from 'mongoose';
 import { IExerciseDocument, IExerciseModel } from './types';
 
