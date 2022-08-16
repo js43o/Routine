@@ -6,16 +6,23 @@ import { useNavigate } from 'react-router-dom';
 import { userSelector } from 'modules/hooks';
 import { persistor } from 'index';
 
-const FooterBlock = styled.div`
+const FooterBlock = styled.footer`
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
   padding: 2rem;
+  color: ${({ theme }) => theme.letter_sub};
+  .buttons {
+    display: flex;
+  }
 `;
 
 const TextButton = styled.div`
-  color: ${({ theme }) => theme.letter_sub};
+  padding: 0 0.5rem;
+  color: ${({ theme }) => theme.letter_main};
   text-decoration: underline;
-  padding: 0.25rem 0.5rem;
   cursor: pointer;
   &.deregister {
     color: ${({ theme }) => theme.red};
@@ -61,10 +68,19 @@ const Footer = () => {
 
   return (
     <FooterBlock>
-      <TextButton onClick={onLogout}>로그아웃</TextButton>
-      <TextButton className="deregister" onClick={onDeregister}>
-        계정 삭제
-      </TextButton>
+      {user.snsProvider === 'kakao' ? (
+        <i>카카오로 로그인 중</i>
+      ) : (
+        <i>
+          <b>{user.username}</b>으로 로그인 중
+        </i>
+      )}
+      <div className="buttons">
+        <TextButton onClick={onLogout}>로그아웃</TextButton>
+        <TextButton className="deregister" onClick={onDeregister}>
+          계정 삭제
+        </TextButton>
+      </div>
     </FooterBlock>
   );
 };
