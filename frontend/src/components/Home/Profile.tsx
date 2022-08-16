@@ -50,7 +50,7 @@ const ImageBlock = styled.label`
 const InfoBlock = styled.div`
   display: flex;
   flex-direction: column;
-  text-align: center;
+  align-items: center;
   .nick {
     display: flex;
     gap: 0.5rem;
@@ -66,7 +66,7 @@ const InfoBlock = styled.div`
     }
   }
   @media (min-width: 430px) {
-    text-align: left;
+    align-items: start;
   }
 `;
 

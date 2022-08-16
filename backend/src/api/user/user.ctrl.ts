@@ -96,14 +96,23 @@ export const setProfileImageSrc = async (ctx: DefaultContext) => {
       ctx.status = 401;
       return;
     }
-    const exists = path.resolve(
-      __dirname + `/../../../uploads/${path.basename(user.profileImage)}`,
-    );
-    if (fs.existsSync(exists)) fs.unlinkSync(exists);
+    removeProfileImage(user.profileImage);
     user.profileImage = src;
     await user.save();
     ctx.status = 200;
   } catch (e) {
     ctx.throw(500, e as Error);
+  }
+};
+
+export const removeProfileImage = (src: string) => {
+  if (!src) return;
+  const exists = path.resolve(
+    __dirname + `/../../../uploads/${path.basename(src)}`,
+  );
+  try {
+    if (fs.existsSync(exists)) fs.unlinkSync(exists);
+  } catch (e) {
+    console.error(e);
   }
 };

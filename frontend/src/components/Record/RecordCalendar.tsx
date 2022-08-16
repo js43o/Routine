@@ -157,20 +157,24 @@ const RecordCalendar = ({
     field: 'year' | 'month',
   ) => {
     e.preventDefault();
-    let text = e.target.value;
-
+    const text = e.target.value;
     if (
       (field === 'year' && text.length > 4) ||
       (field === 'month' && text.length > 2)
     )
       return;
 
-    if (text.length > 1 && text[0] === '0') text = text.slice(1);
-
-    setInput({
-      ...input,
-      [field]: +text,
-    });
+    if (text.length > 1 && text[0] === '0') {
+      setInput({
+        ...input,
+        [field]: +text.slice(1),
+      });
+    } else {
+      setInput({
+        ...input,
+        [field]: +text,
+      });
+    }
   };
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -248,7 +252,7 @@ const RecordCalendar = ({
             <input
               className="year"
               type="number"
-              value={input.year}
+              value={`${input.year}`}
               onChange={(e) => onChange(e, 'year')}
               min={1900}
               max={9999}
@@ -257,7 +261,7 @@ const RecordCalendar = ({
             <input
               className="month"
               type="number"
-              value={input.month}
+              value={`${input.month}`}
               onChange={(e) => onChange(e, 'month')}
               min={1}
               max={12}

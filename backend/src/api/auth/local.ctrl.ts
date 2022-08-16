@@ -1,6 +1,7 @@
 import { DefaultContext } from 'koa';
 import Joi from 'joi';
 import User from '../../models/user';
+import { removeProfileImage } from '../user/user.ctrl';
 
 const USERNAME_SCHEMA = Joi.string().alphanum().min(5).max(20).required();
 const PASSWORD_SCHEMA = Joi.string().min(8).max(20).required();
@@ -105,6 +106,7 @@ export const deregister = async (ctx: DefaultContext) => {
       ctx.status = 404;
       return;
     }
+    removeProfileImage(user.profileImage);
     User.findByIdAndDelete(user._id).exec();
     ctx.status = 204;
   } catch (e) {
