@@ -46,7 +46,7 @@
     "start": "nodemon --exec ts-node src/index.ts"
   },
   "_moduleAliases": {
-    "@root"      : ".",
+    "@root": ".",
     "@api/*": "src/api/*",
     "@data/*": "src/data/*",
     "@lib/*": "src/lib/*",
