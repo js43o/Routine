@@ -44,10 +44,7 @@ function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (
-      window.location.pathname !== '/fitness-app/auth/kakao/redirect' &&
-      !user.username
-    ) {
+    if (window.location.pathname !== '/auth/kakao/redirect' && !user.username) {
       navigate('/login');
     }
   }, [user]);
