@@ -48,7 +48,7 @@ const getKakaoToken = async (code: string) => {
   const params = {
     grant_type: 'authorization_code',
     client_id: KAKAO_API,
-    redirect_uri: 'http://localhost:3000/fitness-app/auth/kakao/redirect',
+    redirect_uri: 'http://3.39.89.80/kakao',
     code,
   };
   try {

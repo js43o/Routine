@@ -44,7 +44,7 @@ function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (window.location.pathname !== '/auth/kakao/redirect' && !user.username) {
+    if (window.location.pathname !== '/kakao' && !user.username) {
       navigate('/login');
     }
   }, [user]);
@@ -70,7 +70,7 @@ function App() {
           <Route path="/record" element={<RecordPage />} />
           <Route path="/register" element={<AuthPage type="register" />} />
           <Route path="/login" element={<AuthPage type="login" />} />
-          <Route path="/auth/kakao/redirect" element={<KakaoPage />} />
+          <Route path="/kakao" element={<KakaoPage />} />
         </Routes>
       </ThemeProvider>
     </AppBlock>
