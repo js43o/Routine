@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import { deregister, kakaoDeregister, kakaoLogout, logout } from 'modules/user';
 import { useNavigate } from 'react-router-dom';
 import { userSelector } from 'modules/hooks';
-import { persistor } from 'index';
+import { initialPerform } from 'modules/perform';
 
 const FooterBlock = styled.footer`
   display: flex;
@@ -43,15 +43,20 @@ const Footer = () => {
     }
   }, [user.username]);
 
-  const onLogout = () => {
+  const onLogout = async () => {
     if (user.snsProvider === 'kakao') {
       dispatch(kakaoLogout());
     }
     dispatch(logout());
-    persistor.purge();
+    dispatch(
+      initialPerform({
+        lastModified: 0,
+        exerciseList: [],
+      }),
+    );
   };
 
-  const onDeregister = () => {
+  const onDeregister = async () => {
     if (
       !window.confirm(
         '삭제한 계정은 복구할 수 없습니다.\n정말 삭제하시겠습니까?',
@@ -63,7 +68,12 @@ const Footer = () => {
     }
     dispatch(deregister({ username: user.username }));
     dispatch(logout());
-    persistor.purge();
+    dispatch(
+      initialPerform({
+        lastModified: 0,
+        exerciseList: [],
+      }),
+    );
   };
 
   return (

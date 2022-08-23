@@ -7,7 +7,6 @@ import {
   SerializedError,
 } from '@reduxjs/toolkit';
 import { AxiosError } from 'axios';
-import { PURGE } from 'redux-persist';
 import * as api from 'lib/api';
 import {
   CompleteItem,
@@ -241,9 +240,7 @@ export const userSlice = createSlice({
   name: 'users',
   initialState,
   reducers: {
-    initializeUser: (state, { payload }: { payload: User }) => {
-      state.user = payload;
-    },
+    initializeUser: () => initialState,
     changeRoutineTitle: (
       state,
       {
@@ -313,7 +310,6 @@ export const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(PURGE, () => initialState)
       .addCase(register.fulfilled, (state, action) => {
         state.user = action.payload;
       })
@@ -334,6 +330,7 @@ export const userSlice = createSlice({
       .addCase(kakaoLogin.rejected, (state) => {
         state.user = initialUser;
       })
+      .addCase(logout.fulfilled, () => initialState)
       .addCase(setInfo.fulfilled, (state, action) => {
         state.user.nickname = action.payload.nickname;
         state.user.intro = action.payload.intro;

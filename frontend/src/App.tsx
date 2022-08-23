@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { ThemeProvider } from '@emotion/react';
 import styled from '@emotion/styled';
-import { persistor } from 'index';
-import { themeSelector } from 'modules/hooks';
+import { initializeUser } from 'modules/user';
+import { userSelector, themeSelector } from 'modules/hooks';
 import GlobalStyles from 'lib/GlobalStyles';
 import LoadingIndicator from 'components/common/LoadingIndicator';
 import HomePage from 'pages/Home';
@@ -12,7 +12,6 @@ import RoutinePage from 'pages/Routine';
 import RecordPage from 'pages/Record';
 import AuthPage from 'pages/Auth';
 import KakaoPage from 'pages/Kakao';
-import { userSelector } from './modules/hooks';
 
 const LoadingBlock = styled.div<{ visible: boolean }>`
   display: flex;
@@ -41,6 +40,7 @@ const AppBlock = styled.div`
 function App() {
   const { loading, error, user } = useSelector(userSelector);
   const theme = useSelector(themeSelector);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -52,7 +52,7 @@ function App() {
   useEffect(() => {
     if (error && error.code === 'ERR_BAD_REQUEST') {
       alert('서버와의 연결이 끊겼습니다.\n다시 로그인해주세요.');
-      persistor.purge();
+      dispatch(initializeUser());
       navigate('/login');
     }
   }, [error]);

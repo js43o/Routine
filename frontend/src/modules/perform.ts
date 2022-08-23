@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { ExerciseItem, PerformList } from 'types';
-import { PURGE } from 'redux-persist';
 
 const initialState: PerformList = {
   lastModified: null,
@@ -48,9 +47,6 @@ export const performSlice = createSlice({
       const exer = state.list[exerIdx];
       exer.setCheck = exer.setCheck.map(() => true);
     },
-  },
-  extraReducers: (builder) => {
-    builder.addCase(PURGE, () => initialState);
   },
 });
 
