@@ -5,7 +5,7 @@ import { ThemeProvider } from '@emotion/react';
 import styled from '@emotion/styled';
 import { initializeUser } from 'modules/user';
 import { userSelector, themeSelector } from 'modules/hooks';
-import GlobalStyles from 'lib/GlobalStyles';
+import GlobalStyles from 'templates/GlobalStyles';
 import LoadingIndicator from 'components/common/LoadingIndicator';
 import HomePage from 'pages/Home';
 import RoutinePage from 'pages/Routine';
@@ -70,7 +70,11 @@ function App() {
           <Route path="/record" element={<RecordPage />} />
           <Route path="/register" element={<AuthPage type="register" />} />
           <Route path="/login" element={<AuthPage type="login" />} />
-          <Route path="/kakao" element={<KakaoPage />} />
+          <Route path="/kakao">
+            <Route path="auth">
+              <Route path="redirect" element={<KakaoPage />} />
+            </Route>
+          </Route>
         </Routes>
       </ThemeProvider>
     </AppBlock>

@@ -11,6 +11,7 @@ import Button from 'components/common/Button';
 import { BsPlusCircle } from 'react-icons/bs';
 import { v4 as uuidv4 } from 'uuid';
 import useErrorMessage from 'hooks/useErrorMessage';
+import ErrorMessage from 'components/common/ErrorMessage';
 
 const AddRoutineButton = styled(Button)`
   display: flex;
@@ -42,7 +43,7 @@ const RoutinePage = () => {
   const [visible, setVisible] = useState<string | null>(null);
   const [editing, setEditing] = useState<string | null>(null);
   const [day, setDay] = useState<number | null>(null);
-  const { onError, ErrorMessage } = useErrorMessage();
+  const { message, onError } = useErrorMessage();
 
   const onOpenModal = useCallback((day: number) => {
     windowWidth.current = document.body.offsetWidth;
@@ -108,7 +109,7 @@ const RoutinePage = () => {
         <BsPlusCircle />
         <b>루틴 추가</b>
       </AddRoutineButton>
-      <ErrorMessage />
+      <ErrorMessage message={message} />
     </Template>
   );
 };

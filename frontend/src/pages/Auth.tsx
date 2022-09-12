@@ -3,11 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, NavLink } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { userSelector } from 'modules/hooks';
-import Title from 'templates/Title';
-import useErrorMessage from 'hooks/useErrorMessage';
 import { login, register } from 'modules/user';
-import Button from 'components/common/Button';
 import useAuth from 'hooks/useAuth';
+import useErrorMessage from 'hooks/useErrorMessage';
+import Title from 'templates/Title';
+import Button from 'components/common/Button';
+import ErrorMessage from 'components/common/ErrorMessage';
 
 const AuthWrapper = styled.div`
   display: flex;
@@ -78,7 +79,7 @@ const Auth = ({ type }: Authprops) => {
     onChangeInput,
     onCheckInputs,
   } = useAuth();
-  const { onError, resetError, ErrorMessage } = useErrorMessage();
+  const { message, onError, resetError } = useErrorMessage();
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -221,7 +222,7 @@ const Auth = ({ type }: Authprops) => {
         </NavLink>
       </AuthBlock>
       <div className="error_wrapper">
-        <ErrorMessage />
+        <ErrorMessage message={message} />
       </div>
     </AuthWrapper>
   );

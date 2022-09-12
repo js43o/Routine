@@ -72,5 +72,6 @@
     "gh-pages": "^3.2.3",
     "mini-css-extract-plugin": "2.4.5",
     "prettier": "^2.5.1"
-  }
+  },
+  "proxy": "http://localhost:4000"
 }

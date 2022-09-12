@@ -9,6 +9,7 @@ import useErrorMessage from 'hooks/useErrorMessage';
 import useAddExercise from 'hooks/useAddExercise';
 import { getExercises } from 'lib/api';
 import LoadingIndicator from 'components/common/LoadingIndicator';
+import ErrorMessage from 'components/common/ErrorMessage';
 
 const AddExerciseWrapper = styled.div<{ visible: boolean }>`
   display: flex;
@@ -172,7 +173,7 @@ const AddExerciseModal = ({
     onChangeInput,
     checkInputs,
   } = useAddExercise();
-  const { onError, resetError, ErrorMessage } = useErrorMessage();
+  const { message, onError, resetError } = useErrorMessage();
 
   const onAddExercise = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -320,7 +321,7 @@ const AddExerciseModal = ({
             </div>
             <SubmitButtons onClose={onClose} />
           </ConfirmBlock>
-          <ErrorMessage />
+          <ErrorMessage message={message} />
         </FooterBlock>
       </AddExerciseBlock>
     </AddExerciseWrapper>

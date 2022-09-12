@@ -6,6 +6,7 @@ import { addComplete } from 'modules/user';
 import { userSelector, performSelector } from 'modules/hooks';
 import { getDatestr } from 'lib/methods';
 import useErrorMessage from 'hooks/useErrorMessage';
+import ErrorMessage from 'components/common/ErrorMessage';
 import {
   MdRadioButtonUnchecked,
   MdOutlineCheckCircleOutline,
@@ -107,7 +108,7 @@ const PerformRoutine = ({
   const { user } = useSelector(userSelector);
   const performs = useSelector(performSelector);
   const dispatch = useDispatch();
-  const { onError, ErrorMessage } = useErrorMessage();
+  const { message, onError } = useErrorMessage();
   const [memo, setMemo] = useState('');
 
   const currentRoutine = user.routines.find(
@@ -215,7 +216,7 @@ const PerformRoutine = ({
         value={memo}
       ></MemoBlock>
       <CompleteButton onClick={onComplete}>운동완료</CompleteButton>
-      <ErrorMessage />
+      <ErrorMessage message={message} />
     </PerformRoutineBlock>
   );
 };

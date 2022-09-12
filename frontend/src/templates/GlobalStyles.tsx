@@ -29,8 +29,16 @@ const GlobalStyles = () => {
         h3,
         h4 {
           display: inline-block;
-          border-bottom: 2px solid ${theme.border_main};
           text-align: center;
+        }
+        h1 {
+          font-size: 1.75rem;
+        }
+        h2 {
+          font-size: 1.5rem;
+        }
+        h3 {
+          font-size: 1.25rem;
         }
         button,
         input,

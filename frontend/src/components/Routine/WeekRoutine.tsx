@@ -10,6 +10,7 @@ import {
 import { userSelector } from 'modules/hooks';
 import { Routine } from 'types';
 import Button from 'components/common/Button';
+import ErrorMessage from 'components/common/ErrorMessage';
 import useErrorMessage from 'hooks/useErrorMessage';
 import { dayidxToDaystr } from 'lib/methods';
 import { BsTriangleFill, BsCheckLg, BsStar, BsStarFill } from 'react-icons/bs';
@@ -133,7 +134,7 @@ const WeekRoutine = ({
 }: WeekRoutineProps) => {
   const { user } = useSelector(userSelector);
   const dispatch = useDispatch();
-  const { onError, ErrorMessage } = useErrorMessage();
+  const { message, onError } = useErrorMessage();
 
   const onSubmit = (routine: Routine) => {
     onSetEditing();
@@ -238,7 +239,7 @@ const WeekRoutine = ({
           </RoutineDetailItem>
         ))}
       </RoutineDetailBlock>
-      <ErrorMessage />
+      <ErrorMessage message={message} />
     </WeekRoutineBlock>
   );
 };

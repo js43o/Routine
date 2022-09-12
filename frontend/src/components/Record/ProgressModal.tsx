@@ -7,6 +7,7 @@ import { userSelector } from 'modules/hooks';
 import { getDatestr } from 'lib/methods';
 import useErrorMessage from 'hooks/useErrorMessage';
 import SubmitButtons from 'components/common/SubmitButtons';
+import ErrorMessage from 'components/common/ErrorMessage';
 
 const ProgressWrapper = styled.div<{ visible: boolean }>`
   display: flex;
@@ -148,7 +149,7 @@ const ProgressModal = ({
   });
   const { user } = useSelector(userSelector);
   const dispatch = useDispatch();
-  const { onError, resetError, ErrorMessage } = useErrorMessage();
+  const { message, onError, resetError } = useErrorMessage();
 
   const onChange = (
     type: 'weight' | 'muscleMass' | 'fatMass',
@@ -268,7 +269,7 @@ const ProgressModal = ({
             <SubmitButtons onClose={onClose} />
           </ConfirmBlock>
         </FooterBlock>
-        <ErrorMessage />
+        <ErrorMessage message={message} />
       </ProgressBlock>
     </ProgressWrapper>
   );

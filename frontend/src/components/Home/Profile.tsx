@@ -7,6 +7,7 @@ import Button from 'components/common/Button';
 import { useDispatch } from 'react-redux';
 import { setInfo, setProfileImage } from 'modules/user';
 import useErrorMessage from 'hooks/useErrorMessage';
+import ErrorMessage from 'components/common/ErrorMessage';
 
 const ProfileBlock = styled.div`
   display: flex;
@@ -86,7 +87,7 @@ const Profile = ({ user }: ProfileProps) => {
   const [nickname, setNickname] = useState(user.nickname);
   const [intro, setIntro] = useState(user.intro);
   const [edit, setEdit] = useState(false);
-  const { onError, resetError, ErrorMessage } = useErrorMessage();
+  const { message, onError, resetError } = useErrorMessage();
 
   const onSubmitInfo = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -173,7 +174,7 @@ const Profile = ({ user }: ProfileProps) => {
           </InfoBlock>
         )}
       </ProfileBlock>
-      <ErrorMessage />
+      <ErrorMessage message={message} />
     </>
   );
 };

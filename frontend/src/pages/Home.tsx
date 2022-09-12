@@ -35,6 +35,7 @@ const HomePage = () => {
   return (
     <Template>
       <Profile user={user} />
+      <hr />
       <h1>이번 주 운동 현황</h1>
       <CompleteDayBar completes={user.completes} />
       <CompleteText>
