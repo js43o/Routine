@@ -20,6 +20,7 @@ const GlobalStyles = () => {
           touch-action: pan-y;
           overflow-y: scroll;
           height: 100%;
+          user-select: none;
         }
         #root {
           height: 100%;

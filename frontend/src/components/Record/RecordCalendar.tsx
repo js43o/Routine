@@ -6,6 +6,8 @@ import { dayidxToDaystr, getDatestr } from 'lib/methods';
 import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
 import { FaRegCalendarCheck } from 'react-icons/fa';
 import { BsCheckLg } from 'react-icons/bs';
+import { useSelector } from 'react-redux';
+import { userSelector } from 'modules/hooks';
 
 const RecordCalendarBlock = styled.div`
   display: flex;
@@ -24,9 +26,6 @@ const CalendarList = styled.ul`
   padding: 1rem 0.5rem;
   border: 1px solid ${({ theme }) => theme.border_main};
   border-radius: 0.5rem;
-  @media (min-width: 430px) {
-    padding: 2rem 0.5rem;
-  }
   span:nth-of-type(1) {
     color: ${({ theme }) => theme.red};
   }
@@ -41,9 +40,9 @@ const CalendarItem = styled.li<{ selected: boolean; performed: boolean }>`
   align-items: center;
   width: 2rem;
   height: 2rem;
-  border: ${({ performed, theme }) =>
-    performed ? `2px solid ${theme.primary}` : ''};
-  border-radius: 50%;
+  border: ${({ selected, performed, theme }) =>
+    `2px solid ${selected || (performed && theme.primary)}`};
+  border-radius: 1rem;
   color: ${({ selected, theme }) => selected && theme.letter_primary};
   background: ${({ selected, theme }) => (selected ? theme.primary : '')};
   font-size: 1rem;
@@ -58,9 +57,9 @@ const CalendarItem = styled.li<{ selected: boolean; performed: boolean }>`
       selected ? theme.letter_primary : theme.blue};
   }
   @media (min-width: 430px) {
-    font-size: 1.25rem;
     width: 3rem;
     height: 3rem;
+    font-size: 1.25rem;
   }
 `;
 
@@ -100,24 +99,8 @@ const DateIndicator = styled(Button)`
   font-size: 2rem;
 `;
 
-const PrevButton = styled(MdNavigateBefore)`
+const ArrowButton = styled(Button)`
   font-size: 2.5rem;
-  border-radius: 50%;
-  @media (hover: hover) {
-    &:hover {
-      background: rgba(0, 0, 0, 0.1);
-    }
-  }
-`;
-
-const NextButton = styled(MdNavigateNext)`
-  font-size: 2.5rem;
-  border-radius: 50%;
-  @media (hover: hover) {
-    &:hover {
-      background: rgba(0, 0, 0, 0.1);
-    }
-  }
 `;
 
 const CheckButton = styled(Button)`
@@ -125,33 +108,24 @@ const CheckButton = styled(Button)`
 `;
 
 type RecordCalendarProps = {
-  currentDate: {
-    year: number;
-    month: number;
-  };
-  records: CompleteItem[];
   selectedDate: string | null;
-  setCurrentDate: React.Dispatch<
-    React.SetStateAction<{
-      year: number;
-      month: number;
-    }>
-  >;
   setSelected: React.Dispatch<React.SetStateAction<CompleteItem | null>>;
 };
 
-const RecordCalendar = ({
-  currentDate,
-  records,
-  selectedDate,
-  setCurrentDate,
-  setSelected,
-}: RecordCalendarProps) => {
+const RecordCalendar = ({ selectedDate, setSelected }: RecordCalendarProps) => {
+  const { user } = useSelector(userSelector);
   const [edit, setEdit] = useState(false);
+  const [currentDate, setCurrentDate] = useState({
+    year: new Date().getFullYear(),
+    month: new Date().getMonth(),
+  });
+  const [records, setRecords] = useState<CompleteItem[]>([]);
+
   const [input, setInput] = useState({
     year: currentDate.year,
     month: currentDate.month + 1,
   });
+
   const onChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     field: 'year' | 'month',
@@ -209,12 +183,6 @@ const RecordCalendar = ({
       });
   };
 
-  const setDateNow = () =>
-    setCurrentDate({
-      year: new Date().getFullYear(),
-      month: new Date().getMonth(),
-    });
-
   const onSelect = (e: React.MouseEvent) => {
     const elem = (e.target as HTMLLIElement).closest('li');
     if (!elem || !elem.textContent) return;
@@ -230,9 +198,42 @@ const RecordCalendar = ({
           ),
         ),
     );
-    if (!info) return;
-    setSelected(info);
+    if (info) setSelected(info);
   };
+
+  const setDateNow = () => {
+    setCurrentDate({
+      year: new Date().getFullYear(),
+      month: new Date().getMonth(),
+    });
+    const info = records.find((r) => r.date === getDatestr(new Date()));
+    if (info) setSelected(info);
+  };
+
+  useEffect(() => {
+    const firstDate = new Date(currentDate.year, currentDate.month);
+    const tempRecords: CompleteItem[] = [];
+    firstDate.setDate(1);
+
+    for (let i = 0; i < 7; i += 1)
+      if (i < firstDate.getDay())
+        tempRecords.push({
+          date: `${-i}`,
+          list: [],
+          memo: '',
+        });
+
+    while (firstDate.getMonth() === currentDate.month) {
+      const r = user.completes.find((c) => c.date === getDatestr(firstDate));
+      tempRecords.push({
+        date: getDatestr(firstDate),
+        list: r ? r.list : [],
+        memo: r ? r.memo : '',
+      });
+      firstDate.setDate(firstDate.getDate() + 1);
+    }
+    setRecords(tempRecords);
+  }, [currentDate, user.completes]);
 
   useEffect(() => {
     setInput({
@@ -245,7 +246,9 @@ const RecordCalendar = ({
     <RecordCalendarBlock>
       <CalendarHeader>
         <Button onClick={decreaseMonth}>
-          <PrevButton />
+          <ArrowButton>
+            <MdNavigateBefore />
+          </ArrowButton>
         </Button>
         {edit ? (
           <form onSubmit={onSubmit}>
@@ -283,28 +286,25 @@ const RecordCalendar = ({
             </Button>
           </div>
         )}
-        <Button onClick={increaseMonth}>
-          <NextButton />
-        </Button>
+        <ArrowButton onClick={increaseMonth}>
+          <MdNavigateNext />
+        </ArrowButton>
       </CalendarHeader>
       <CalendarList>
         {[...Array(7)].map((_, i) => (
           <span>{dayidxToDaystr(i)}</span>
         ))}
-        {records.length > 0
-          ? records.map((d) => (
-              <CalendarItem
-                key={d.date}
-                performed={d.list.length > 0}
-                selected={selectedDate === d.date}
-                onClick={(e) => onSelect(e)}
-              >
-                {+d.date.slice(8, 10) > 0 && +d.date.slice(8, 10)}
-              </CalendarItem>
-            ))
-          : [...Array(30)].map(() => (
-              <CalendarItem selected={false} performed={false}></CalendarItem>
-            ))}
+        {records.length &&
+          records.map((d) => (
+            <CalendarItem
+              key={d.date}
+              performed={d.list.length > 0}
+              selected={selectedDate === d.date}
+              onClick={(e) => onSelect(e)}
+            >
+              {+d.date.slice(8, 10) > 0 && +d.date.slice(8, 10)}
+            </CalendarItem>
+          ))}
       </CalendarList>
     </RecordCalendarBlock>
   );

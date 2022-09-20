@@ -8,13 +8,19 @@ const TitleBlock = styled.div`
   align-items: center;
   font-family: 'PT Sans Narrow', sans-serif;
   font-size: 2.5rem;
+  user-select: none;
+  gap: 0.25rem;
+`;
+
+const LogoBlock = styled(CgInfinity)`
+  margin-top: 0.5rem;
 `;
 
 const Title = () => {
   return (
     <TitleBlock>
       Routine
-      <CgInfinity />
+      <LogoBlock />
     </TitleBlock>
   );
 };

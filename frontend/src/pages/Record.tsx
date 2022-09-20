@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import Template from 'templates/Template';
 import { userSelector } from 'modules/hooks';
 import { CompleteItem } from 'types';
-import { getDatestr, hideScroll, unhideScroll } from 'lib/methods';
+import { hideScroll, unhideScroll } from 'lib/methods';
 import { FaPencilAlt } from 'react-icons/fa';
 import RecordCalendar from 'components/Record/RecordCalendar';
 import ProgressViewer from 'components/Record/ProgressViewer';
@@ -33,11 +33,6 @@ const ProgressHeader = styled.div`
 
 const RecordPage = () => {
   const { user } = useSelector(userSelector);
-  const [currentDate, setCurrentDate] = useState({
-    year: new Date().getFullYear(),
-    month: new Date().getMonth(),
-  });
-  const [records, setRecords] = useState<CompleteItem[]>([]);
   const [selected, setSelected] = useState<CompleteItem | null>(null);
   const [modal, setModal] = useState(false);
   const windowWidth = useRef(document.body.offsetWidth);
@@ -52,31 +47,6 @@ const RecordPage = () => {
     unhideScroll();
   }, []);
 
-  useEffect(() => {
-    const firstDate = new Date(currentDate.year, currentDate.month);
-    const tempRecords: CompleteItem[] = [];
-    firstDate.setDate(1);
-
-    for (let i = 0; i < 7; i += 1)
-      if (i < firstDate.getDay())
-        tempRecords.push({
-          date: `${-i}`,
-          list: [],
-          memo: '',
-        });
-
-    while (firstDate.getMonth() === currentDate.month) {
-      const r = user.completes.find((c) => c.date === getDatestr(firstDate));
-      tempRecords.push({
-        date: getDatestr(firstDate),
-        list: r ? r.list : [],
-        memo: r ? r.memo : '',
-      });
-      firstDate.setDate(firstDate.getDate() + 1);
-    }
-    setRecords(tempRecords);
-  }, [currentDate, user.completes]);
-
   return (
     <Template>
       <SetProgressModal
@@ -86,13 +56,13 @@ const RecordPage = () => {
         onCloseModal={onCloseModal}
       />
       <RecordCalendar
-        currentDate={currentDate}
-        records={records}
         selectedDate={selected ? selected.date : null}
-        setCurrentDate={setCurrentDate}
         setSelected={setSelected}
       />
-      <h2>수행한 운동</h2>
+      <h2>
+        {selected &&
+          `${selected.date.slice(5, 7)}월 ${selected.date.slice(8, 10)}일 운동`}
+      </h2>
       <ExerciseHistory complete={selected} />
       <h2>메모</h2>
       <MemoBlock>

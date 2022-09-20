@@ -11,14 +11,15 @@ import ErrorMessage from 'components/common/ErrorMessage';
 
 const ProfileBlock = styled.div`
   display: flex;
-  gap: 0.5rem;
   flex-direction: column;
   align-items: center;
+  margin-top: 1rem;
   button {
     font-size: 1.5rem;
   }
   @media (min-width: 430px) {
     flex-direction: row;
+    gap: 1rem;
   }
 `;
 
