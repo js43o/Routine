@@ -5,10 +5,10 @@ let timer: NodeJS.Timeout;
 const useErrorMessage = () => {
   const [message, setMessage] = useState('');
 
-  const onError = (message: string) => {
+  const onError = (str: string) => {
     if (message) return;
 
-    setMessage(message);
+    setMessage(str);
     timer = setTimeout(() => {
       setMessage('');
     }, 2000);

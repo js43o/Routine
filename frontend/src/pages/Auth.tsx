@@ -156,9 +156,7 @@ const Auth = ({ type }: Authprops) => {
               onChange={(e) => onChangeInput('username', e)}
             />
             {type === 'register' && (
-              <small>
-                ※ 영문 소문자/숫자 포함 5-20자 (특수기호 (-),(_) 허용)
-              </small>
+              <small>※ 영문 소문자/숫자/-/_ 포함 5-20자</small>
             )}
           </label>
           <label htmlFor="password">
