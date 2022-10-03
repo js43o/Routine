@@ -13,7 +13,8 @@ import ErrorMessage from 'components/common/ErrorMessage';
 
 const AddExerciseWrapper = styled.div<{ visible: boolean }>`
   display: flex;
-  place-items: center;
+  justify-content: center;
+  align-items: center;
   position: fixed;
   top: 0;
   left: 0;
@@ -32,24 +33,15 @@ const AddExerciseBlock = styled.div<{ visible: boolean; offset: number }>`
   justify-content: space-between;
   position: fixed;
   top: ${({ visible }) => (visible ? '5%' : '100%')};
-  left: 5%;
   z-index: 100;
   width: 90%;
   max-width: 430px;
   height: 90%;
   border: 1px solid ${({ theme }) => theme.border_main};
   border-radius: 0.5rem;
-  margin: 0 auto;
   background: ${({ theme }) => theme.background_main};
   overflow: hidden;
   transition: top 0.5s;
-  input {
-    width: 100%;
-    font-size: 1.125rem;
-  }
-  @media (min-width: 540px) {
-    left: ${({ offset }) => offset / 2 - 215}px;
-  }
 `;
 
 const HeaderBlock = styled.div`
@@ -59,6 +51,10 @@ const HeaderBlock = styled.div`
   gap: 0.5rem;
   padding: 0.5rem;
   border-bottom: 1px solid ${({ theme }) => theme.border_main};
+  input {
+    width: 100%;
+    font-size: 1.125rem;
+  }
 `;
 
 const CategoryListBlock = styled.ul`
@@ -289,6 +285,7 @@ const AddExerciseModal = ({
             <div className="weight">
               <b>중량</b>
               <input
+                className="count"
                 type="number"
                 min={0}
                 max={999}
@@ -300,6 +297,7 @@ const AddExerciseModal = ({
             <div className="numOfTimes">
               <b>횟수</b>
               <input
+                className="count"
                 type="number"
                 min={0}
                 max={999}
@@ -311,6 +309,7 @@ const AddExerciseModal = ({
             <div className="numOfSets">
               <b>세트 수</b>
               <input
+                className="count"
                 type="number"
                 min={0}
                 max={20}

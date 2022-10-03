@@ -24,7 +24,7 @@ const AuthBlock = styled.div<{ type: string }>`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  padding: 1rem;
+  padding: 1.5rem;
   border: 1px solid ${({ theme }) => theme.border_main};
   border-radius: 0.5rem;
   background: ${({ theme }) => theme.background_main};
@@ -36,13 +36,22 @@ const AuthBlock = styled.div<{ type: string }>`
       display: flex;
       flex-direction: column;
       position: relative;
-      small {
-        color: ${({ theme }) => theme.letter_sub};
-      }
     }
   }
-  .link {
-    align-self: end;
+  .or {
+    align-self: center;
+    color: ${({ theme }) => theme.letter_sub};
+  }
+  .auth_another {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    color: ${({ theme }) => theme.letter_sub};
+    .link {
+      font-weight: bold;
+      color: ${({ theme }) => theme.blue};
+    }
   }
 `;
 
@@ -51,7 +60,7 @@ const KakaoLoginButton = styled(Button)`
   width: 100%;
   padding: 0.5rem;
   color: black;
-  background: ${({ theme }) => theme.yellow};
+  background: #fee500;
   img {
     margin-top: 0.2rem;
     width: 1rem;
@@ -200,24 +209,38 @@ const Auth = ({ type }: Authprops) => {
           </SubmitButton>
         </form>
         {type === 'login' && (
-          <a
-            href={`https://kauth.kakao.com/oauth/authorize?client_id=${REACT_APP_KAKAO_API}&redirect_uri=${REACT_APP_KAKAO_REDIRECT}&response_type=code`}
-          >
-            <KakaoLoginButton>
-              <img
-                src={`${process.env.PUBLIC_URL}/kakao.png`}
-                alt="kakao_logo"
-              ></img>
-              <span>카카오 로그인</span>
-            </KakaoLoginButton>
-          </a>
+          <>
+            <span className="or">또는...</span>
+            <a
+              href={`https://kauth.kakao.com/oauth/authorize?client_id=${REACT_APP_KAKAO_API}&redirect_uri=${REACT_APP_KAKAO_REDIRECT}&response_type=code`}
+            >
+              <KakaoLoginButton>
+                <img
+                  src={`${process.env.PUBLIC_URL}/kakao.png`}
+                  alt="kakao_logo"
+                ></img>
+                <span>카카오 로그인</span>
+              </KakaoLoginButton>
+            </a>
+          </>
         )}
-        <NavLink
-          to={type === 'register' ? '/login' : '/register'}
-          className="link"
-        >
-          {type === 'register' ? '로그인 ▶' : '계정 등록 ▶'}
-        </NavLink>
+        <div className="auth_another">
+          {type === 'register' ? (
+            <>
+              <span>계정이 있다면</span>
+              <NavLink to="/login" className="link">
+                로그인
+              </NavLink>
+            </>
+          ) : (
+            <>
+              <span>계정이 없으신가요?</span>
+              <NavLink to="/register" className="link">
+                계정 등록
+              </NavLink>
+            </>
+          )}
+        </div>
       </AuthBlock>
       <div className="error_wrapper">
         <ErrorMessage message={message} />

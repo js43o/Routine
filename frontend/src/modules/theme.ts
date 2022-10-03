@@ -16,7 +16,7 @@ export const lightTheme: Theme = {
     border_main: '#cccccc',
     border_primary: '#67e6c0',
     letter_main: 'black',
-    letter_sub: '#5a5d5f',
+    letter_sub: 'grey',
     letter_primary: 'white',
     primary: '#2AC1BC',
     secondary: '#FEF37C',
@@ -30,8 +30,8 @@ export const lightTheme: Theme = {
 export const darkTheme: Theme = {
   mode: 'dark',
   colors: {
-    body: '#111111',
-    background_main: 'black',
+    body: 'black',
+    background_main: '#111111',
     background_sub: '#444444',
     border_main: '#666666',
     border_primary: '#466159',

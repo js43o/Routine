@@ -14,7 +14,7 @@ const HeaderBlock = styled.header`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  padding: 1rem;
+  padding: 0.5rem;
   @media (min-width: 430px) {
     flex-direction: row;
   }

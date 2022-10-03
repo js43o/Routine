@@ -60,9 +60,8 @@ const TitleBlock = styled.div<{ editing: boolean }>`
     }
   }
   input {
+    height: 2rem;
     min-width: 0;
-    font-size: 1.025rem;
-    margin-right: 0.5rem;
   }
 `;
 
@@ -80,6 +79,7 @@ const DetailButton = styled(BsTriangleFill)<{ visible: number }>`
   flex-shrink: 0;
   transform: ${({ visible }) => (visible ? 'rotate(180deg)' : 'rotate(90deg)')};
   transition: transform 0.2s;
+  font-size: 1rem;
 `;
 
 const RoutineDetailBlock = styled.ul`

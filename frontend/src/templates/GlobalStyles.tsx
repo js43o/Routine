@@ -48,12 +48,16 @@ const GlobalStyles = () => {
           border: 1px solid transparent;
           border-radius: 0.25rem;
           color: ${theme.letter_main};
-          background: ${theme.background_sub};
+          background: ${theme.background_main};
           font-family: 'Noto Sans KR', sans-serif;
         }
         input {
-          padding: 0.25rem;
+          padding: 0.5rem;
           border: 1px solid ${theme.border_main};
+          &.count {
+            padding: 0.25rem;
+            font-size: 1.5rem;
+          }
         }
         a {
           color: inherit;
@@ -70,6 +74,9 @@ const GlobalStyles = () => {
           border-top: 1px solid ${theme.border_main};
           margin-top: 2rem;
           background: none;
+        }
+        small {
+          color: ${theme.letter_sub};
         }
         code {
           font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',

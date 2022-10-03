@@ -19,9 +19,10 @@ export const getKorProgress = (str: string) => {
 };
 
 export const getWeekDate = (date: Date) => {
-  date.setDate(date.getDate() - date.getDay()); // this week, sunday
-  date.setHours(0, 0, 0, 0);
-  const result = [date];
+  const d = new Date(date);
+  d.setDate(d.getDate() - d.getDay());
+  d.setHours(0, 0, 0, 0);
+  const result = [d];
 
   while (result.length < 7) {
     const a = new Date(date);
@@ -31,6 +32,15 @@ export const getWeekDate = (date: Date) => {
 
   return result;
 };
+
+export const getFirstDay = (date: Date) => {
+  const d = new Date(date);
+  d.setDate(1);
+  return d.getDay();
+};
+
+export const getLastDayOfLastMonth = (year: number, month: number) =>
+  new Date(year, month, 0).getDate();
 
 export const hideScroll = () => {
   let offset = document.body.offsetWidth;
