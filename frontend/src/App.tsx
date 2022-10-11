@@ -70,11 +70,7 @@ function App() {
           <Route path="/record" element={<RecordPage />} />
           <Route path="/register" element={<AuthPage type="register" />} />
           <Route path="/login" element={<AuthPage type="login" />} />
-          <Route path="/kakao">
-            <Route path="auth">
-              <Route path="redirect" element={<KakaoPage />} />
-            </Route>
-          </Route>
+          <Route path="/kakao" element={<KakaoPage />} />
         </Routes>
       </ThemeProvider>
     </AppBlock>
