@@ -43,12 +43,12 @@ export const kakaoLogin = async (ctx: DefaultContext) => {
 };
 
 const getKakaoToken = async (code: string) => {
-  const { KAKAO_API } = process.env;
+  const { KAKAO_API, KAKAO_REDIRECT } = process.env;
   const url = 'https://kauth.kakao.com/oauth/token';
   const params = {
     grant_type: 'authorization_code',
     client_id: KAKAO_API,
-    redirect_uri: 'http://3.39.89.80/kakao',
+    redirect_uri: KAKAO_REDIRECT,
     code,
   };
   try {
