@@ -151,10 +151,14 @@ export const setCurrentRoutine = createAsyncThunk(
 
 export const setProfileImage = createAsyncThunk(
   'SET_PROFILE_IMAGE',
-  async ({ username, image }: { username: string; image: FormData }) => {
-    const response = await api.uploadProfileImage(image);
-    await api.setProfileImageSrc(username, response.data.url);
-    return response.data.url;
+  async ({ username, image }: { username: string; image: FormData | null }) => {
+    if (image) {
+      const response = await api.uploadProfileImage(image);
+      await api.setProfileImageSrc(username, response.data.url);
+      return response.data.url;
+    }
+    await api.setProfileImageSrc(username, '');
+    return '';
   },
 );
 
