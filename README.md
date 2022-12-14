@@ -3,7 +3,7 @@
 > **Routine**은 간편한 운동 일정 관리 웹 어플리케이션입니다. <br />자신만의 루틴을 만들고, 매일 운동을 수행하고, 기록을 돌아보세요.
 
 ## 사이트 링크
-<b>http://fitness-app.ddns.net</b>
+<b>http://routine-app.ddns.net</b>
 
 ## 로컬 환경에서 실행하기
 
