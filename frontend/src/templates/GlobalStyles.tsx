@@ -31,15 +31,24 @@ const GlobalStyles = () => {
         h4 {
           display: inline-block;
           text-align: center;
+          @media (min-width: 430px) {
+            text-align: start;
+          }
         }
         h1 {
+          margin: 1rem 0;
           font-size: 1.75rem;
         }
         h2 {
+          margin: 0.5rem 0;
           font-size: 1.5rem;
         }
         h3 {
+          margin: 0.25rem 0;
           font-size: 1.25rem;
+        }
+        h4 {
+          margin: 0;
         }
         button,
         input,
@@ -72,8 +81,8 @@ const GlobalStyles = () => {
         hr {
           border: none;
           border-top: 1px solid ${theme.border_main};
-          margin-top: 2rem;
           background: none;
+          align-self: stretch;
         }
         small {
           color: ${theme.letter_sub};

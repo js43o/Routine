@@ -6,20 +6,23 @@ import Footer from './Footer';
 const TemplateBlock = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
   width: 100%;
   height: 100%;
-  align-items: center;
   @media (min-width: 768px) {
     width: 768px;
   }
 `;
 
 const ContentBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 0.5rem;
   width: 100%;
-  background: ${({ theme }) => theme.background_main};
   padding: 1rem;
   border-radius: 0.5rem;
-  flex-grow: 1;
+  background: ${({ theme }) => theme.background_main};
   @media (min-width: 430px) {
   }
 `;

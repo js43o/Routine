@@ -143,7 +143,11 @@ const PerformRoutine = ({
   const todayRoutine = currentRoutine.weekRoutine[day];
 
   if (!todayRoutine.length) {
-    return <PerformRoutineBlock>오늘은 쉬는 날!</PerformRoutineBlock>;
+    return (
+      <PerformRoutineBlock>
+        <i>오늘은 쉬는 날!</i>
+      </PerformRoutineBlock>
+    );
   }
 
   if (complete)

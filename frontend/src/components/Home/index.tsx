@@ -8,6 +8,14 @@ import { getDatestr } from 'lib/methods';
 import CompleteDayBar from 'components/Home/CompleteDayBar';
 import Profile from 'components/Home/Profile';
 
+const TodayExerciseHeader = styled.div`
+  display: flex;
+  justify-content: center;
+  @media (min-width: 430px) {
+    justify-content: start;
+  }
+`;
+
 const CompleteText = styled.div`
   display: flex;
   align-items: center;
@@ -35,13 +43,12 @@ const HomePage = () => {
   return (
     <Template>
       <Profile user={user} />
-      <hr />
       <h1>이번 주 운동 현황</h1>
       <CompleteDayBar completes={user.completes} />
-      <CompleteText>
+      <TodayExerciseHeader>
         <h1>오늘의 운동</h1>
-        {isCompleted ? <span>완료</span> : null}
-      </CompleteText>
+        <CompleteText>{isCompleted ? <span>완료</span> : null}</CompleteText>
+      </TodayExerciseHeader>
       <PerformRoutine
         currentRoutineId={user.currentRoutineId}
         complete={isCompleted}

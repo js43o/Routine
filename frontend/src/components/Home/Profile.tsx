@@ -6,7 +6,17 @@ import { useDispatch } from 'react-redux';
 import { setInfo, setProfileImage } from 'modules/user';
 import useErrorMessage from 'hooks/useErrorMessage';
 import ErrorMessage from 'components/common/ErrorMessage';
-import { FaPencilAlt, FaTrashAlt } from 'react-icons/fa';
+import { FaUpload, FaTrashAlt } from 'react-icons/fa';
+
+const ProfileWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  @media (min-width: 430px) {
+    align-items: start;
+  }
+  border-bottom: 1px solid ${({ theme }) => theme.background_sub};
+`;
 
 const ProfileBlock = styled.div`
   display: flex;
@@ -35,7 +45,6 @@ const ImageBlock = styled.div`
   background: ${({ theme }) => theme.background_sub};
   border-radius: 50%;
   overflow: hidden;
-  cursor: pointer;
   input {
     display: none;
   }
@@ -67,6 +76,7 @@ const InfoBlock = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
+  text-align: center;
   .info {
     display: flex;
     flex-direction: column;
@@ -82,6 +92,7 @@ const InfoBlock = styled.div`
   }
   @media (min-width: 430px) {
     align-items: start;
+    text-align: start;
   }
 `;
 
@@ -149,7 +160,7 @@ const Profile = ({ user }: ProfileProps) => {
 
   const onRemoveImage = () => {
     // eslint-disable-next-line no-restricted-globals
-    if (confirm('정말 삭제하시겠습니까?')) {
+    if (user.profileImage && confirm('정말 삭제하시겠습니까?')) {
       dispatch(setProfileImage({ username: user.username, image: null }));
     }
   };
@@ -160,7 +171,7 @@ const Profile = ({ user }: ProfileProps) => {
   }, [user]);
 
   return (
-    <>
+    <ProfileWrapper>
       <ProfileBlock>
         <div className="profileImageWrapper">
           <ImageBlock>
@@ -176,7 +187,7 @@ const Profile = ({ user }: ProfileProps) => {
               <div className="buttons">
                 <EditProfileButton>
                   <label htmlFor="profileImage">
-                    <FaPencilAlt />
+                    <FaUpload />
                     <input
                       id="profileImage"
                       type="file"
@@ -218,7 +229,7 @@ const Profile = ({ user }: ProfileProps) => {
           <InfoBlock>
             <div className="info">
               <b className="nick">{user.nickname}</b>
-              <span>{user.intro || '자기소개가 없습니다.'}</span>
+              <div>{user.intro || '자기소개가 없습니다.'}</div>
             </div>
             {!edit && (
               <EditButton onClick={() => setEdit(true)}>편집</EditButton>
@@ -227,7 +238,7 @@ const Profile = ({ user }: ProfileProps) => {
         )}
       </ProfileBlock>
       <ErrorMessage message={message} />
-    </>
+    </ProfileWrapper>
   );
 };
 

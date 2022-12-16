@@ -4,12 +4,14 @@ import { CompleteItem } from 'types';
 
 const ExerciseHistoryBlock = styled.ul`
   display: flex;
+  justify-content: center;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  padding: 0.5rem;
+  gap: 0.25rem;
+  padding: 0.25rem;
   border: 1px solid ${({ theme }) => theme.border_main};
   border-radius: 0.5rem;
   background: ${({ theme }) => theme.background_sub};
+  text-align: center;
 `;
 
 const ExerciseHistoryItem = styled.li`
@@ -29,7 +31,11 @@ type ExerciseHistoryProps = {
 
 const ExerciseHistory = ({ complete }: ExerciseHistoryProps) => {
   if (!complete || complete.list.length <= 0)
-    return <ExerciseHistoryBlock>수행한 운동이 없습니다.</ExerciseHistoryBlock>;
+    return (
+      <ExerciseHistoryBlock>
+        <i>수행한 운동이 없습니다.</i>
+      </ExerciseHistoryBlock>
+    );
 
   return (
     <ExerciseHistoryBlock>
