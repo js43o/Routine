@@ -7,11 +7,11 @@ import { initializeUser } from 'modules/user';
 import { userSelector, themeSelector } from 'modules/hooks';
 import GlobalStyles from 'templates/GlobalStyles';
 import LoadingIndicator from 'components/common/LoadingIndicator';
-import HomePage from 'pages/Home';
-import RoutinePage from 'pages/Routine';
-import RecordPage from 'pages/Record';
-import AuthPage from 'pages/Auth';
-import KakaoPage from 'pages/Kakao';
+import HomePage from 'components/Home';
+import RoutinePage from 'components/Routine';
+import RecordPage from 'components/Record';
+import AuthPage from 'components/Auth';
+import KakaoPage from 'components/Auth/Kakao';
 
 const LoadingBlock = styled.div<{ visible: boolean }>`
   display: flex;
