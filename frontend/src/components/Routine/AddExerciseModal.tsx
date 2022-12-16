@@ -10,39 +10,7 @@ import useAddExercise from 'hooks/useAddExercise';
 import { getExercises } from 'lib/api';
 import LoadingIndicator from 'components/common/LoadingIndicator';
 import ErrorMessage from 'components/common/ErrorMessage';
-
-const AddExerciseWrapper = styled.div<{ visible: boolean }>`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 100;
-  background: rgba(0, 0, 0, 0.5);
-  opacity: ${({ visible }) => (visible ? 1 : 0)};
-  transition: opacity 0.5s;
-  pointer-events: ${({ visible }) => (visible ? 'auto' : 'none')};
-`;
-
-const AddExerciseBlock = styled.div<{ visible: boolean; offset: number }>`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  position: fixed;
-  top: ${({ visible }) => (visible ? '5%' : '100%')};
-  z-index: 100;
-  width: 90%;
-  max-width: 430px;
-  height: 90%;
-  border: 1px solid ${({ theme }) => theme.border_main};
-  border-radius: 0.5rem;
-  background: ${({ theme }) => theme.background_main};
-  overflow: hidden;
-  transition: top 0.5s;
-`;
+import Modal from 'components/common/Modal';
 
 const HeaderBlock = styled.div`
   display: flex;
@@ -147,7 +115,6 @@ type AddExerciseProps = {
   routineId: string | null;
   day: number | null;
   visible: boolean;
-  offset: number;
   onCloseModal: () => void;
 };
 
@@ -155,7 +122,6 @@ const AddExerciseModal = ({
   routineId,
   day,
   visible,
-  offset,
   onCloseModal,
 }: AddExerciseProps) => {
   const dispatch = useDispatch();
@@ -212,118 +178,114 @@ const AddExerciseModal = ({
   }, []);
 
   return (
-    <AddExerciseWrapper visible={visible}>
-      <AddExerciseBlock visible={visible} offset={offset}>
-        <HeaderBlock>
-          <h2>운동 목록</h2>
-          <CategoryListBlock>
-            <CategoryItemBlock
-              checked={addState.category === 'all' ? 1 : 0}
-              onClick={() => onSetCategory('all')}
-            >
-              전체
-            </CategoryItemBlock>
-            <CategoryItemBlock
-              checked={addState.category === 'upper' ? 1 : 0}
-              onClick={() => onSetCategory('upper')}
-            >
-              상체
-            </CategoryItemBlock>
-            <CategoryItemBlock
-              checked={addState.category === 'lower' ? 1 : 0}
-              onClick={() => onSetCategory('lower')}
-            >
-              하체
-            </CategoryItemBlock>
-            <CategoryItemBlock
-              checked={addState.category === 'core' ? 1 : 0}
-              onClick={() => onSetCategory('core')}
-            >
-              코어
-            </CategoryItemBlock>
-          </CategoryListBlock>
-          <input
-            type="text"
-            onChange={onChangeName}
-            value={name}
-            placeholder="이름으로 찾기..."
-          />
-        </HeaderBlock>
-        {exercises.length > 0 ? (
-          <ExerciseListBlock>
-            {exercises
-              .filter((exer) =>
-                addState.category === 'all'
-                  ? 1
-                  : exer.category.includes(addState.category),
-              )
-              .filter((exer) =>
-                exer.name
-                  .replaceAll(' ', '')
-                  .includes(name.replaceAll(' ', '')),
-              )
-              .map((exer) => (
-                <ExerciseItemBlock
-                  onClick={() => onSelectExercise(exer)}
-                  isSelected={addState.selected === exer ? 1 : 0}
-                  key={exer.name}
-                >
-                  <b>{exer.name}</b>
-                  <div>
-                    {exer.part.map((item) => (
-                      <span key={item}>#{item} </span>
-                    ))}
-                  </div>
-                </ExerciseItemBlock>
-              ))}
-          </ExerciseListBlock>
-        ) : (
-          <LoadingIndicator />
-        )}
-        <FooterBlock>
-          <ConfirmBlock onSubmit={onAddExercise}>
-            <div className="weight">
-              <b>중량</b>
-              <input
-                className="count"
-                type="number"
-                min={0}
-                max={999}
-                value={addState.inputs.weight}
-                onChange={(e) => onChangeInput('CHANGE_WEIGHT', e)}
-              />
-              kg
-            </div>
-            <div className="numOfTimes">
-              <b>횟수</b>
-              <input
-                className="count"
-                type="number"
-                min={0}
-                max={999}
-                value={addState.inputs.numberOfTimes}
-                onChange={(e) => onChangeInput('CHANGE_NUM_OF_TIMES', e)}
-              />
-              회
-            </div>
-            <div className="numOfSets">
-              <b>세트 수</b>
-              <input
-                className="count"
-                type="number"
-                min={0}
-                max={20}
-                value={addState.inputs.numberOfSets}
-                onChange={(e) => onChangeInput('CHANGE_NUM_OF_SETS', e)}
-              />
-              세트
-            </div>
-            <SubmitButtons onClose={onClose} />
-          </ConfirmBlock>
-          <ErrorMessage message={message} />
-        </FooterBlock>
-      </AddExerciseBlock>
-    </AddExerciseWrapper>
+    <Modal visible={visible}>
+      <HeaderBlock>
+        <h2>운동 목록</h2>
+        <CategoryListBlock>
+          <CategoryItemBlock
+            checked={addState.category === 'all' ? 1 : 0}
+            onClick={() => onSetCategory('all')}
+          >
+            전체
+          </CategoryItemBlock>
+          <CategoryItemBlock
+            checked={addState.category === 'upper' ? 1 : 0}
+            onClick={() => onSetCategory('upper')}
+          >
+            상체
+          </CategoryItemBlock>
+          <CategoryItemBlock
+            checked={addState.category === 'lower' ? 1 : 0}
+            onClick={() => onSetCategory('lower')}
+          >
+            하체
+          </CategoryItemBlock>
+          <CategoryItemBlock
+            checked={addState.category === 'core' ? 1 : 0}
+            onClick={() => onSetCategory('core')}
+          >
+            코어
+          </CategoryItemBlock>
+        </CategoryListBlock>
+        <input
+          type="text"
+          onChange={onChangeName}
+          value={name}
+          placeholder="이름으로 찾기..."
+        />
+      </HeaderBlock>
+      {exercises.length > 0 ? (
+        <ExerciseListBlock>
+          {exercises
+            .filter((exer) =>
+              addState.category === 'all'
+                ? 1
+                : exer.category.includes(addState.category),
+            )
+            .filter((exer) =>
+              exer.name.replaceAll(' ', '').includes(name.replaceAll(' ', '')),
+            )
+            .map((exer) => (
+              <ExerciseItemBlock
+                onClick={() => onSelectExercise(exer)}
+                isSelected={addState.selected === exer ? 1 : 0}
+                key={exer.name}
+              >
+                <b>{exer.name}</b>
+                <div>
+                  {exer.part.map((item) => (
+                    <span key={item}>#{item} </span>
+                  ))}
+                </div>
+              </ExerciseItemBlock>
+            ))}
+        </ExerciseListBlock>
+      ) : (
+        <LoadingIndicator />
+      )}
+      <FooterBlock>
+        <ConfirmBlock onSubmit={onAddExercise}>
+          <div className="weight">
+            <b>중량</b>
+            <input
+              className="count"
+              type="number"
+              min={0}
+              max={999}
+              value={addState.inputs.weight}
+              onChange={(e) => onChangeInput('CHANGE_WEIGHT', e)}
+            />
+            kg
+          </div>
+          <div className="numOfTimes">
+            <b>횟수</b>
+            <input
+              className="count"
+              type="number"
+              min={0}
+              max={999}
+              value={addState.inputs.numberOfTimes}
+              onChange={(e) => onChangeInput('CHANGE_NUM_OF_TIMES', e)}
+            />
+            회
+          </div>
+          <div className="numOfSets">
+            <b>세트 수</b>
+            <input
+              className="count"
+              type="number"
+              min={0}
+              max={20}
+              value={addState.inputs.numberOfSets}
+              onChange={(e) => onChangeInput('CHANGE_NUM_OF_SETS', e)}
+            />
+            세트
+          </div>
+          <SubmitButtons onClose={onClose} />
+        </ConfirmBlock>
+        <ErrorMessage message={message} />
+      </FooterBlock>
+    </Modal>
   );
 };
 

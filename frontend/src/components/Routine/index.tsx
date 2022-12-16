@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import Template from 'templates/Template';
@@ -39,14 +39,12 @@ const RoutinePage = () => {
   const dispatch = useDispatch();
 
   const [modal, setModal] = useState(false);
-  const windowWidth = useRef(document.body.offsetWidth);
   const [visible, setVisible] = useState<string | null>(null);
   const [editing, setEditing] = useState<string | null>(null);
   const [day, setDay] = useState<number | null>(null);
   const { message, onError } = useErrorMessage();
 
   const onOpenModal = useCallback((day: number) => {
-    windowWidth.current = document.body.offsetWidth;
     setDay(day);
     setModal(true);
     hideScroll();
@@ -88,7 +86,6 @@ const RoutinePage = () => {
         routineId={editing}
         day={day}
         visible={modal}
-        offset={windowWidth.current}
         onCloseModal={onCloseModal}
       />
       <h1>루틴 목록</h1>

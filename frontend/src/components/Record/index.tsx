@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import Template from 'templates/Template';
@@ -35,10 +35,8 @@ const RecordPage = () => {
   const { user } = useSelector(userSelector);
   const [selected, setSelected] = useState<CompleteItem | null>(null);
   const [modal, setModal] = useState(false);
-  const windowWidth = useRef(document.body.offsetWidth);
 
   const onOpenModal = useCallback(() => {
-    windowWidth.current = document.body.offsetWidth;
     setModal(true);
     hideScroll();
   }, []);
@@ -51,7 +49,6 @@ const RecordPage = () => {
     <Template>
       <SetProgressModal
         visible={modal}
-        offset={windowWidth.current}
         data={user.progress}
         onCloseModal={onCloseModal}
       />
