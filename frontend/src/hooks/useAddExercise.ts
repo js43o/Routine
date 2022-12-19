@@ -3,7 +3,7 @@ import { Exercise } from 'types';
 
 type State = {
   category: string;
-  selected: Exercise | null;
+  selected: string | null;
   inputs: {
     weight: number;
     numberOfTimes: number;
@@ -13,7 +13,7 @@ type State = {
 
 type Action =
   | { type: 'SET_CATEGORY'; payload: string }
-  | { type: 'SET_SELECTED'; payload: Exercise | null }
+  | { type: 'SET_SELECTED'; payload: string | null }
   | {
       type: 'CHANGE_WEIGHT' | 'CHANGE_NUM_OF_TIMES' | 'CHANGE_NUM_OF_SETS';
       payload: number;
@@ -55,7 +55,7 @@ const useAddExercise = () => {
 
   const onSelectExercise = useCallback(
     (exercise: Exercise) =>
-      dispatch({ type: 'SET_SELECTED', payload: exercise }),
+      dispatch({ type: 'SET_SELECTED', payload: exercise.name }),
     [],
   );
 
@@ -64,10 +64,9 @@ const useAddExercise = () => {
       type: 'CHANGE_WEIGHT' | 'CHANGE_NUM_OF_TIMES' | 'CHANGE_NUM_OF_SETS',
       e: React.ChangeEvent<HTMLInputElement>,
     ) => {
+      if (e.target.value.length > 3) return;
       if (e.target.value.length > 1 && e.target.value[0] === '0')
         e.target.value = e.target.value.slice(1);
-
-      if (e.target.value.length > 3) return;
       dispatch({
         type,
         payload: +e.target.value,

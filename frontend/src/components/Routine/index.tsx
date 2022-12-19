@@ -8,7 +8,7 @@ import { hideScroll, unhideScroll } from 'lib/methods';
 import RoutineItem from 'components/Routine/WeekRoutine';
 import AddExercise from 'components/Routine/AddExerciseModal';
 import Button from 'components/common/Button';
-import { BsPlusCircle } from 'react-icons/bs';
+import { BsPlusCircleDotted } from 'react-icons/bs';
 import { v4 as uuidv4 } from 'uuid';
 import useErrorMessage from 'hooks/useErrorMessage';
 import ErrorMessage from 'components/common/ErrorMessage';
@@ -51,7 +51,7 @@ const RoutinePage = () => {
   }, []);
   const onCloseModal = useCallback(() => {
     setModal(false);
-    unhideScroll();
+    setTimeout(unhideScroll, 500);
   }, []);
 
   const onSetVisible = useCallback((routineId?: string) => {
@@ -103,7 +103,7 @@ const RoutinePage = () => {
         ))}
       </RoutineListBlock>
       <AddRoutineButton onClick={onAddRoutine}>
-        <BsPlusCircle />
+        <BsPlusCircleDotted />
         <b>루틴 추가</b>
       </AddRoutineButton>
       <ErrorMessage message={message} />

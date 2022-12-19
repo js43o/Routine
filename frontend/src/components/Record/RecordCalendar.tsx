@@ -100,10 +100,10 @@ const CalendarHeader = styled.div`
     display: flex;
     font-size: 2rem;
     .year {
-      width: 4.75rem;
+      width: 5.25rem;
     }
     .month {
-      width: 3rem;
+      width: 3.5rem;
     }
     button {
       font-size: 1.5rem;

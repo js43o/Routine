@@ -3,13 +3,15 @@ import styled from '@emotion/styled';
 import Button from './Button';
 
 const ButtonsBlock = styled.div`
+  button {
+    padding: 0.5rem;
+    width: 4rem;
+  }
   .submit {
-    padding: 0.25rem 1rem;
     color: ${({ theme }) => theme.letter_primary};
     background: ${({ theme }) => theme.primary};
   }
   .close {
-    padding: 0.25rem 1rem;
     background: ${({ theme }) => theme.background_sub};
     border: 1px solid ${({ theme }) => theme.border_main};
   }

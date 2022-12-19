@@ -11,6 +11,7 @@ import { getExercises } from 'lib/api';
 import LoadingIndicator from 'components/common/LoadingIndicator';
 import ErrorMessage from 'components/common/ErrorMessage';
 import Modal from 'components/common/Modal';
+import InputConfirm from 'components/common/InputConfirm';
 
 const HeaderBlock = styled.div`
   display: flex;
@@ -53,7 +54,7 @@ const ExerciseListBlock = styled.ul`
   overflow-y: scroll;
 `;
 
-const ExerciseItemBlock = styled.li<{ isSelected: number }>`
+const ExerciseItemBlock = styled.li<{ isSelected: boolean }>`
   display: flex;
   flex-direction: column;
   padding: 0.25rem 0.5rem;
@@ -72,43 +73,6 @@ const FooterBlock = styled.div`
   flex-direction: column;
   place-items: center;
   border-top: 1px solid ${({ theme }) => theme.border_main};
-  .error {
-    justify-self: end;
-  }
-`;
-
-const ConfirmBlock = styled.form`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-  padding-top: 0.5rem;
-  .weight,
-  .numOfTimes,
-  .numOfSets {
-    display: flex;
-    flex-direction: column;
-    place-items: center;
-    input {
-      font-size: 1.5rem;
-      width: 3.5rem;
-      @media (min-width: 430px) {
-        font-size: 2rem;
-        width: 4rem;
-      }
-    }
-  }
-  .buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    @media (min-width: 430px) {
-      flex-direction: row;
-      button {
-        font-size: 1.25rem;
-      }
-    }
-  }
 `;
 
 type AddExerciseProps = {
@@ -148,7 +112,7 @@ const AddExerciseModal = ({
     }
 
     const exercise: ExerciseItem = {
-      exercise: (addState.selected as Exercise).name,
+      exercise: addState.selected as string,
       weight: addState.inputs.weight,
       numberOfTimes: addState.inputs.numberOfTimes,
       numberOfSets: addState.inputs.numberOfSets,
@@ -219,7 +183,7 @@ const AddExerciseModal = ({
           {exercises
             .filter((exer) =>
               addState.category === 'all'
-                ? 1
+                ? true
                 : exer.category.includes(addState.category),
             )
             .filter((exer) =>
@@ -228,7 +192,7 @@ const AddExerciseModal = ({
             .map((exer) => (
               <ExerciseItemBlock
                 onClick={() => onSelectExercise(exer)}
-                isSelected={addState.selected === exer ? 1 : 0}
+                isSelected={addState.selected === exer.name}
                 key={exer.name}
               >
                 <b>{exer.name}</b>
@@ -244,7 +208,7 @@ const AddExerciseModal = ({
         <LoadingIndicator />
       )}
       <FooterBlock>
-        <ConfirmBlock onSubmit={onAddExercise}>
+        <InputConfirm onSubmit={onAddExercise}>
           <div className="weight">
             <b>중량</b>
             <input
@@ -282,7 +246,7 @@ const AddExerciseModal = ({
             세트
           </div>
           <SubmitButtons onClose={onClose} />
-        </ConfirmBlock>
+        </InputConfirm>
         <ErrorMessage message={message} />
       </FooterBlock>
     </Modal>

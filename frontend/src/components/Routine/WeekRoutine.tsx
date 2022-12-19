@@ -21,7 +21,7 @@ const WeekRoutineBlock = styled.li<{ visible: boolean; editing?: boolean }>`
   display: flex;
   flex-direction: column;
   height: ${({ visible }) => (visible ? '35rem' : '48px')};
-  padding: 0.5rem;
+  padding: 6px;
   border: 1px solid
     ${({ editing, theme }) => (editing ? theme.primary : theme.border_main)};
   border-radius: 0.5rem;
@@ -29,7 +29,7 @@ const WeekRoutineBlock = styled.li<{ visible: boolean; editing?: boolean }>`
   transition: border 0.2s, height 0.5s;
   .header {
     display: flex;
-    justify-content: start;
+    justify-content: space-between;
     align-items: center;
     gap: 0.5rem;
     .buttons {
@@ -44,16 +44,16 @@ const WeekRoutineBlock = styled.li<{ visible: boolean; editing?: boolean }>`
 `;
 
 const TitleBlock = styled.div<{ editing: boolean }>`
-  height: 34px;
   display: flex;
   place-items: center;
   gap: 0.5rem;
   flex-grow: 1;
-  font-weight: bold;
-  font-size: 1.25rem;
-  white-space: nowrap;
-  overflow: hidden;
+  height: 34px;
   border-radius: 0.25rem;
+  white-space: nowrap;
+  font-size: 1.25rem;
+  font-weight: bold;
+  overflow: hidden;
   @media (hover: hover) {
     &:hover {
       color: ${({ editing, theme }) => !editing && theme.letter_sub};

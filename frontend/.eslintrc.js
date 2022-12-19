@@ -29,5 +29,6 @@ module.exports = {
     'arrow-body-style': 0,
     'react/self-closing-comp': 0,
     'no-param-reassign': 0,
+    'no-restricted-globals': 0,
   },
 };

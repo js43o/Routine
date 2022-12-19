@@ -9,42 +9,52 @@ import useErrorMessage from 'hooks/useErrorMessage';
 import SubmitButtons from 'components/common/SubmitButtons';
 import ErrorMessage from 'components/common/ErrorMessage';
 import Modal from 'components/common/Modal';
+import InputConfirm from 'components/common/InputConfirm';
 
 const HeaderBlock = styled.div`
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   padding: 0.5rem;
+  border-bottom: 1px solid ${({ theme }) => theme.border_main};
+  .category {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    width: 100%;
+    place-items: center;
+    justify-content: space-evenly;
+  }
+  & > span {
+    color: ${({ theme }) => theme.letter_sub};
+  }
 `;
 
 const ProgressListBlock = styled.ul`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  gap: 0.5rem;
-  padding: 0.5rem;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  background: ${({ theme }) => theme.background_sub};
   width: 100%;
   overflow-y: scroll;
 `;
 
-const ProgressItemHeader = styled.div`
+const ProgressItemBlock = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   padding: 0.25rem;
+  width: 100%;
   border: 1px solid ${({ theme }) => theme.border_main};
   border-radius: 0.25rem;
-  background: ${({ theme }) => theme.background_sub};
+  background: ${({ theme }) => theme.background_main};
   text-align: center;
   white-space: nowrap;
-  font-weight: bold;
   div + div {
     display: flex;
     flex-direction: column;
     border-left: 1px solid ${({ theme }) => theme.border_main};
   }
-`;
-
-const ProgressItemBlock = styled(ProgressItemHeader)`
-  background: ${({ theme }) => theme.background_main};
   @media (hover: hover) {
     :hover {
       opacity: 0.75;
@@ -60,41 +70,7 @@ const FooterBlock = styled.div`
   display: flex;
   flex-direction: column;
   place-items: center;
-  .error {
-  }
-`;
-
-const ConfirmBlock = styled.form`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-  .weight,
-  .muscleMass,
-  .fatMass {
-    display: flex;
-    flex-direction: column;
-    place-items: center;
-    input {
-      font-size: 1.5rem;
-      width: 3.5rem;
-      @media (min-width: 430px) {
-        font-size: 2rem;
-        width: 4rem;
-      }
-    }
-  }
-  .buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    @media (min-width: 430px) {
-      flex-direction: row;
-      button {
-        font-size: 1.25rem;
-      }
-    }
-  }
+  border-top: 1px solid ${({ theme }) => theme.border_main};
 `;
 
 type AddProgressModalProps = {
@@ -125,7 +101,7 @@ const ProgressModal = ({
     if (e.target.value.length > 1 && e.target.value[0] === '0') {
       e.target.value = e.target.value.slice(1);
     }
-    setInput({ ...input, [type]: e.target.value });
+    setInput({ ...input, [type]: +e.target.value });
   };
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -176,14 +152,9 @@ const ProgressModal = ({
     <Modal visible={visible}>
       <HeaderBlock>
         <h2>체성분 기록</h2>
+        <span>날짜 · 체중 · 골격근량 · 체지방량</span>
       </HeaderBlock>
       <ProgressListBlock>
-        <ProgressItemHeader>
-          <div>날짜</div>
-          <div>체중</div>
-          <div>골격근량</div>
-          <div>체지방량</div>
-        </ProgressItemHeader>
         {[...Array(data[0].data.length)].map((_, i) => (
           <ProgressItemBlock onClick={() => onRemove(data[0].data[i].x)}>
             <div>
@@ -196,10 +167,11 @@ const ProgressModal = ({
         ))}
       </ProgressListBlock>
       <FooterBlock>
-        <ConfirmBlock onSubmit={onSubmit}>
+        <InputConfirm onSubmit={onSubmit}>
           <div className="weight">
             <b>체중</b>
             <input
+              className="count"
               type="number"
               min={0}
               max={300}
@@ -211,6 +183,7 @@ const ProgressModal = ({
           <div className="muscleMass">
             <b>골격근량</b>
             <input
+              className="count"
               type="number"
               min={0}
               max={150}
@@ -222,6 +195,7 @@ const ProgressModal = ({
           <div className="fatMass">
             <b>체지방량</b>
             <input
+              className="count"
               type="number"
               min={0}
               max={150}
@@ -231,7 +205,7 @@ const ProgressModal = ({
             kg
           </div>
           <SubmitButtons onClose={onClose} />
-        </ConfirmBlock>
+        </InputConfirm>
         <ErrorMessage message={message} />
       </FooterBlock>
     </Modal>

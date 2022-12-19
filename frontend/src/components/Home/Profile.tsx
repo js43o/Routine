@@ -159,10 +159,8 @@ const Profile = ({ user }: ProfileProps) => {
   };
 
   const onRemoveImage = () => {
-    // eslint-disable-next-line no-restricted-globals
-    if (user.profileImage && confirm('정말 삭제하시겠습니까?')) {
-      dispatch(setProfileImage({ username: user.username, image: null }));
-    }
+    if (!user.profileImage || !confirm('정말 삭제하시겠습니까?')) return;
+    dispatch(setProfileImage({ username: user.username, image: null }));
   };
 
   useEffect(() => {

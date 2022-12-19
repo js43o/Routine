@@ -126,14 +126,15 @@ const DayRoutine = ({
       clearTimeout(timer);
       document.onpointermove = null;
       document.onpointerup = null;
-      if (editing)
-        dispatch(
-          removeExercise({
-            routineId,
-            day: dayIdx,
-            idx,
-          }),
-        );
+      if (!editing) return;
+      if (!window.confirm('정말 삭제하시겠습니까?')) return;
+      dispatch(
+        removeExercise({
+          routineId,
+          day: dayIdx,
+          idx,
+        }),
+      );
     };
   };
 
