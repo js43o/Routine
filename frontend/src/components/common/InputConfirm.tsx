@@ -12,10 +12,6 @@ const InputConfirmBlock = styled.form`
     flex-direction: column;
     place-items: center;
     flex-grow: 1;
-    .count {
-      font-size: 1.5rem;
-      width: 4.25rem;
-    }
   }
   .buttons {
     display: flex;

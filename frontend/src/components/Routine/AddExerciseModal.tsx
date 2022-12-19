@@ -16,25 +16,24 @@ import InputConfirm from 'components/common/InputConfirm';
 const HeaderBlock = styled.div`
   display: flex;
   flex-direction: column;
-  place-items: center;
-  gap: 0.5rem;
+  align-items: center;
+  gap: 0.25rem;
   padding: 0.5rem;
   border-bottom: 1px solid ${({ theme }) => theme.border_main};
   input {
     width: 100%;
-    font-size: 1.125rem;
   }
 `;
 
 const CategoryListBlock = styled.ul`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 0.5rem;
+  gap: 0.25rem;
   width: 100%;
 `;
 
 const CategoryItemBlock = styled(Button)<{ checked: number }>`
-  padding: 0.125rem;
+  padding: 0.25rem;
   border: 1px solid
     ${({ checked, theme }) => (checked ? 'transparent' : theme.border_main)};
   background: ${({ checked, theme }) =>
@@ -47,7 +46,6 @@ const ExerciseListBlock = styled.ul`
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-  width: 100%;
   height: 100%;
   padding: 0.25rem;
   background: ${({ theme }) => theme.background_sub};

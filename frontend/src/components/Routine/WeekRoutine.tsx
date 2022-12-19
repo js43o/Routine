@@ -49,7 +49,6 @@ const TitleBlock = styled.div<{ editing: boolean }>`
   gap: 0.5rem;
   flex-grow: 1;
   height: 34px;
-  border-radius: 0.25rem;
   white-space: nowrap;
   font-size: 1.25rem;
   font-weight: bold;

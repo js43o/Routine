@@ -17,7 +17,6 @@ export const performSlice = createSlice({
       }: { payload: { lastModified: number; exerciseList: ExerciseItem[] } },
     ) => {
       state.lastModified = lastModified;
-      // eslint-disable-next-line no-param-reassign
       state.list = exerciseList.map((r) => ({
         exercise: r,
         setCheck: [...Array(r.numberOfSets)].map(() => false),

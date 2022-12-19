@@ -55,7 +55,7 @@ const GlobalStyles = () => {
         textarea {
           font-size: 1rem;
           border: 1px solid transparent;
-          border-radius: 0.25rem;
+          border-radius: 0.5rem;
           color: ${theme.letter_main};
           background: ${theme.background_main};
           font-family: 'Noto Sans KR', sans-serif;
@@ -64,8 +64,13 @@ const GlobalStyles = () => {
           padding: 0.5rem;
           border: 1px solid ${theme.border_main};
           &.count {
+            width: 3.5rem;
             padding: 0.25rem;
             font-size: 1.5rem;
+          }
+          &.count::-webkit-outer-spin-button,
+          &.count::-webkit-inner-spin-button {
+            -webkit-appearance: none;
           }
         }
         a {

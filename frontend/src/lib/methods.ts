@@ -21,11 +21,10 @@ export const getKorProgress = (str: string) => {
 export const getWeekDate = (date: Date) => {
   const d = new Date(date);
   d.setDate(d.getDate() - d.getDay());
-  d.setHours(0, 0, 0, 0);
   const result = [d];
 
   while (result.length < 7) {
-    const a = new Date(date);
+    const a = new Date(d);
     a.setDate(a.getDate() + result.length);
     result.push(a);
   }

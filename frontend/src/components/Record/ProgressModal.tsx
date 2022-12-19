@@ -46,7 +46,7 @@ const ProgressItemBlock = styled.div`
   padding: 0.25rem;
   width: 100%;
   border: 1px solid ${({ theme }) => theme.border_main};
-  border-radius: 0.25rem;
+  border-radius: 0.5rem;
   background: ${({ theme }) => theme.background_main};
   text-align: center;
   white-space: nowrap;

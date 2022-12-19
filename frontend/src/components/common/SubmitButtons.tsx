@@ -4,7 +4,7 @@ import Button from './Button';
 
 const ButtonsBlock = styled.div`
   button {
-    padding: 0.5rem;
+    padding: 0.25rem 0.5rem;
     width: 4rem;
   }
   .submit {
