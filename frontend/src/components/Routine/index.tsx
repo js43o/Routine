@@ -6,7 +6,7 @@ import { addRoutine } from 'modules/user';
 import { userSelector } from 'modules/hooks';
 import { hideScroll, unhideScroll } from 'lib/methods';
 import RoutineItem from 'components/Routine/WeekRoutine';
-import AddExercise from 'components/Routine/AddExerciseModal';
+import AddExerciseModal from 'components/Routine/AddExerciseModal';
 import Button from 'components/common/Button';
 import { BsPlusCircleDotted } from 'react-icons/bs';
 import { v4 as uuidv4 } from 'uuid';
@@ -37,31 +37,33 @@ const RoutineListBlock = styled.ul`
 const RoutinePage = () => {
   const { user } = useSelector(userSelector);
   const dispatch = useDispatch();
+  const { message, onError } = useErrorMessage();
 
   const [modal, setModal] = useState(false);
   const [visible, setVisible] = useState<string | null>(null);
   const [editing, setEditing] = useState<string | null>(null);
   const [day, setDay] = useState<number | null>(null);
-  const { message, onError } = useErrorMessage();
 
   const onOpenModal = useCallback((day: number) => {
     setDay(day);
     setModal(true);
     hideScroll();
   }, []);
+
   const onCloseModal = useCallback(() => {
     setModal(false);
     setTimeout(unhideScroll, 500);
   }, []);
 
-  const onSetVisible = useCallback((routineId?: string) => {
+  const onSetVisible = useCallback((routineId: string | null) => {
     if (routineId) {
       setVisible(routineId);
       return;
     }
     setVisible(null);
   }, []);
-  const onSetEditing = useCallback((routineId?: string) => {
+
+  const onSetEditing = useCallback((routineId: string | null) => {
     if (routineId) {
       setVisible(routineId);
       setEditing(routineId);
@@ -82,7 +84,7 @@ const RoutinePage = () => {
 
   return (
     <Template>
-      <AddExercise
+      <AddExerciseModal
         routineId={editing}
         day={day}
         visible={modal}

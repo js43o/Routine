@@ -3,19 +3,20 @@ import { useDispatch } from 'react-redux';
 import styled from '@emotion/styled';
 import { removeExercise } from 'modules/user';
 import { ExerciseItem } from 'types';
-import useScroll from 'hooks/useDayRoutine';
+import useDragExercise from 'hooks/useDragExercise';
 import { BsPlusCircleDotted } from 'react-icons/bs';
 import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
 import Button from 'components/common/Button';
 
-const DayRoutineWrapper = styled.div`
+const DayRoutineBlock = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-grow: 1;
   position: relative;
 `;
 
-const DayRoutineBlock = styled.ul<{ editing: boolean }>`
+const ExerciseListBlock = styled.ul<{ editing: boolean }>`
   display: flex;
   flex-grow: 1;
   align-items: center;
@@ -45,6 +46,9 @@ const ExerciseItemBlock = styled.li<{ editing?: number }>`
   span {
     font-size: 0.8rem;
   }
+  &.hold {
+    transform: scale(1.1);
+  }
   @media (hover: hover) {
     &:hover {
       opacity: ${({ editing }) => (editing ? 0.75 : 1)};
@@ -52,9 +56,6 @@ const ExerciseItemBlock = styled.li<{ editing?: number }>`
   }
   &:active {
     opacity: ${({ editing }) => (editing ? 0.5 : 1)};
-  }
-  &.hold {
-    transform: scale(1.1);
   }
 `;
 
@@ -96,15 +97,15 @@ type DayRoutineProps = {
 
 const DayRoutine = ({
   dayRoutine,
-  routineId = '',
-  dayIdx = -1,
-  editing = false,
+  routineId,
+  dayIdx,
+  editing,
   onOpenModal,
   onError,
 }: DayRoutineProps) => {
   const dispatch = useDispatch();
-  const { ref, moveTo, onDragStart } = useScroll();
-  const dr = useRef<ExerciseItem[]>(dayRoutine);
+  const { ref, moveTo, onDragStart } = useDragExercise();
+  const tempDayRoutine = useRef<ExerciseItem[]>(dayRoutine);
 
   const onAddExercise = () => {
     if (dayRoutine.length >= 20) {
@@ -114,25 +115,26 @@ const DayRoutine = ({
     onOpenModal(dayIdx);
   };
 
-  const onPointerDown = (e: PointerEvent, idx: number) => {
+  const onPointerDown = (e: PointerEvent, exerciseIdx: number) => {
     const elem = (e.target as HTMLElement).closest('li') as HTMLLIElement;
     const timer = setTimeout(() => {
-      if (!editing) {
-        return;
-      }
-      onDragStart(routineId, dayIdx, idx, elem, e.clientX);
+      if (!editing) return;
+      onDragStart(routineId, dayIdx, exerciseIdx, elem, e.clientX);
     }, 500);
+
     document.onpointerup = () => {
       clearTimeout(timer);
       document.onpointermove = null;
       document.onpointerup = null;
+
       if (!editing) return;
       if (!window.confirm('정말 삭제하시겠습니까?')) return;
+
       dispatch(
         removeExercise({
           routineId,
           day: dayIdx,
-          idx,
+          idx: exerciseIdx,
         }),
       );
     };
@@ -140,19 +142,20 @@ const DayRoutine = ({
 
   useEffect(() => {
     if (dayRoutine.length <= 0) return;
-    if (routineId && dr.current.length < dayRoutine.length) moveTo('end');
-    dr.current = dayRoutine;
+    if (routineId && tempDayRoutine.current.length < dayRoutine.length)
+      moveTo('end');
+    tempDayRoutine.current = dayRoutine;
   }, [dayRoutine]);
 
   return (
-    <DayRoutineWrapper>
+    <DayRoutineBlock>
       <PrevScrollButton
         onPointerDown={() => moveTo('prev')}
         isEnd={ref.current?.scrollLeft === 0}
       >
         <MdNavigateBefore />
       </PrevScrollButton>
-      <DayRoutineBlock ref={ref} editing={editing}>
+      <ExerciseListBlock ref={ref} editing={editing}>
         {dayRoutine.map((s, i) => (
           <ExerciseItemBlock
             editing={editing ? 1 : 0}
@@ -170,19 +173,18 @@ const DayRoutine = ({
         >
           <BsPlusCircleDotted />
         </AddExerciseButton>
-      </DayRoutineBlock>
+      </ExerciseListBlock>
       <NextScrollButton
         onClick={() => moveTo('next')}
         isEnd={
-          ref.current
-            ? ref.current.scrollLeft ===
-              ref.current.scrollWidth - ref.current.clientWidth
-            : false
+          !!ref.current &&
+          ref.current.scrollLeft ===
+            ref.current.scrollWidth - ref.current.clientWidth
         }
       >
         <MdNavigateNext />
       </NextScrollButton>
-    </DayRoutineWrapper>
+    </DayRoutineBlock>
   );
 };
 

@@ -87,17 +87,17 @@ const AddExerciseModal = ({
   onCloseModal,
 }: AddExerciseProps) => {
   const dispatch = useDispatch();
-  const [exercises, setExercises] = useState<Exercise[]>([]);
-  const [name, setName] = useState('');
-
   const {
-    addState,
+    state: { category, selected, inputs },
     onSetCategory,
     onSelectExercise,
     onChangeInput,
     checkInputs,
   } = useAddExercise();
   const { message, onError, resetError } = useErrorMessage();
+
+  const [exercises, setExercises] = useState<Exercise[]>([]);
+  const [name, setName] = useState('');
 
   const onAddExercise = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -110,10 +110,10 @@ const AddExerciseModal = ({
     }
 
     const exercise: ExerciseItem = {
-      exercise: addState.selected as string,
-      weight: addState.inputs.weight,
-      numberOfTimes: addState.inputs.numberOfTimes,
-      numberOfSets: addState.inputs.numberOfSets,
+      exercise: selected as string,
+      weight: inputs.weight,
+      numberOfTimes: inputs.numberOfTimes,
+      numberOfSets: inputs.numberOfSets,
     };
     dispatch(addExercise({ routineId, day, exercise }));
     onClose();
@@ -145,25 +145,25 @@ const AddExerciseModal = ({
         <h2>운동 목록</h2>
         <CategoryListBlock>
           <CategoryItemBlock
-            checked={addState.category === 'all' ? 1 : 0}
+            checked={category === 'all' ? 1 : 0}
             onClick={() => onSetCategory('all')}
           >
             전체
           </CategoryItemBlock>
           <CategoryItemBlock
-            checked={addState.category === 'upper' ? 1 : 0}
+            checked={category === 'upper' ? 1 : 0}
             onClick={() => onSetCategory('upper')}
           >
             상체
           </CategoryItemBlock>
           <CategoryItemBlock
-            checked={addState.category === 'lower' ? 1 : 0}
+            checked={category === 'lower' ? 1 : 0}
             onClick={() => onSetCategory('lower')}
           >
             하체
           </CategoryItemBlock>
           <CategoryItemBlock
-            checked={addState.category === 'core' ? 1 : 0}
+            checked={category === 'core' ? 1 : 0}
             onClick={() => onSetCategory('core')}
           >
             코어
@@ -180,9 +180,7 @@ const AddExerciseModal = ({
         <ExerciseListBlock>
           {exercises
             .filter((exer) =>
-              addState.category === 'all'
-                ? true
-                : exer.category.includes(addState.category),
+              category === 'all' ? true : exer.category.includes(category),
             )
             .filter((exer) =>
               exer.name.replaceAll(' ', '').includes(name.replaceAll(' ', '')),
@@ -190,7 +188,7 @@ const AddExerciseModal = ({
             .map((exer) => (
               <ExerciseItemBlock
                 onClick={() => onSelectExercise(exer)}
-                isSelected={addState.selected === exer.name}
+                isSelected={selected === exer.name}
                 key={exer.name}
               >
                 <b>{exer.name}</b>
@@ -214,7 +212,7 @@ const AddExerciseModal = ({
               type="number"
               min={0}
               max={999}
-              value={addState.inputs.weight}
+              value={inputs.weight}
               onChange={(e) => onChangeInput('CHANGE_WEIGHT', e)}
             />
             kg
@@ -226,7 +224,7 @@ const AddExerciseModal = ({
               type="number"
               min={0}
               max={999}
-              value={addState.inputs.numberOfTimes}
+              value={inputs.numberOfTimes}
               onChange={(e) => onChangeInput('CHANGE_NUM_OF_TIMES', e)}
             />
             회
@@ -238,7 +236,7 @@ const AddExerciseModal = ({
               type="number"
               min={0}
               max={20}
-              value={addState.inputs.numberOfSets}
+              value={inputs.numberOfSets}
               onChange={(e) => onChangeInput('CHANGE_NUM_OF_SETS', e)}
             />
             세트

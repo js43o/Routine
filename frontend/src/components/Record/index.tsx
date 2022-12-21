@@ -31,7 +31,7 @@ const MemoBlock = styled.div`
   padding: 0.25rem;
 `;
 
-const AddProgressBlock = styled(Button)`
+const AddProgressButton = styled(Button)`
   font-size: 1.5rem;
 `;
 
@@ -48,15 +48,17 @@ const ProgressHeader = styled.div`
 const RecordPage = () => {
   const { user } = useSelector(userSelector);
   const [selected, setSelected] = useState<CompleteItem | null>(null);
+
   const [modal, setModal] = useState(false);
 
   const onOpenModal = useCallback(() => {
     setModal(true);
     hideScroll();
   }, []);
+
   const onCloseModal = useCallback(() => {
     setModal(false);
-    unhideScroll();
+    setTimeout(unhideScroll, 500);
   }, []);
 
   return (
@@ -85,9 +87,9 @@ const RecordPage = () => {
       </RecordBlock>
       <ProgressHeader>
         <h1>체성분 변화</h1>
-        <AddProgressBlock onClick={onOpenModal}>
+        <AddProgressButton onClick={onOpenModal}>
           <FaPencilAlt />
-        </AddProgressBlock>
+        </AddProgressButton>
       </ProgressHeader>
       <ProgressViewer data={user.progress} />
     </Template>

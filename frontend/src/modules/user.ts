@@ -251,9 +251,12 @@ export const userSlice = createSlice({
         payload: { routineId, value },
       }: { payload: { routineId: string; value: string } },
     ) => {
-      const r = state.user.routines.find((s) => s.routineId === routineId);
-      if (!r) return;
-      r.title = value;
+      const routine = state.user.routines.find(
+        (routine) => routine.routineId === routineId,
+      );
+      if (!routine) return;
+
+      routine.title = value;
     },
     addRoutine: (state, { payload }: { payload: Routine }) => {
       state.user.routines.push(payload);
@@ -266,12 +269,15 @@ export const userSlice = createSlice({
         payload: { routineId: string; day: number; exercise: ExerciseItem };
       },
     ) => {
-      const r = state.user.routines.find((s) => s.routineId === routineId);
-      if (!r) return;
-      const d = r.weekRoutine[day];
-      if (!d) return;
-      r.weekRoutine[day] = [...d, exercise];
-      r.lastModified = Date.now();
+      const routine = state.user.routines.find(
+        (s) => s.routineId === routineId,
+      );
+      if (!routine) return;
+      const dayRoutine = routine.weekRoutine[day];
+      if (!dayRoutine) return;
+
+      routine.weekRoutine[day] = [...dayRoutine, exercise];
+      routine.lastModified = Date.now();
     },
     removeExercise: (
       state,
@@ -279,12 +285,15 @@ export const userSlice = createSlice({
         payload: { routineId, day, idx },
       }: { payload: { routineId: string; day: number; idx: number } },
     ) => {
-      const r = state.user.routines.find((s) => s.routineId === routineId);
-      if (!r) return;
-      const d = r.weekRoutine[day];
-      if (!d) return;
-      r.weekRoutine[day] = d.filter((_, i) => i !== idx);
-      r.lastModified = Date.now();
+      const routine = state.user.routines.find(
+        (s) => s.routineId === routineId,
+      );
+      if (!routine) return;
+      const dayRoutine = routine.weekRoutine[day];
+      if (!dayRoutine) return;
+
+      routine.weekRoutine[day] = dayRoutine.filter((_, i) => i !== idx);
+      routine.lastModified = Date.now();
     },
     insertExercise: (
       state,
@@ -299,17 +308,20 @@ export const userSlice = createSlice({
         };
       },
     ) => {
-      const r = state.user.routines.find((s) => s.routineId === routineId);
-      if (!r) return;
-      const d = r.weekRoutine[day];
-      if (!d) return;
-      const filtered = d.filter((_, i) => i !== fromIdx);
-      r.weekRoutine[day] = [
+      const routine = state.user.routines.find(
+        (s) => s.routineId === routineId,
+      );
+      if (!routine) return;
+      const dayRoutine = routine.weekRoutine[day];
+      if (!dayRoutine) return;
+
+      const filtered = dayRoutine.filter((_, i) => i !== fromIdx);
+      routine.weekRoutine[day] = [
         ...filtered.slice(0, toIdx),
-        d[fromIdx],
+        dayRoutine[fromIdx],
         ...filtered.slice(toIdx),
       ];
-      r.lastModified = Date.now();
+      routine.lastModified = Date.now();
     },
   },
   extraReducers: (builder) => {

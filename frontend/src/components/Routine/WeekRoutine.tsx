@@ -15,7 +15,7 @@ import useErrorMessage from 'hooks/useErrorMessage';
 import { dayidxToDaystr } from 'lib/methods';
 import { BsTriangleFill, BsCheckLg, BsStar, BsStarFill } from 'react-icons/bs';
 import { FaPencilAlt, FaTrashAlt } from 'react-icons/fa';
-import RoutineExerciseList from './DayRoutine';
+import DayRoutine from './DayRoutine';
 
 const WeekRoutineBlock = styled.li<{ visible: boolean; editing?: boolean }>`
   display: flex;
@@ -58,7 +58,7 @@ const TitleBlock = styled.div<{ editing: boolean }>`
       color: ${({ editing, theme }) => !editing && theme.letter_sub};
     }
   }
-  input {
+  & > input {
     height: 2rem;
     min-width: 0;
   }
@@ -74,28 +74,25 @@ const DaySpan = styled.div<{ dayIdx: number }>`
   }};
 `;
 
-const DetailButton = styled(BsTriangleFill)<{ visible: number }>`
+const OpenIndicator = styled(BsTriangleFill)<{ visible: number }>`
   flex-shrink: 0;
   transform: ${({ visible }) => (visible ? 'rotate(180deg)' : 'rotate(90deg)')};
   transition: transform 0.2s;
   font-size: 1rem;
 `;
 
-const RoutineDetailBlock = styled.ul`
+const RoutineContent = styled.ul`
   display: flex;
   flex-direction: column;
   margin-top: 0.5rem;
   gap: 0.25rem;
 `;
 
-const RoutineDetailItem = styled.li`
+const DayRoutineWrapper = styled.li`
   display: flex;
   place-items: center;
   border-radius: 0.5rem;
   overflow: hidden;
-  .list {
-    flex-grow: 1;
-  }
 `;
 
 const RemoveRoutineButton = styled(Button)`
@@ -119,14 +116,14 @@ type WeekRoutineProps = {
   isVisible: boolean;
   isEditing: boolean;
   onOpenModal: (day: number) => void;
-  onSetVisible: (id?: string) => void;
-  onSetEditing: (id?: string) => void;
+  onSetVisible: (id: string | null) => void;
+  onSetEditing: (id: string | null) => void;
 };
 
 const WeekRoutine = ({
   routine,
-  isVisible = false,
-  isEditing = false,
+  isVisible,
+  isEditing,
   onOpenModal,
   onSetVisible,
   onSetEditing,
@@ -136,7 +133,7 @@ const WeekRoutine = ({
   const { message, onError } = useErrorMessage();
 
   const onSubmit = (routine: Routine) => {
-    onSetEditing();
+    onSetEditing(null);
     dispatch(editRoutine({ username: user.username, routine }));
   };
 
@@ -154,13 +151,11 @@ const WeekRoutine = ({
       <div className="header">
         <TitleBlock
           editing={isEditing}
-          onClick={
-            !isEditing && isVisible
-              ? () => onSetVisible()
-              : () => onSetVisible(routine.routineId)
+          onClick={() =>
+            onSetVisible(!isEditing && isVisible ? null : routine.routineId)
           }
         >
-          <DetailButton visible={isVisible ? 1 : 0} />
+          <OpenIndicator visible={isVisible ? 1 : 0} />
           {isEditing ? (
             <input
               type="text"
@@ -221,23 +216,21 @@ const WeekRoutine = ({
           </RemoveRoutineButton>
         </div>
       </div>
-      <RoutineDetailBlock>
+      <RoutineContent>
         {routine.weekRoutine.map((dayRoutine, dayIdx) => (
-          <RoutineDetailItem>
+          <DayRoutineWrapper>
             <DaySpan dayIdx={dayIdx}>{dayidxToDaystr(dayIdx)}</DaySpan>
-            <div className="list">
-              <RoutineExerciseList
-                dayRoutine={dayRoutine}
-                dayIdx={dayIdx}
-                routineId={routine.routineId}
-                editing={isEditing}
-                onOpenModal={onOpenModal}
-                onError={onError}
-              />
-            </div>
-          </RoutineDetailItem>
+            <DayRoutine
+              dayRoutine={dayRoutine}
+              dayIdx={dayIdx}
+              routineId={routine.routineId}
+              editing={isEditing}
+              onOpenModal={onOpenModal}
+              onError={onError}
+            />
+          </DayRoutineWrapper>
         ))}
-      </RoutineDetailBlock>
+      </RoutineContent>
       <ErrorMessage message={message} />
     </WeekRoutineBlock>
   );

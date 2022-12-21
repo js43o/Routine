@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { insertExercise } from 'modules/user';
 import { hideScroll, unhideScroll } from 'lib/methods';
 
-const useScroll = () => {
+const useDragExercise = () => {
   const ref = useRef<HTMLUListElement>(null);
   const x = useRef(0);
   const dispatch = useDispatch();
@@ -39,7 +39,7 @@ const useScroll = () => {
   };
 
   const onDragStart = (
-    id: string,
+    routineId: string,
     day: number,
     fromIdx: number,
     elem: HTMLLIElement,
@@ -54,7 +54,7 @@ const useScroll = () => {
     document.onpointerup = (e) => {
       elem.classList.remove('hold');
       elem.style.transform = '';
-      onDragEnd(e, id, day, fromIdx, x);
+      onDragEnd(e, routineId, day, fromIdx, x);
     };
   };
 
@@ -72,28 +72,38 @@ const useScroll = () => {
     const items = Array.from(ref.current.querySelectorAll('li'));
     if (!items) return;
 
-    if (e.clientX < init)
-      for (let i = 0; i < items.length; i += 1) {
+    if (e.clientX < init) {
+      items.every((item, idx) => {
         const pos =
-          (items[i].getBoundingClientRect().left +
-            items[i].getBoundingClientRect().right) /
+          (item.getBoundingClientRect().left +
+            item.getBoundingClientRect().right) /
           2;
         if (e.clientX < pos) {
-          dispatch(insertExercise({ routineId, day, fromIdx, toIdx: i }));
-          break;
+          dispatch(insertExercise({ routineId, day, fromIdx, toIdx: idx }));
+          return false;
         }
-      }
-    else if (e.clientX > init)
-      for (let i = items.length - 1; i >= 0; i -= 1) {
+        return true;
+      });
+    } else if (e.clientX > init) {
+      [...items].reverse().every((item, idx) => {
         const pos =
-          (items[i].getBoundingClientRect().left +
-            items[i].getBoundingClientRect().right) /
+          (item.getBoundingClientRect().left +
+            item.getBoundingClientRect().right) /
           2;
         if (e.clientX > pos) {
-          dispatch(insertExercise({ routineId, day, fromIdx, toIdx: i }));
-          break;
+          dispatch(
+            insertExercise({
+              routineId,
+              day,
+              fromIdx,
+              toIdx: items.length - idx - 1,
+            }),
+          );
+          return false;
         }
-      }
+        return true;
+      });
+    }
 
     document.onpointermove = null;
     document.onpointerup = null;
@@ -102,4 +112,4 @@ const useScroll = () => {
   return { ref, moveTo, onDragStart };
 };
 
-export default useScroll;
+export default useDragExercise;

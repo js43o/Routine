@@ -98,7 +98,7 @@ const useAddExercise = () => {
   }, [state.selected, state.inputs]);
 
   return {
-    addState: state,
+    state,
     onSetCategory,
     onSelectExercise,
     onChangeInput,

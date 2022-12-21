@@ -18,7 +18,7 @@ export const lightTheme: Theme = {
     letter_main: 'black',
     letter_sub: 'grey',
     letter_primary: 'white',
-    primary: '#2AC1BC',
+    primary: '#29A1C5',
     secondary: '#FEF37C',
     memo_body: '#fffed5',
     red: '#df2323',

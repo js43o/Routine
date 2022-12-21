@@ -100,10 +100,10 @@ const CalendarHeader = styled.div`
     display: flex;
     font-size: 2rem;
     .year {
-      width: 5.25rem;
+      width: 4.25rem;
     }
     .month {
-      width: 3.5rem;
+      width: 2.5rem;
     }
     button {
       font-size: 1.5rem;
@@ -244,10 +244,11 @@ const RecordCalendar = ({ selectedDate, setSelected }: RecordCalendarProps) => {
               type="number"
               value={`${input.year}`}
               onChange={(e) => onChange(e, 'year')}
-              min={1900}
-              max={9999}
+              min={2000}
+              max={2999}
+              placeholder="연도"
             />
-            .
+            -
             <input
               className="month count"
               type="number"
@@ -255,6 +256,7 @@ const RecordCalendar = ({ selectedDate, setSelected }: RecordCalendarProps) => {
               onChange={(e) => onChange(e, 'month')}
               min={1}
               max={12}
+              placeholder="월"
             />
             <CheckButton type="submit">
               <BsCheckLg />
@@ -263,7 +265,7 @@ const RecordCalendar = ({ selectedDate, setSelected }: RecordCalendarProps) => {
         ) : (
           <div className="title">
             <DateIndicator onClick={() => setEdit(true)}>
-              {currentDate.getFullYear()}.
+              {currentDate.getFullYear()}-
               {currentDate.getMonth() < 9
                 ? `0${currentDate.getMonth() + 1}`
                 : currentDate.getMonth() + 1}
