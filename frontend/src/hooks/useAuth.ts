@@ -1,4 +1,5 @@
 import { useReducer, useCallback } from 'react';
+import { regexp } from 'lib/constants';
 
 type State = {
   username: string;
@@ -76,10 +77,6 @@ const reducer = (state: State, action: Action) => {
 
 const useAuth = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const usernameReg = /^[A-Za-z\d_-]+$/;
-  const passwordReg =
-    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]+$/;
-  const nicknameReg = /^[ㄱ-ㅎ가-힇A-Za-z\d]+$/;
 
   const checkInputs = (
     type: 'username' | 'password' | 'nickname',
@@ -92,7 +89,7 @@ const useAuth = () => {
           payload: {
             field: 'username',
             value: {
-              allowedCharacter: usernameReg.test(str),
+              allowedCharacter: regexp.username.test(str),
               allowedLength: str.length >= 5 && str.length <= 20,
             },
           },
@@ -104,7 +101,7 @@ const useAuth = () => {
           payload: {
             field: 'password',
             value: {
-              allowedCharacter: passwordReg.test(str),
+              allowedCharacter: regexp.password.test(str),
               allowedLength: str.length >= 8 && str.length <= 20,
             },
           },
@@ -116,7 +113,7 @@ const useAuth = () => {
           payload: {
             field: 'nickname',
             value: {
-              allowedCharacter: nicknameReg.test(str),
+              allowedCharacter: regexp.nickname.test(str),
               allowedLength: str.length >= 1 && str.length <= 10,
             },
           },
