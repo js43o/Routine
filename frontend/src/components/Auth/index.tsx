@@ -1,14 +1,13 @@
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, NavLink } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { userSelector } from 'modules/hooks';
-import { login, register } from 'modules/user';
-import useAuth from 'hooks/useAuth';
 import useErrorMessage from 'hooks/useErrorMessage';
 import Title from 'templates/Title';
-import Button from 'components/common/Button';
 import ErrorMessage from 'components/common/ErrorMessage';
+import Register from './Register';
+import Login from './Login';
 
 const AuthWrapper = styled.div`
   display: flex;
@@ -20,7 +19,7 @@ const AuthWrapper = styled.div`
   }
 `;
 
-const AuthBlock = styled.div<{ type: string }>`
+const AuthBlock = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -53,24 +52,11 @@ const AuthBlock = styled.div<{ type: string }>`
       color: ${({ theme }) => theme.blue};
     }
   }
-`;
-
-const KakaoLoginButton = styled(Button)`
-  gap: 0.5rem;
-  width: 100%;
-  padding: 0.5rem;
-  color: black;
-  background: #fee500;
-  img {
-    margin-top: 0.2rem;
-    width: 1rem;
+  .submit_button {
+    padding: 0.5rem;
+    color: ${({ theme }) => theme.letter_primary};
+    background: ${({ theme }) => theme.primary};
   }
-`;
-
-const SubmitButton = styled(Button)`
-  padding: 0.5rem;
-  color: ${({ theme }) => theme.letter_primary};
-  background: ${({ theme }) => theme.primary};
 `;
 
 type Authprops = {
@@ -79,48 +65,8 @@ type Authprops = {
 
 const Auth = ({ type }: Authprops) => {
   const { error, authErrorCode, user } = useSelector(userSelector);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { REACT_APP_KAKAO_API, REACT_APP_KAKAO_REDIRECT } = process.env;
-
-  const {
-    state: { username, password, passwordConfirm, nickname },
-    onChangeInput,
-    onCheckInputs,
-  } = useAuth();
   const { message, onError, resetError } = useErrorMessage();
-
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (type === 'register') {
-      if (
-        !onCheckInputs(username, 'username') ||
-        !onCheckInputs(password, 'password') ||
-        !onCheckInputs(nickname, 'nickname')
-      ) {
-        onError('입력값이 조건을 만족하지 않습니다.');
-        return;
-      }
-      if (password !== passwordConfirm) {
-        onError('비밀번호가 일치하지 않습니다.');
-        return;
-      }
-      dispatch(register({ username, password, nickname }));
-    } else {
-      if (!username || !password) {
-        onError('아이디/비밀번호를 입력하세요.');
-        return;
-      }
-      if (
-        !onCheckInputs(username, 'username') ||
-        !onCheckInputs(password, 'password')
-      ) {
-        onError('입력값이 조건을 만족하지 않습니다.');
-        return;
-      }
-      dispatch(login({ username, password }));
-    }
-  };
 
   useEffect(() => {
     if (!error) return;
@@ -153,98 +99,16 @@ const Auth = ({ type }: Authprops) => {
   return (
     <AuthWrapper>
       <Title />
-      <AuthBlock type={type}>
-        <form onSubmit={onSubmit}>
-          <label htmlFor="username">
-            아이디
-            <input
-              type="text"
-              id="username"
-              maxLength={20}
-              value={username}
-              onChange={(e) => onChangeInput('username', e)}
-            />
-            {type === 'register' && (
-              <small>※ 영문 소문자/숫자/-/_ 포함 5-20자</small>
-            )}
-          </label>
-          <label htmlFor="password">
-            비밀번호
-            <input
-              type="password"
-              id="password"
-              maxLength={20}
-              value={password}
-              onChange={(e) => onChangeInput('password', e)}
-            />
-            <small>※ 영문 대소문자/숫자/특수문자 포함 8-20자</small>
-          </label>
-          {type === 'register' && (
-            <>
-              <label htmlFor="passwordConfirm">
-                비밀번호 재확인
-                <input
-                  type="password"
-                  id="passwordConfirm"
-                  maxLength={20}
-                  value={passwordConfirm}
-                  onChange={(e) => onChangeInput('passwordConfirm', e)}
-                />
-              </label>
-              <label htmlFor="nickname">
-                닉네임
-                <input
-                  type="text"
-                  id="nickname"
-                  maxLength={10}
-                  value={nickname}
-                  onChange={(e) => onChangeInput('nickname', e)}
-                />
-                <small>※ 한글/영문 대소문자/숫자 1-10자</small>
-              </label>
-            </>
-          )}
-          <SubmitButton type="submit">
-            {type === 'register' ? '계정 등록' : '로그인'}
-          </SubmitButton>
-        </form>
-        {type === 'login' && (
-          <>
-            <span className="or">또는...</span>
-            <a
-              href={`https://kauth.kakao.com/oauth/authorize?client_id=${REACT_APP_KAKAO_API}&redirect_uri=${REACT_APP_KAKAO_REDIRECT}&response_type=code`}
-            >
-              <KakaoLoginButton>
-                <img
-                  src={`${process.env.PUBLIC_URL}/kakao.png`}
-                  alt="kakao_logo"
-                ></img>
-                <span>카카오 로그인</span>
-              </KakaoLoginButton>
-            </a>
-          </>
+      <AuthBlock>
+        {type === 'register' ? (
+          <Register onError={onError} />
+        ) : (
+          <Login onError={onError} />
         )}
-        <div className="auth_another">
-          {type === 'register' ? (
-            <>
-              <span>계정이 있다면</span>
-              <NavLink to="/login" className="link">
-                로그인
-              </NavLink>
-            </>
-          ) : (
-            <>
-              <span>계정이 없으신가요?</span>
-              <NavLink to="/register" className="link">
-                계정 등록
-              </NavLink>
-            </>
-          )}
+        <div className="error_wrapper">
+          <ErrorMessage message={message} />
         </div>
       </AuthBlock>
-      <div className="error_wrapper">
-        <ErrorMessage message={message} />
-      </div>
     </AuthWrapper>
   );
 };

@@ -5,6 +5,20 @@ type State = {
   password: string;
   passwordConfirm: string;
   nickname: string;
+  inputCondition: {
+    username: {
+      allowedCharacter: boolean;
+      allowedLength: boolean;
+    };
+    password: {
+      allowedCharacter: boolean;
+      allowedLength: boolean;
+    };
+    nickname: {
+      allowedCharacter: boolean;
+      allowedLength: boolean;
+    };
+  };
 };
 
 const initialState: State = {
@@ -12,6 +26,20 @@ const initialState: State = {
   password: '',
   passwordConfirm: '',
   nickname: '',
+  inputCondition: {
+    username: {
+      allowedCharacter: false,
+      allowedLength: false,
+    },
+    password: {
+      allowedCharacter: false,
+      allowedLength: false,
+    },
+    nickname: {
+      allowedCharacter: false,
+      allowedLength: false,
+    },
+  },
 };
 
 type Action =
@@ -21,6 +49,10 @@ type Action =
   | {
       type: 'CHANGE_FIELD';
       payload: { field: string; value: string };
+    }
+  | {
+      type: 'CHECK_CONDITION';
+      payload: { field: string; value: { [x: string]: boolean } };
     };
 
 const reducer = (state: State, action: Action) => {
@@ -29,6 +61,14 @@ const reducer = (state: State, action: Action) => {
       return initialState;
     case 'CHANGE_FIELD':
       return { ...state, [action.payload.field]: action.payload.value };
+    case 'CHECK_CONDITION':
+      return {
+        ...state,
+        inputCondition: {
+          ...state.inputCondition,
+          [action.payload.field]: action.payload.value,
+        },
+      };
     default:
       return state;
   }
@@ -36,6 +76,56 @@ const reducer = (state: State, action: Action) => {
 
 const useAuth = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const usernameReg = /^[A-Za-z\d_-]+$/;
+  const passwordReg =
+    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]+$/;
+  const nicknameReg = /^[ㄱ-ㅎ가-힇A-Za-z\d]+$/;
+
+  const checkInputs = (
+    type: 'username' | 'password' | 'nickname',
+    str: string,
+  ) => {
+    switch (type) {
+      case 'username':
+        dispatch({
+          type: 'CHECK_CONDITION',
+          payload: {
+            field: 'username',
+            value: {
+              allowedCharacter: usernameReg.test(str),
+              allowedLength: str.length >= 5 && str.length <= 20,
+            },
+          },
+        });
+        break;
+      case 'password':
+        dispatch({
+          type: 'CHECK_CONDITION',
+          payload: {
+            field: 'password',
+            value: {
+              allowedCharacter: passwordReg.test(str),
+              allowedLength: str.length >= 8 && str.length <= 20,
+            },
+          },
+        });
+        break;
+      case 'nickname':
+        dispatch({
+          type: 'CHECK_CONDITION',
+          payload: {
+            field: 'nickname',
+            value: {
+              allowedCharacter: nicknameReg.test(str),
+              allowedLength: str.length >= 1 && str.length <= 10,
+            },
+          },
+        });
+        break;
+      default:
+        break;
+    }
+  };
 
   const onChangeInput = useCallback(
     (
@@ -49,30 +139,14 @@ const useAuth = () => {
           value: e.target.value,
         },
       });
+      if (field !== 'passwordConfirm') checkInputs(field, e.target.value);
     },
     [],
   );
 
-  const onCheckInputs = (
-    str: string,
-    type: 'username' | 'password' | 'nickname',
-  ) => {
-    switch (type) {
-      case 'username':
-        return /^[A-Za-z\d_-]{5,20}/.test(str);
-      case 'password':
-        return /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]){8,20}/.test(str);
-      case 'nickname':
-        return /^[ㄱ-ㅎ가-힇A-Za-z\d]{1,10}/.test(str);
-      default:
-        return false;
-    }
-  };
-
   return {
     state,
     onChangeInput,
-    onCheckInputs,
   };
 };
 
