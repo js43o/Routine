@@ -12,16 +12,13 @@ import Login from './Login';
 const AuthWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  align-self: center;
-  .error_wrapper {
-    height: 1rem;
-  }
+  margin: auto auto;
 `;
 
 const AuthBlock = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 0.5rem;
   padding: 1.5rem;
   border: 1px solid ${({ theme }) => theme.border_main};
@@ -41,21 +38,27 @@ const AuthBlock = styled.div`
     align-self: center;
     color: ${({ theme }) => theme.letter_sub};
   }
-  .auth_another {
+  .auth-switch {
     display: flex;
     justify-content: center;
-    gap: 0.5rem;
-    padding: 0.5rem;
+    gap: 0.25rem;
+    margin-top: 0.25rem;
     color: ${({ theme }) => theme.letter_sub};
     .link {
       font-weight: bold;
       color: ${({ theme }) => theme.blue};
     }
   }
-  .submit_button {
+  .submit-button {
     padding: 0.5rem;
     color: ${({ theme }) => theme.letter_primary};
     background: ${({ theme }) => theme.primary};
+  }
+  .kakao-login {
+    width: 100%;
+  }
+  .error-message {
+    align-self: center;
   }
 `;
 
@@ -105,9 +108,7 @@ const Auth = ({ type }: Authprops) => {
         ) : (
           <Login onError={onError} />
         )}
-        <div className="error_wrapper">
-          <ErrorMessage message={message} />
-        </div>
+        <ErrorMessage message={message} />
       </AuthBlock>
     </AuthWrapper>
   );

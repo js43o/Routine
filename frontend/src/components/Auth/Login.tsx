@@ -9,6 +9,7 @@ import useAuth from 'hooks/useAuth';
 const KakaoLoginButton = styled(Button)`
   gap: 0.5rem;
   width: 100%;
+  flex-grow: 1;
   padding: 0.5rem;
   color: black;
   background: #fee500;
@@ -40,7 +41,7 @@ const Login = ({ onError }: LoginProps) => {
       Object.values(inputCondition.username).includes(false) ||
       Object.values(inputCondition.password).includes(false)
     ) {
-      onError('입력값이 조건을 만족하지 않습니다.');
+      onError('입력값을 확인해주세요.');
       return;
     }
     dispatch(login({ username, password }));
@@ -69,13 +70,14 @@ const Login = ({ onError }: LoginProps) => {
             onChange={(e) => onChangeInput('password', e)}
           />
         </label>
-        <Button type="submit" className="submit_button">
+        <Button type="submit" className="submit-button">
           로그인
         </Button>
       </form>
-      <span className="or">또는...</span>
+      <span className="or">───── 또는... ─────</span>
       <a
         href={`https://kauth.kakao.com/oauth/authorize?client_id=${REACT_APP_KAKAO_API}&redirect_uri=${REACT_APP_KAKAO_REDIRECT}&response_type=code`}
+        className="kakao-login"
       >
         <KakaoLoginButton>
           <img
@@ -85,7 +87,7 @@ const Login = ({ onError }: LoginProps) => {
           <span>카카오 로그인</span>
         </KakaoLoginButton>
       </a>
-      <div className="auth_another">
+      <div className="auth-switch">
         <span>계정이 없으신가요?</span>
         <NavLink to="/register" className="link">
           계정 등록
