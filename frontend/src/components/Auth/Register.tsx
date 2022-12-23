@@ -83,7 +83,7 @@ const Register = ({ onError }: RegisterProps) => {
               <CheckedCircle />
             ) : (
               <UncheckedCircle />
-            )}{' '}
+            )}
             5-20자 이내
           </InputChecker>
         </InputCheckerWrapper>
@@ -111,7 +111,7 @@ const Register = ({ onError }: RegisterProps) => {
               <CheckedCircle />
             ) : (
               <UncheckedCircle />
-            )}{' '}
+            )}
             8-20자 이내
           </InputChecker>
         </InputCheckerWrapper>
@@ -159,7 +159,7 @@ const Register = ({ onError }: RegisterProps) => {
               <CheckedCircle />
             ) : (
               <UncheckedCircle />
-            )}{' '}
+            )}
             1-10자 이내
           </InputChecker>
         </InputCheckerWrapper>

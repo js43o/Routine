@@ -40,7 +40,7 @@ const useDragExercise = () => {
 
   const onDragStart = (
     routineId: string,
-    day: number,
+    dayIdx: number,
     fromIdx: number,
     elem: HTMLLIElement,
     x: number,
@@ -54,14 +54,14 @@ const useDragExercise = () => {
     document.onpointerup = (e) => {
       elem.classList.remove('hold');
       elem.style.transform = '';
-      onDragEnd(e, routineId, day, fromIdx, x);
+      onDragEnd(e, routineId, dayIdx, fromIdx, x);
     };
   };
 
   const onDragEnd = (
     e: PointerEvent,
     routineId: string,
-    day: number,
+    dayIdx: number,
     fromIdx: number,
     init: number,
   ) => {
@@ -79,7 +79,7 @@ const useDragExercise = () => {
             item.getBoundingClientRect().right) /
           2;
         if (e.clientX < pos) {
-          dispatch(insertExercise({ routineId, day, fromIdx, toIdx: idx }));
+          dispatch(insertExercise({ routineId, dayIdx, fromIdx, toIdx: idx }));
           return false;
         }
         return true;
@@ -94,7 +94,7 @@ const useDragExercise = () => {
           dispatch(
             insertExercise({
               routineId,
-              day,
+              dayIdx,
               fromIdx,
               toIdx: items.length - idx - 1,
             }),

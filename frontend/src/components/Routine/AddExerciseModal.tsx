@@ -75,14 +75,14 @@ const FooterBlock = styled.div`
 
 type AddExerciseProps = {
   routineId: string | null;
-  day: number | null;
+  dayIdx: number | null;
   visible: boolean;
   onCloseModal: () => void;
 };
 
 const AddExerciseModal = ({
   routineId,
-  day,
+  dayIdx,
   visible,
   onCloseModal,
 }: AddExerciseProps) => {
@@ -101,7 +101,7 @@ const AddExerciseModal = ({
 
   const onAddExercise = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!routineId || day === null) return;
+    if (!routineId || dayIdx === null) return;
 
     const error = checkInputs();
     if (error) {
@@ -115,7 +115,7 @@ const AddExerciseModal = ({
       numberOfTimes: inputs.numberOfTimes,
       numberOfSets: inputs.numberOfSets,
     };
-    dispatch(addExercise({ routineId, day, exercise }));
+    dispatch(addExercise({ routineId, dayIdx, exercise }));
     onClose();
   };
 

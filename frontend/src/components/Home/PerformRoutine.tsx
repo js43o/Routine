@@ -153,9 +153,12 @@ const PerformRoutine = ({
   if (complete)
     return <PerformRoutineBlock>오늘 운동을 완료했습니다.</PerformRoutineBlock>;
 
-  const onToggleCheck = (exerIdx: number, setIdx: number) =>
-    dispatch(toggleCheck({ exerIdx, setIdx }));
-  const onCheckAll = (exerIdx: number) => dispatch(checkAll({ exerIdx }));
+  const onToggleCheck = (exerciseIdx: number, setIdx: number) =>
+    dispatch(toggleCheck({ exerciseIdx, setIdx }));
+
+  const onCheckAll = (exerciseIdx: number) =>
+    dispatch(checkAll({ exerciseIdx }));
+
   const isCompleted = () =>
     performs.list.reduce(
       (acc, exer) => acc + exer.setCheck.filter((a) => !a).length,

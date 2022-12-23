@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ExerciseItem, PerformList } from 'types';
 
 const initialState: PerformList = {
@@ -12,10 +12,12 @@ export const performSlice = createSlice({
   reducers: {
     initialPerform: (
       state,
-      {
-        payload: { lastModified, exerciseList },
-      }: { payload: { lastModified: number; exerciseList: ExerciseItem[] } },
+      action: PayloadAction<{
+        lastModified: number;
+        exerciseList: ExerciseItem[];
+      }>,
     ) => {
+      const { lastModified, exerciseList } = action.payload;
       state.lastModified = lastModified;
       state.list = exerciseList.map((r) => ({
         exercise: r,
@@ -24,11 +26,10 @@ export const performSlice = createSlice({
     },
     toggleCheck: (
       state,
-      {
-        payload: { exerIdx, setIdx },
-      }: { payload: { exerIdx: number; setIdx: number } },
+      action: PayloadAction<{ exerciseIdx: number; setIdx: number }>,
     ) => {
-      const exer = state.list[exerIdx];
+      const { exerciseIdx, setIdx } = action.payload;
+      const exer = state.list[exerciseIdx];
       if (!exer) return;
 
       if (!exer.setCheck[setIdx] && (setIdx === 0 || exer.setCheck[setIdx - 1]))
@@ -39,11 +40,9 @@ export const performSlice = createSlice({
       )
         exer.setCheck[setIdx] = !exer.setCheck[setIdx];
     },
-    checkAll: (
-      state,
-      { payload: { exerIdx } }: { payload: { exerIdx: number } },
-    ) => {
-      const exer = state.list[exerIdx];
+    checkAll: (state, action: PayloadAction<{ exerciseIdx: number }>) => {
+      const { exerciseIdx } = action.payload;
+      const exer = state.list[exerciseIdx];
       exer.setCheck = exer.setCheck.map(() => true);
     },
   },

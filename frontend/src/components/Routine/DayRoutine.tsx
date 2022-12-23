@@ -133,8 +133,8 @@ const DayRoutine = ({
       dispatch(
         removeExercise({
           routineId,
-          day: dayIdx,
-          idx: exerciseIdx,
+          dayIdx,
+          exerciseIdx,
         }),
       );
     };

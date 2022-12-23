@@ -42,10 +42,10 @@ const RoutinePage = () => {
   const [modal, setModal] = useState(false);
   const [visible, setVisible] = useState<string | null>(null);
   const [editing, setEditing] = useState<string | null>(null);
-  const [day, setDay] = useState<number | null>(null);
+  const [dayIdx, setDayIdx] = useState<number | null>(null);
 
-  const onOpenModal = useCallback((day: number) => {
-    setDay(day);
+  const onOpenModal = useCallback((dayIdx: number) => {
+    setDayIdx(dayIdx);
     setModal(true);
     hideScroll();
   }, []);
@@ -86,7 +86,7 @@ const RoutinePage = () => {
     <Template>
       <AddExerciseModal
         routineId={editing}
-        day={day}
+        dayIdx={dayIdx}
         visible={modal}
         onCloseModal={onCloseModal}
       />

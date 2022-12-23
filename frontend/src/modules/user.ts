@@ -4,6 +4,7 @@ import {
   isFulfilled,
   isPending,
   isRejected,
+  PayloadAction,
   SerializedError,
 } from '@reduxjs/toolkit';
 import { AxiosError } from 'axios';
@@ -58,19 +59,20 @@ const initialState: UserStateType = {
 export const register = createAsyncThunk(
   'REGISTER',
   async (
-    {
-      username,
-      password,
-      nickname,
-    }: { username: string; password: string; nickname: string },
+    payload: {
+      username: string;
+      password: string;
+      nickname: string;
+    },
     { rejectWithValue },
   ) => {
     try {
+      const { username, password, nickname } = payload;
       const response = await api.register(username, password, nickname);
       return response.data;
     } catch (e) {
       if (e instanceof AxiosError) {
-        return rejectWithValue(e.response?.status || '');
+        return rejectWithValue(e.response?.status);
       }
       return e;
     }
@@ -80,15 +82,19 @@ export const register = createAsyncThunk(
 export const login = createAsyncThunk(
   'LOGIN',
   async (
-    { username, password }: { username: string; password: string },
+    payload: {
+      username: string;
+      password: string;
+    },
     { rejectWithValue },
   ) => {
     try {
+      const { username, password } = payload;
       const response = await api.login(username, password);
       return response.data;
     } catch (e) {
       if (e instanceof AxiosError) {
-        return rejectWithValue(e.response?.status || '');
+        return rejectWithValue(e.response?.status);
       }
       return e;
     }
@@ -101,15 +107,15 @@ export const logout = createAsyncThunk('LOGOUT', async () => {
 
 export const deregister = createAsyncThunk(
   'DEREGISTER',
-  async ({ username }: { username: string }) => {
-    await api.deregister(username);
+  async (payload: { username: string }) => {
+    await api.deregister(payload.username);
   },
 );
 
 export const kakaoLogin = createAsyncThunk(
   'KAKAO_LOGIN',
-  async ({ code }: { code: string }) => {
-    const response = await api.kakaoLogin(code);
+  async (payload: { code: string }) => {
+    const response = await api.kakaoLogin(payload.code);
     return response.data;
   },
 );
@@ -127,15 +133,8 @@ export const kakaoDeregister = createAsyncThunk(
 
 export const setInfo = createAsyncThunk(
   'SET_INFO',
-  async ({
-    username,
-    nickname,
-    intro,
-  }: {
-    username: string;
-    nickname: string;
-    intro: string;
-  }) => {
+  async (payload: { username: string; nickname: string; intro: string }) => {
+    const { username, nickname, intro } = payload;
     await api.setInfo(username, nickname, intro);
     return { nickname, intro };
   },
@@ -143,7 +142,8 @@ export const setInfo = createAsyncThunk(
 
 export const setCurrentRoutine = createAsyncThunk(
   'SET_CURRENT_ROUTINE',
-  async ({ username, routineId }: { username: string; routineId: string }) => {
+  async (payload: { username: string; routineId: string }) => {
+    const { username, routineId } = payload;
     await api.setCurrentRoutine(username, routineId);
     return routineId;
   },
@@ -151,7 +151,8 @@ export const setCurrentRoutine = createAsyncThunk(
 
 export const setProfileImage = createAsyncThunk(
   'SET_PROFILE_IMAGE',
-  async ({ username, image }: { username: string; image: FormData | null }) => {
+  async (payload: { username: string; image: FormData | null }) => {
+    const { username, image } = payload;
     if (image) {
       const response = await api.uploadProfileImage(image);
       await api.setProfileImageSrc(username, response.data.url);
@@ -164,13 +165,8 @@ export const setProfileImage = createAsyncThunk(
 
 export const addComplete = createAsyncThunk(
   'ADD_COMPLETE',
-  async ({
-    username,
-    complete,
-  }: {
-    username: string;
-    complete: CompleteItem;
-  }) => {
+  async (payload: { username: string; complete: CompleteItem }) => {
+    const { username, complete } = payload;
     await api.addComplete(username, complete);
     return complete;
   },
@@ -178,7 +174,8 @@ export const addComplete = createAsyncThunk(
 
 export const removeComplete = createAsyncThunk(
   'REMOVE_COMPLETE',
-  async ({ username, date }: { username: string; date: string }) => {
+  async (payload: { username: string; date: string }) => {
+    const { username, date } = payload;
     await api.removeProgress(username, date);
     return date;
   },
@@ -186,13 +183,8 @@ export const removeComplete = createAsyncThunk(
 
 export const addProgress = createAsyncThunk(
   'ADD_PROGRESS',
-  async ({
-    username,
-    progress,
-  }: {
-    username: string;
-    progress: ProgressPayload;
-  }) => {
+  async (payload: { username: string; progress: ProgressPayload }) => {
+    const { username, progress } = payload;
     await api.addProgress(username, [
       { x: progress.date, y: progress.weight },
       { x: progress.date, y: progress.muscleMass },
@@ -204,7 +196,8 @@ export const addProgress = createAsyncThunk(
 
 export const removeProgress = createAsyncThunk(
   'REMOVE_PROGRESS',
-  async ({ username, date }: { username: string; date: string }) => {
+  async (payload: { username: string; date: string }) => {
+    const { username, date } = payload;
     await api.removeProgress(username, date);
     return date;
   },
@@ -212,7 +205,8 @@ export const removeProgress = createAsyncThunk(
 
 export const addRoutine = createAsyncThunk(
   'ADD_ROUTINE',
-  async ({ username, routineId }: { username: string; routineId: string }) => {
+  async (payload: { username: string; routineId: string }) => {
+    const { username, routineId } = payload;
     const routine: Routine = {
       routineId,
       title: '새 루틴',
@@ -226,7 +220,8 @@ export const addRoutine = createAsyncThunk(
 
 export const removeRoutine = createAsyncThunk(
   'REMOVE_ROUTINE',
-  async ({ username, routineId }: { username: string; routineId: string }) => {
+  async (payload: { username: string; routineId: string }) => {
+    const { username, routineId } = payload;
     await api.removeRoutine(username, routineId);
     return routineId;
   },
@@ -234,7 +229,8 @@ export const removeRoutine = createAsyncThunk(
 
 export const editRoutine = createAsyncThunk(
   'EDIT_ROUTINE',
-  async ({ username, routine }: { username: string; routine: Routine }) => {
+  async (payload: { username: string; routine: Routine }) => {
+    const { username, routine } = payload;
     await api.editRoutine(username, routine);
     return routine.routineId;
   },
@@ -247,10 +243,9 @@ export const userSlice = createSlice({
     initializeUser: () => initialState,
     changeRoutineTitle: (
       state,
-      {
-        payload: { routineId, value },
-      }: { payload: { routineId: string; value: string } },
+      action: PayloadAction<{ routineId: string; value: string }>,
     ) => {
+      const { routineId, value } = action.payload;
       const routine = state.user.routines.find(
         (routine) => routine.routineId === routineId,
       );
@@ -258,65 +253,68 @@ export const userSlice = createSlice({
 
       routine.title = value;
     },
-    addRoutine: (state, { payload }: { payload: Routine }) => {
-      state.user.routines.push(payload);
+    addRoutine: (state, action: PayloadAction<{ routine: Routine }>) => {
+      state.user.routines.push(action.payload.routine);
     },
     addExercise: (
       state,
-      {
-        payload: { routineId, day, exercise },
-      }: {
-        payload: { routineId: string; day: number; exercise: ExerciseItem };
-      },
+      action: PayloadAction<{
+        routineId: string;
+        dayIdx: number;
+        exercise: ExerciseItem;
+      }>,
     ) => {
+      const { routineId, dayIdx, exercise } = action.payload;
       const routine = state.user.routines.find(
         (s) => s.routineId === routineId,
       );
       if (!routine) return;
-      const dayRoutine = routine.weekRoutine[day];
+      const dayRoutine = routine.weekRoutine[dayIdx];
       if (!dayRoutine) return;
 
-      routine.weekRoutine[day] = [...dayRoutine, exercise];
+      routine.weekRoutine[dayIdx] = [...dayRoutine, exercise];
       routine.lastModified = Date.now();
     },
     removeExercise: (
       state,
-      {
-        payload: { routineId, day, idx },
-      }: { payload: { routineId: string; day: number; idx: number } },
+      action: PayloadAction<{
+        routineId: string;
+        dayIdx: number;
+        exerciseIdx: number;
+      }>,
     ) => {
+      const { routineId, dayIdx, exerciseIdx } = action.payload;
       const routine = state.user.routines.find(
         (s) => s.routineId === routineId,
       );
       if (!routine) return;
-      const dayRoutine = routine.weekRoutine[day];
+      const dayRoutine = routine.weekRoutine[dayIdx];
       if (!dayRoutine) return;
 
-      routine.weekRoutine[day] = dayRoutine.filter((_, i) => i !== idx);
+      routine.weekRoutine[dayIdx] = dayRoutine.filter(
+        (_, i) => i !== exerciseIdx,
+      );
       routine.lastModified = Date.now();
     },
     insertExercise: (
       state,
-      {
-        payload: { routineId, day, fromIdx, toIdx },
-      }: {
-        payload: {
-          routineId: string;
-          day: number;
-          fromIdx: number;
-          toIdx: number;
-        };
-      },
+      action: PayloadAction<{
+        routineId: string;
+        dayIdx: number;
+        fromIdx: number;
+        toIdx: number;
+      }>,
     ) => {
+      const { routineId, dayIdx, fromIdx, toIdx } = action.payload;
       const routine = state.user.routines.find(
         (s) => s.routineId === routineId,
       );
       if (!routine) return;
-      const dayRoutine = routine.weekRoutine[day];
+      const dayRoutine = routine.weekRoutine[dayIdx];
       if (!dayRoutine) return;
 
       const filtered = dayRoutine.filter((_, i) => i !== fromIdx);
-      routine.weekRoutine[day] = [
+      routine.weekRoutine[dayIdx] = [
         ...filtered.slice(0, toIdx),
         dayRoutine[fromIdx],
         ...filtered.slice(toIdx),
