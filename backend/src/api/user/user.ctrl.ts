@@ -23,7 +23,7 @@ export const setInfo = async (ctx: DefaultContext) => {
   try {
     const user = await User.findByUsername(username);
     if (!user) {
-      ctx.status = 401;
+      ctx.status = 404;
       return;
     }
     user.nickname = nickname;
@@ -52,7 +52,7 @@ export const setCurrentRoutine = async (ctx: DefaultContext) => {
   try {
     const user = await User.findByUsername(username);
     if (!user) {
-      ctx.status = 401;
+      ctx.status = 404;
       return;
     }
     user.currentRoutineId = routineId;
@@ -93,7 +93,7 @@ export const setProfileImageSrc = async (ctx: DefaultContext) => {
   try {
     const user = await User.findByUsername(username);
     if (!user) {
-      ctx.status = 401;
+      ctx.status = 404;
       return;
     }
     removeProfileImage(user.profileImage);

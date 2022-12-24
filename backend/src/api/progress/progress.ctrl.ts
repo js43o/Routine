@@ -25,7 +25,7 @@ export const addProgress = async (ctx: DefaultContext) => {
   try {
     const user = await User.findByUsername(username);
     if (!user) {
-      ctx.status = 401;
+      ctx.status = 404;
       return;
     }
     user.progress[0].data.push(progress[0]);
@@ -55,7 +55,7 @@ export const removeProgress = async (ctx: DefaultContext) => {
   try {
     const user = await User.findByUsername(username);
     if (!user) {
-      ctx.status = 401;
+      ctx.status = 404;
       return;
     }
 
@@ -99,7 +99,7 @@ export const setProgress = async (ctx: DefaultContext) => {
   try {
     const user = await User.findByUsername(username);
     if (!user) {
-      ctx.status = 401;
+      ctx.status = 404;
       return;
     }
 

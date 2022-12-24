@@ -63,7 +63,7 @@ export const login = async (ctx: DefaultContext) => {
   try {
     const user = await User.findByUsername(username);
     if (!user) {
-      ctx.status = 401;
+      ctx.status = 404;
       return;
     }
     const valid = await user.checkPassword(password);

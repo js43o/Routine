@@ -31,7 +31,7 @@ export const addComplete = async (ctx: DefaultContext) => {
   try {
     const user = await User.findByUsername(username);
     if (!user) {
-      ctx.status = 401;
+      ctx.status = 404;
       return;
     }
     user.completes.push(complete);
@@ -59,7 +59,7 @@ export const removeComplete = async (ctx: DefaultContext) => {
   try {
     const user = await User.findByUsername(username);
     if (!user) {
-      ctx.status = 401;
+      ctx.status = 404;
       return;
     }
 

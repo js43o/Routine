@@ -35,7 +35,7 @@ export const addRoutine = async (ctx: DefaultContext) => {
   try {
     const user = await User.findByUsername(username);
     if (!user) {
-      ctx.status = 401;
+      ctx.status = 404;
       return;
     }
     user.routines.push(routine);
@@ -63,7 +63,7 @@ export const removeRoutine = async (ctx: DefaultContext) => {
   try {
     const user = await User.findByUsername(username);
     if (!user) {
-      ctx.status = 401;
+      ctx.status = 404;
       return;
     }
 
@@ -97,7 +97,7 @@ export const editRoutine = async (ctx: DefaultContext) => {
   try {
     const user = await User.findByUsername(username);
     if (!user) {
-      ctx.status = 401;
+      ctx.status = 404;
       return;
     }
 

@@ -6,6 +6,7 @@ import { userSelector } from 'modules/hooks';
 import useErrorMessage from 'hooks/useErrorMessage';
 import Title from 'templates/Title';
 import ErrorMessage from 'components/common/ErrorMessage';
+import { getAuthErrorCodeMessage } from 'lib/methods';
 import Register from './Register';
 import Login from './Login';
 
@@ -73,20 +74,7 @@ const Auth = ({ type }: Authprops) => {
 
   useEffect(() => {
     if (!error) return;
-    switch (authErrorCode) {
-      case 400:
-        onError('잘못된 입력입니다.');
-        break;
-      case 401:
-        onError('로그인 정보가 일치하지 않습니다.');
-        break;
-      case 409:
-        onError('이미 해당 아이디가 존재합니다.');
-        break;
-      default:
-        onError('잠시 후 다시 시도해주세요.');
-        break;
-    }
+    onError(getAuthErrorCodeMessage(authErrorCode));
   }, [error]);
 
   useEffect(() => {

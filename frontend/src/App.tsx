@@ -50,11 +50,16 @@ function App() {
   }, [user]);
 
   useEffect(() => {
-    if (error && error.code === 'ERR_BAD_REQUEST') {
-      alert('서버와의 연결이 끊겼습니다.\n다시 로그인해주세요.');
-      dispatch(initializeUser());
-      navigate('/login');
+    if (!error) return;
+    if (error.code === 'ERR_BAD_REQUEST') {
+      alert('잘못된 요청입니다.\n다시 로그인해주세요.');
     }
+    if (error.code === 'ERR_BAD_RESPONSE') {
+      alert('서버와의 연결이 끊겼습니다.\n다시 로그인해주세요.');
+    }
+
+    dispatch(initializeUser());
+    navigate('/login');
   }, [error]);
 
   return (

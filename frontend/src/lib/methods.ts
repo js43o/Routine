@@ -52,3 +52,20 @@ export const unhideScroll = () => {
   document.body.style.overflow = '';
   document.body.style.paddingRight = '';
 };
+
+export const getAuthErrorCodeMessage = (code: number) => {
+  switch (code) {
+    case 400:
+      return '잘못된 입력입니다.';
+    case 401:
+      return '로그인 정보가 일치하지 않습니다.';
+    case 404:
+      return '존재하지 않는 회원입니다.';
+    case 409:
+      return '이미 해당 아이디가 존재합니다.';
+    case 500:
+      return '서버의 응답이 없습니다.';
+    default:
+      return '잠시 후 다시 시도해주세요.';
+  }
+};
