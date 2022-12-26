@@ -107,12 +107,19 @@ const CheckButton = styled(Button)`
   color: ${({ theme }) => theme.letter_primary};
 `;
 
-const EditProfileButton = styled(Button)`
+const UploadImageButton = styled(Button)`
   color: white;
   font-size: 1.5rem;
+  label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
 `;
 
-const RemoveProfileButton = styled(Button)`
+const RemoveImageButton = styled(Button)`
   color: ${({ theme }) => theme.red};
   font-size: 1.5rem;
 `;
@@ -156,6 +163,7 @@ const Profile = ({ user }: ProfileProps) => {
     const formData = new FormData();
     formData.append('image', uploadFile);
     dispatch(setProfileImage({ username: user.username, image: formData }));
+    e.target.value = '';
   };
 
   const onRemoveImage = () => {
@@ -183,7 +191,7 @@ const Profile = ({ user }: ProfileProps) => {
             )}
             {edit && (
               <div className="buttons">
-                <EditProfileButton>
+                <UploadImageButton>
                   <label htmlFor="profileImage">
                     <FaUpload />
                     <input
@@ -193,10 +201,10 @@ const Profile = ({ user }: ProfileProps) => {
                       onChange={(e) => onSubmitImage(e)}
                     />
                   </label>
-                </EditProfileButton>
-                <RemoveProfileButton onClick={onRemoveImage}>
+                </UploadImageButton>
+                <RemoveImageButton onClick={onRemoveImage}>
                   <FaTrashAlt />
-                </RemoveProfileButton>
+                </RemoveImageButton>
               </div>
             )}
           </ImageBlock>

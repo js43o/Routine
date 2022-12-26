@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { getDatestr, getWeekDate } from 'lib/methods';
 import { CompleteItem } from 'types';
+import CompleteList from './CompleteList';
 
 const CompleteDayBarBlock = styled.ul`
   display: grid;
@@ -32,18 +33,34 @@ type CompleteBarProps = {
 
 const CompleteDayBar = ({ completes }: CompleteBarProps) => {
   const weekDate = getWeekDate(new Date());
+  const [complete, setComplete] = useState<CompleteItem | null>(null);
+
+  const removeComplete = (e: MouseEvent) => {
+    if (!e.target || !(e.target as HTMLElement).closest('.complete-item'))
+      setComplete(null);
+  };
+
+  useEffect(() => {
+    document.addEventListener('click', removeComplete);
+    return () => document.removeEventListener('click', removeComplete);
+  }, []);
 
   return (
     <CompleteDayBarBlock>
-      {weekDate.map((w) =>
-        completes.filter((c) => c.date === getDatestr(w)).length ? (
-          <CompleteDayItem done key={w.getDay()}>
+      {weekDate.map((w) => {
+        const dayComplete = completes.filter((c) => c.date === getDatestr(w));
+        return (
+          <CompleteDayItem
+            done={!!dayComplete.length}
+            key={w.getDay()}
+            onClick={() => setComplete(dayComplete[0])}
+            className="complete-item"
+          >
             {w.getDate()}
+            <CompleteList complete={complete} visible={!!dayComplete.length} />
           </CompleteDayItem>
-        ) : (
-          <CompleteDayItem key={w.getDay()}>{w.getDate()}</CompleteDayItem>
-        ),
-      )}
+        );
+      })}
     </CompleteDayBarBlock>
   );
 };
