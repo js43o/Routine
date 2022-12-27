@@ -158,6 +158,7 @@ const WeekRoutine = ({
           <OpenIndicator visible={isVisible ? 1 : 0} />
           {isEditing ? (
             <input
+              title="루틴 이름"
               type="text"
               value={routine.title}
               maxLength={12}
@@ -185,6 +186,7 @@ const WeekRoutine = ({
                   }),
                 )
               }
+              aria-label="unset current routine"
             >
               <BsStarFill />
             </UnsetCurrentRoutineButton>
@@ -198,20 +200,30 @@ const WeekRoutine = ({
                   }),
                 )
               }
+              aria-label="set current routine"
             >
               <BsStar />
             </SetCurrentRoutineButton>
           )}
           {isEditing ? (
-            <CheckButton onClick={() => onSubmit(routine)}>
+            <CheckButton
+              onClick={() => onSubmit(routine)}
+              aria-label="save routine"
+            >
               <BsCheckLg />
             </CheckButton>
           ) : (
-            <EditButton onClick={() => onSetEditing(routine.routineId)}>
+            <EditButton
+              onClick={() => onSetEditing(routine.routineId)}
+              aria-label="edit routine"
+            >
               <FaPencilAlt />
             </EditButton>
           )}
-          <RemoveRoutineButton onClick={onRemoveRoutine}>
+          <RemoveRoutineButton
+            onClick={onRemoveRoutine}
+            aria-label="remove routine"
+          >
             <FaTrashAlt />
           </RemoveRoutineButton>
         </div>

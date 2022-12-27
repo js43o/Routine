@@ -27,8 +27,11 @@ const ButtonBlock = styled.button`
 `;
 
 const Button = ({ children, ...props }: ButtonProps) => {
-  // eslint-disable-next-line react/jsx-props-no-spreading
-  return <ButtonBlock {...props}>{children}</ButtonBlock>;
+  return (
+    <ButtonBlock type="button" {...props}>
+      {children}
+    </ButtonBlock>
+  );
 };
 
 Button.defaultProps = {

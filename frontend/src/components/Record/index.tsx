@@ -87,7 +87,7 @@ const RecordPage = () => {
       </RecordBlock>
       <ProgressHeader>
         <h1>체성분 변화</h1>
-        <AddProgressButton onClick={onOpenModal}>
+        <AddProgressButton onClick={onOpenModal} aria-label="add progress">
           <FaPencilAlt />
         </AddProgressButton>
       </ProgressHeader>

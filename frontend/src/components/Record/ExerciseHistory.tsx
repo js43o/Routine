@@ -33,7 +33,9 @@ const ExerciseHistory = ({ complete }: ExerciseHistoryProps) => {
   if (!complete || complete.list.length <= 0)
     return (
       <ExerciseHistoryBlock>
-        <i>수행한 운동이 없습니다.</i>
+        <li>
+          <i>수행한 운동이 없습니다.</i>
+        </li>
       </ExerciseHistoryBlock>
     );
 

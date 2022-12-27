@@ -25,7 +25,7 @@ const HeaderBlock = styled.div`
   }
 `;
 
-const CategoryListBlock = styled.ul`
+const CategoryListBlock = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 0.25rem;
@@ -206,8 +206,9 @@ const AddExerciseModal = ({
       <FooterBlock>
         <InputConfirm onSubmit={onAddExercise}>
           <div className="weight">
-            <b>중량</b>
+            <label htmlFor="weight">중량</label>
             <input
+              id="weight"
               className="count"
               type="number"
               min={0}
@@ -218,8 +219,9 @@ const AddExerciseModal = ({
             kg
           </div>
           <div className="numOfTimes">
-            <b>횟수</b>
+            <label htmlFor="numOfTimes">횟수</label>
             <input
+              id="numOfTimes"
               className="count"
               type="number"
               min={0}
@@ -230,8 +232,9 @@ const AddExerciseModal = ({
             회
           </div>
           <div className="numOfSets">
-            <b>세트 수</b>
+            <label htmlFor="numOfSets">세트 수</label>
             <input
+              id="numOfSets"
               className="count"
               type="number"
               min={0}

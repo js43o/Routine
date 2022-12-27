@@ -70,7 +70,7 @@ function Header() {
         <NavLinkBlock to="/">홈</NavLinkBlock>
         <NavLinkBlock to="/routine">루틴</NavLinkBlock>
         <NavLinkBlock to="/record">기록</NavLinkBlock>
-        <ToggleButton onClick={onToggleTheme}>
+        <ToggleButton onClick={onToggleTheme} aria-label="change theme">
           {theme.mode === 'light' ? <BsFillSunFill /> : <BsFillMoonFill />}
         </ToggleButton>
       </NavBlock>

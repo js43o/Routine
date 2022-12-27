@@ -152,6 +152,7 @@ const DayRoutine = ({
       <PrevScrollButton
         onPointerDown={() => moveTo('prev')}
         isEnd={ref.current?.scrollLeft === 0}
+        aria-label="scroll prev"
       >
         <MdNavigateBefore />
       </PrevScrollButton>
@@ -167,12 +168,15 @@ const DayRoutine = ({
             </small>
           </ExerciseItemBlock>
         ))}
-        <AddExerciseButton
-          onClick={dayIdx !== -1 && editing ? () => onAddExercise() : null}
-          editing={editing ? 1 : 0}
-        >
-          <BsPlusCircleDotted />
-        </AddExerciseButton>
+        <li>
+          <AddExerciseButton
+            onClick={dayIdx !== -1 && editing ? () => onAddExercise() : null}
+            editing={editing ? 1 : 0}
+            aria-label="add exercise"
+          >
+            <BsPlusCircleDotted />
+          </AddExerciseButton>
+        </li>
       </ExerciseListBlock>
       <NextScrollButton
         onClick={() => moveTo('next')}
@@ -181,6 +185,7 @@ const DayRoutine = ({
           ref.current.scrollLeft ===
             ref.current.scrollWidth - ref.current.clientWidth
         }
+        aria-label="scroll next"
       >
         <MdNavigateNext />
       </NextScrollButton>

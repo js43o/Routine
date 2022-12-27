@@ -169,9 +169,11 @@ const Register = ({ onError }: RegisterProps) => {
       </form>
       <div className="auth-switch">
         <span>계정이 있다면...</span>
-        <NavLink to="/login" className="link">
-          로그인
-        </NavLink>
+        <Button aria-label="login page">
+          <NavLink to="/login" className="link">
+            로그인
+          </NavLink>
+        </Button>
       </div>
     </>
   );

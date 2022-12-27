@@ -40,7 +40,7 @@ const ProgressListBlock = styled.ul`
   overflow-y: scroll;
 `;
 
-const ProgressItemBlock = styled.div`
+const ProgressItemBlock = styled.li`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   padding: 0.25rem;
@@ -169,8 +169,9 @@ const ProgressModal = ({
       <FooterBlock>
         <InputConfirm onSubmit={onSubmit}>
           <div className="weight">
-            <b>체중</b>
+            <label htmlFor="weight">체중</label>
             <input
+              id="weight"
               className="count"
               type="number"
               min={0}
@@ -181,8 +182,9 @@ const ProgressModal = ({
             kg
           </div>
           <div className="muscleMass">
-            <b>골격근량</b>
+            <label htmlFor="muscleMass">골격근량</label>
             <input
+              id="muscleMass"
               className="count"
               type="number"
               min={0}
@@ -193,8 +195,9 @@ const ProgressModal = ({
             kg
           </div>
           <div className="fatMass">
-            <b>체지방량</b>
+            <label htmlFor="fatMass">체지방량</label>
             <input
+              id="fatMass"
               className="count"
               type="number"
               min={0}
@@ -204,7 +207,7 @@ const ProgressModal = ({
             />
             kg
           </div>
-          <SubmitButtons onClose={onClose} />
+          <SubmitButtons onClose={onClose} aria-label="add progress" />
         </InputConfirm>
         <ErrorMessage message={message} />
       </FooterBlock>

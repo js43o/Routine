@@ -30,13 +30,13 @@ const CalendarList = styled.ul`
   padding: 1rem 0.5rem;
   border: 1px solid ${({ theme }) => theme.border_main};
   border-radius: 0.5rem;
-  span {
+  .day-name {
     font-weight: bold;
   }
-  span:nth-of-type(1) {
+  .day-name:nth-of-type(1) {
     color: ${({ theme }) => theme.red};
   }
-  span:nth-of-type(7) {
+  .day-name:nth-of-type(7) {
     color: ${({ theme }) => theme.blue};
   }
 `;
@@ -232,14 +232,13 @@ const RecordCalendar = ({ selectedDate, setSelected }: RecordCalendarProps) => {
   return (
     <RecordCalendarBlock>
       <CalendarHeader>
-        <Button onClick={decreaseMonth}>
-          <ArrowButton>
-            <MdNavigateBefore />
-          </ArrowButton>
-        </Button>
+        <ArrowButton onClick={decreaseMonth} aria-label="prev month">
+          <MdNavigateBefore />
+        </ArrowButton>
         {edit ? (
           <form onSubmit={onSubmit}>
             <input
+              title="year"
               className="year count"
               type="number"
               value={`${input.year}`}
@@ -250,6 +249,7 @@ const RecordCalendar = ({ selectedDate, setSelected }: RecordCalendarProps) => {
             />
             -
             <input
+              title="month"
               className="month count"
               type="number"
               value={`${input.month}`}
@@ -258,7 +258,7 @@ const RecordCalendar = ({ selectedDate, setSelected }: RecordCalendarProps) => {
               max={12}
               placeholder="월"
             />
-            <CheckButton type="submit">
+            <CheckButton type="submit" aria-label="set date">
               <BsCheckLg />
             </CheckButton>
           </form>
@@ -270,18 +270,18 @@ const RecordCalendar = ({ selectedDate, setSelected }: RecordCalendarProps) => {
                 ? `0${currentDate.getMonth() + 1}`
                 : currentDate.getMonth() + 1}
             </DateIndicator>
-            <Button onClick={setDateNow}>
+            <Button onClick={setDateNow} aria-label="today">
               <FaRegCalendarCheck />
             </Button>
           </div>
         )}
-        <ArrowButton onClick={increaseMonth}>
+        <ArrowButton onClick={increaseMonth} aria-label="next month">
           <MdNavigateNext />
         </ArrowButton>
       </CalendarHeader>
       <CalendarList>
         {[...Array(7)].map((_, i) => (
-          <span>{dayidxToDaystr(i)}</span>
+          <li className="day-name">{dayidxToDaystr(i)}</li>
         ))}
         {[...Array(getFirstDay(currentDate))].map((_, i) => (
           <CalendarItemWire onClick={() => decreaseMonth()}>

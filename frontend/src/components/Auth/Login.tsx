@@ -89,9 +89,11 @@ const Login = ({ onError }: LoginProps) => {
       </a>
       <div className="auth-switch">
         <span>계정이 없으신가요?</span>
-        <NavLink to="/register" className="link">
-          계정 등록
-        </NavLink>
+        <Button aria-label="register page">
+          <NavLink to="/register" className="link">
+            계정 등록
+          </NavLink>
+        </Button>
       </div>
     </>
   );

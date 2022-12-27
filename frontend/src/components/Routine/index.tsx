@@ -104,7 +104,7 @@ const RoutinePage = () => {
           />
         ))}
       </RoutineListBlock>
-      <AddRoutineButton onClick={onAddRoutine}>
+      <AddRoutineButton onClick={onAddRoutine} aria-label="add routine">
         <BsPlusCircleDotted />
         <b>루틴 추가</b>
       </AddRoutineButton>
