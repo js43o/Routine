@@ -230,12 +230,12 @@ const WeekRoutine = ({
       </div>
       <RoutineContent>
         {routine.weekRoutine.map((dayRoutine, dayIdx) => (
-          <DayRoutineWrapper>
+          <DayRoutineWrapper key={dayIdx}>
             <DaySpan dayIdx={dayIdx}>{dayidxToDaystr(dayIdx)}</DaySpan>
             <DayRoutine
-              dayRoutine={dayRoutine}
-              dayIdx={dayIdx}
               routineId={routine.routineId}
+              dayIdx={dayIdx}
+              dayRoutine={dayRoutine}
               editing={isEditing}
               onOpenModal={onOpenModal}
               onError={onError}

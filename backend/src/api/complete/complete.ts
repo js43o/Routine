@@ -4,7 +4,7 @@ import User from '../../models/user';
 
 export const addComplete = async (ctx: DefaultContext) => {
   const exerciseSchema = Joi.object().keys({
-    exercise: Joi.string().required(),
+    name: Joi.string().required(),
     weight: Joi.number().min(1),
     numberOfTimes: Joi.number().min(1),
     numberOfSets: Joi.number().min(1).max(20),

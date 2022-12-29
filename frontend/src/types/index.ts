@@ -26,7 +26,7 @@ export type Exercise = {
 };
 
 export type ExerciseItem = {
-  exercise: string;
+  name: string;
   weight: number;
   numberOfTimes: number;
   numberOfSets: number;

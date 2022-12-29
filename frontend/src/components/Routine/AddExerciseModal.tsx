@@ -101,7 +101,7 @@ const AddExerciseModal = ({
 
   const onAddExercise = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!routineId || dayIdx === null) return;
+    if (!routineId || dayIdx === null || !selected) return;
 
     const error = checkInputs();
     if (error) {
@@ -110,7 +110,7 @@ const AddExerciseModal = ({
     }
 
     const exercise: ExerciseItem = {
-      exercise: selected as string,
+      name: selected,
       weight: inputs.weight,
       numberOfTimes: inputs.numberOfTimes,
       numberOfSets: inputs.numberOfSets,
@@ -179,21 +179,23 @@ const AddExerciseModal = ({
       {exercises.length > 0 ? (
         <ExerciseListBlock>
           {exercises
-            .filter((exer) =>
-              category === 'all' ? true : exer.category.includes(category),
+            .filter((exercise) =>
+              category === 'all' ? true : exercise.category.includes(category),
             )
-            .filter((exer) =>
-              exer.name.replaceAll(' ', '').includes(name.replaceAll(' ', '')),
+            .filter((exercise) =>
+              exercise.name
+                .replaceAll(' ', '')
+                .includes(name.replaceAll(' ', '')),
             )
-            .map((exer) => (
+            .map((exercise) => (
               <ExerciseItemBlock
-                onClick={() => onSelectExercise(exer)}
-                isSelected={selected === exer.name}
-                key={exer.name}
+                onClick={() => onSelectExercise(exercise)}
+                isSelected={selected === exercise.name}
+                key={exercise.name}
               >
-                <b>{exer.name}</b>
+                <b>{exercise.name}</b>
                 <div>
-                  {exer.part.map((item) => (
+                  {exercise.part.map((item) => (
                     <span key={item}>#{item} </span>
                   ))}
                 </div>

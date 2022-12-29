@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import { IUserDocument, IUserModel } from './types';
 
 const ExerciseItemSchema = new Schema({
-  exercise: String,
+  name: String,
   weight: Number,
   numberOfTimes: Number,
   numberOfSets: Number,

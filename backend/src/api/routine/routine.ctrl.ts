@@ -3,7 +3,7 @@ import Joi from 'joi';
 import User from '../../models/user';
 
 const exerciseSchema = Joi.object().keys({
-  exercise: Joi.string().required(),
+  name: Joi.string().required(),
   weight: Joi.number().min(1),
   numberOfTimes: Joi.number().min(1),
   numberOfSets: Joi.number().min(1).max(20),

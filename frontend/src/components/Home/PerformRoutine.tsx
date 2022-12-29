@@ -195,7 +195,7 @@ const PerformRoutine = ({
             completed={!p.setCheck.filter((a) => !a).length}
             onClick={() => onCheckAll(i)}
           >
-            <b>{p.exercise.exercise}</b>
+            <b>{p.exercise.name}</b>
             <span>
               {p.exercise.weight}kg, {p.exercise.numberOfTimes}회
             </span>

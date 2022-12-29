@@ -157,14 +157,16 @@ const DayRoutine = ({
         <MdNavigateBefore />
       </PrevScrollButton>
       <ExerciseListBlock ref={ref} editing={editing}>
-        {dayRoutine.map((s, i) => (
+        {dayRoutine.map((exercise, idx) => (
           <ExerciseItemBlock
+            key={exercise.name}
             editing={editing ? 1 : 0}
-            onPointerDown={(e) => onPointerDown(e, i)}
+            onPointerDown={(e) => onPointerDown(e, idx)}
           >
-            <b>{s.exercise}</b>
+            <b>{exercise.name}</b>
             <small>
-              {s.weight}kg, {s.numberOfTimes}x{s.numberOfSets}
+              {exercise.weight}kg, {exercise.numberOfTimes}x
+              {exercise.numberOfSets}
             </small>
           </ExerciseItemBlock>
         ))}
