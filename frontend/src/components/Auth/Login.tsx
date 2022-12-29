@@ -33,10 +33,12 @@ const Login = ({ onError }: LoginProps) => {
 
   const onLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (!username || !password) {
       onError('아이디/비밀번호를 입력하세요.');
       return;
     }
+
     if (
       Object.values(inputCondition.username).includes(false) ||
       Object.values(inputCondition.password).includes(false)
@@ -44,6 +46,7 @@ const Login = ({ onError }: LoginProps) => {
       onError('입력값을 확인해주세요.');
       return;
     }
+
     dispatch(login({ username, password }));
   };
 

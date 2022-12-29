@@ -30,7 +30,7 @@ type ErrorMessageProps = {
 
 const ErrorMessage = ({ message }: ErrorMessageProps) => {
   return (
-    <ErrorMessageBlock className={`error-message${message && ' shaking'}`}>
+    <ErrorMessageBlock className={`error-message ${message && 'shaking'}`}>
       {message}
     </ErrorMessageBlock>
   );

@@ -6,8 +6,7 @@ const useErrorMessage = () => {
   const [message, setMessage] = useState('');
 
   const onError = (str: string) => {
-    if (message) return;
-
+    if (message) clearTimeout(timer);
     setMessage(str);
     timer = setTimeout(() => {
       setMessage('');

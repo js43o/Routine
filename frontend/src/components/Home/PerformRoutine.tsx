@@ -94,6 +94,7 @@ const MemoBlock = styled.textarea<{ visible: number }>`
   border-radius: 0.5rem;
   font-size: 1rem;
   background: ${({ theme }) => theme.memo_body};
+  transition: height 0.2s;
 `;
 
 type PerformRoutineProps = {
@@ -217,7 +218,8 @@ const PerformRoutine = ({
       <MemoBlock
         placeholder="오늘의 운동 소감은?"
         visible={isCompleted() ? 1 : 0}
-        rows={5}
+        rows={4}
+        maxLength={100}
         wrap="soft"
         onChange={onMemo}
         value={memo}

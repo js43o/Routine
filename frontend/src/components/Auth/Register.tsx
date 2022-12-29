@@ -40,6 +40,7 @@ const Register = ({ onError }: RegisterProps) => {
 
   const onRegister = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (
       Object.values(inputCondition.username).includes(false) ||
       Object.values(inputCondition.password).includes(false) ||
@@ -48,6 +49,7 @@ const Register = ({ onError }: RegisterProps) => {
       onError('입력값을 확인해주세요.');
       return;
     }
+
     if (password !== passwordConfirm) {
       onError('비밀번호가 일치하지 않습니다.');
       return;
