@@ -44,7 +44,7 @@ const CompleteList = ({ complete, visible }: CompleteListProps) => {
       <div className="date">{complete?.date}</div>
       <div className="content">
         {complete?.list.map((exer) => (
-          <span>{exer.exercise}</span>
+          <span key={exer.exercise}>{exer.exercise}</span>
         ))}
       </div>
     </CompleteListBlock>

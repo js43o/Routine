@@ -32,12 +32,13 @@ type CompleteBarProps = {
 };
 
 const CompleteDayBar = ({ completes }: CompleteBarProps) => {
+  const [visible, setVisible] = useState<Date | null>(null);
+
   const weekDate = getWeekDate(new Date());
-  const [complete, setComplete] = useState<CompleteItem | null>(null);
 
   const removeComplete = (e: MouseEvent) => {
     if (!e.target || !(e.target as HTMLElement).closest('.complete-item'))
-      setComplete(null);
+      setVisible(null);
   };
 
   useEffect(() => {
@@ -47,17 +48,22 @@ const CompleteDayBar = ({ completes }: CompleteBarProps) => {
 
   return (
     <CompleteDayBarBlock>
-      {weekDate.map((w) => {
-        const dayComplete = completes.filter((c) => c.date === getDatestr(w));
+      {weekDate.map((date) => {
+        const dayComplete = completes.filter(
+          (complete) => complete.date === getDatestr(date),
+        )[0];
         return (
           <CompleteDayItem
-            done={!!dayComplete.length}
-            key={w.getDay()}
-            onClick={() => setComplete(dayComplete[0])}
+            done={!!dayComplete}
+            key={date.getDay()}
+            onClick={() => setVisible(date)}
             className="complete-item"
           >
-            {w.getDate()}
-            <CompleteList complete={complete} visible={!!dayComplete.length} />
+            {date.getDate()}
+            <CompleteList
+              complete={dayComplete}
+              visible={visible?.getDate() === date.getDate()}
+            />
           </CompleteDayItem>
         );
       })}
