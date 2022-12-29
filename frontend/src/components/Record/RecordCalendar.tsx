@@ -281,10 +281,12 @@ const RecordCalendar = ({ selectedDate, setSelected }: RecordCalendarProps) => {
       </CalendarHeader>
       <CalendarList>
         {[...Array(7)].map((_, i) => (
-          <li className="day-name">{dayidxToDaystr(i)}</li>
+          <li className="day-name" key={dayidxToDaystr(i)}>
+            {dayidxToDaystr(i)}
+          </li>
         ))}
         {[...Array(getFirstDay(currentDate))].map((_, i) => (
-          <CalendarItemWire onClick={() => decreaseMonth()}>
+          <CalendarItemWire onClick={() => decreaseMonth()} key={i}>
             {getLastDayOfLastMonth(
               currentDate.getFullYear(),
               currentDate.getMonth(),
@@ -310,7 +312,9 @@ const RecordCalendar = ({ selectedDate, setSelected }: RecordCalendarProps) => {
               : Math.max(42 - (getFirstDay(currentDate) + records.length), 0),
           ),
         ].map((_, i) => (
-          <CalendarItemWire onClick={increaseMonth}>{i + 1}</CalendarItemWire>
+          <CalendarItemWire onClick={increaseMonth} key={i}>
+            {i + 1}
+          </CalendarItemWire>
         ))}
       </CalendarList>
     </RecordCalendarBlock>

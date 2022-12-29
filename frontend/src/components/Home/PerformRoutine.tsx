@@ -74,11 +74,6 @@ const CompleteButton = styled.button`
   background: ${({ theme }) => theme.background_sub};
   font-size: 1.5rem;
   font-weight: bold;
-  @media (hover: hover) {
-    &:hover {
-      background: ${({ theme }) => theme.secondary};
-    }
-  }
   &:active {
     color: ${({ theme }) => theme.letter_primary};
     background: ${({ theme }) => theme.primary};
@@ -189,23 +184,24 @@ const PerformRoutine = ({
 
   return (
     <PerformRoutineBlock>
-      {performs.list.map((p, i) => (
-        <PerformExerciseBlock>
+      {performs.list.map((perform, i) => (
+        <PerformExerciseBlock key={i}>
           <ExerciseBlock
-            completed={!p.setCheck.filter((a) => !a).length}
+            completed={!perform.setCheck.filter((a) => !a).length}
             onClick={() => onCheckAll(i)}
           >
-            <b>{p.exercise.name}</b>
+            <b>{perform.exercise.name}</b>
             <span>
-              {p.exercise.weight}kg, {p.exercise.numberOfTimes}회
+              {perform.exercise.weight}kg, {perform.exercise.numberOfTimes}회
             </span>
           </ExerciseBlock>
-          {p.setCheck.map((_, j) => (
+          {perform.setCheck.map((_, j) => (
             <SetButton
-              available={j === 0 || p.setCheck[j - 1]}
+              key={j}
+              available={j === 0 || perform.setCheck[j - 1]}
               onClick={() => onToggleCheck(i, j)}
             >
-              {p.setCheck[j] ? (
+              {perform.setCheck[j] ? (
                 <MdOutlineCheckCircleOutline />
               ) : (
                 <MdRadioButtonUnchecked />

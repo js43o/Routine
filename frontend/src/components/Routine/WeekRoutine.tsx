@@ -50,12 +50,12 @@ const TitleBlock = styled.div<{ editing: boolean }>`
   flex-grow: 1;
   height: 34px;
   white-space: nowrap;
-  font-size: 1.25rem;
+  font-size: 1.125rem;
   font-weight: bold;
   overflow: hidden;
   @media (hover: hover) {
     &:hover {
-      color: ${({ editing, theme }) => !editing && theme.letter_sub};
+      opacity: 0.5;
     }
   }
   & > input {
@@ -64,9 +64,8 @@ const TitleBlock = styled.div<{ editing: boolean }>`
   }
 `;
 
-const DaySpan = styled.div<{ dayIdx: number }>`
+const DaySpan = styled.b<{ dayIdx: number }>`
   margin: 0 0.25rem 0 0;
-  font-weight: bold;
   color: ${({ dayIdx, theme }) => {
     if (dayIdx === 0) return theme.red;
     if (dayIdx === 6) return theme.blue;
@@ -161,7 +160,7 @@ const WeekRoutine = ({
               title="루틴 이름"
               type="text"
               value={routine.title}
-              maxLength={12}
+              maxLength={10}
               onChange={(e) =>
                 dispatch(
                   changeRoutineTitle({

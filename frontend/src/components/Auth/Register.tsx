@@ -21,10 +21,13 @@ const InputChecker = styled.div`
   gap: 0.25rem;
 `;
 
-const UncheckedCircle = styled(BsCircle)``;
+const UncheckedCircle = styled(BsCircle)`
+  font-size: 1.125rem;
+`;
 
 const CheckedCircle = styled(BsCheckCircle)`
-  color: ${({ theme }) => theme.primary};
+  color: ${({ theme }) => theme.blue};
+  font-size: 1.125rem;
 `;
 
 type RegisterProps = {
