@@ -7,7 +7,7 @@ const initialState: PerformList = {
 };
 
 export const performSlice = createSlice({
-  name: 'performs',
+  name: 'perform',
   initialState,
   reducers: {
     initialPerform: (
@@ -19,9 +19,9 @@ export const performSlice = createSlice({
     ) => {
       const { lastModified, exerciseList } = action.payload;
       state.lastModified = lastModified;
-      state.list = exerciseList.map((r) => ({
-        exercise: r,
-        setCheck: [...Array(r.numberOfSets)].map(() => false),
+      state.list = exerciseList.map((exercise) => ({
+        exercise,
+        setCheck: [...Array(exercise.numberOfSets)].map(() => false),
       }));
     },
     toggleCheck: (
@@ -29,21 +29,25 @@ export const performSlice = createSlice({
       action: PayloadAction<{ exerciseIdx: number; setIdx: number }>,
     ) => {
       const { exerciseIdx, setIdx } = action.payload;
-      const exer = state.list[exerciseIdx];
-      if (!exer) return;
+      const exercise = state.list[exerciseIdx];
+      if (!exercise) return;
 
-      if (!exer.setCheck[setIdx] && (setIdx === 0 || exer.setCheck[setIdx - 1]))
-        exer.setCheck[setIdx] = !exer.setCheck[setIdx];
-      else if (
-        exer.setCheck[setIdx] &&
-        (setIdx === exer.setCheck.length - 1 || !exer.setCheck[setIdx + 1])
+      if (
+        !exercise.setCheck[setIdx] &&
+        (setIdx === 0 || exercise.setCheck[setIdx - 1])
       )
-        exer.setCheck[setIdx] = !exer.setCheck[setIdx];
+        exercise.setCheck[setIdx] = !exercise.setCheck[setIdx];
+      else if (
+        exercise.setCheck[setIdx] &&
+        (setIdx === exercise.setCheck.length - 1 ||
+          !exercise.setCheck[setIdx + 1])
+      )
+        exercise.setCheck[setIdx] = !exercise.setCheck[setIdx];
     },
     checkAll: (state, action: PayloadAction<{ exerciseIdx: number }>) => {
       const { exerciseIdx } = action.payload;
-      const exer = state.list[exerciseIdx];
-      exer.setCheck = exer.setCheck.map(() => true);
+      const exercise = state.list[exerciseIdx];
+      exercise.setCheck = exercise.setCheck.map(() => true);
     },
   },
 });

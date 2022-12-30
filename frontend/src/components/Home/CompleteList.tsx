@@ -43,8 +43,8 @@ const CompleteList = ({ complete, visible }: CompleteListProps) => {
     <CompleteListBlock visible={!!(complete && visible)}>
       <div className="date">{complete?.date}</div>
       <div className="content">
-        {complete?.list.map((exer) => (
-          <span key={exer.name}>{exer.name}</span>
+        {complete?.list.map((exer, idx) => (
+          <span key={idx}>{exer.name}</span>
         ))}
       </div>
     </CompleteListBlock>

@@ -57,7 +57,7 @@ const initialState: UserStateType = {
 };
 
 export const register = createAsyncThunk(
-  'REGISTER',
+  'user/register',
   async (
     payload: {
       username: string;
@@ -80,7 +80,7 @@ export const register = createAsyncThunk(
 );
 
 export const login = createAsyncThunk(
-  'LOGIN',
+  'user/login',
   async (
     payload: {
       username: string;
@@ -101,38 +101,38 @@ export const login = createAsyncThunk(
   },
 );
 
-export const logout = createAsyncThunk('LOGOUT', async () => {
+export const logout = createAsyncThunk('user/logout', async () => {
   await api.logout();
 });
 
 export const deregister = createAsyncThunk(
-  'DEREGISTER',
+  'user/deregister',
   async (payload: { username: string }) => {
     await api.deregister(payload.username);
   },
 );
 
 export const kakaoLogin = createAsyncThunk(
-  'KAKAO_LOGIN',
+  'user/kakaoLogin',
   async (payload: { code: string }) => {
     const response = await api.kakaoLogin(payload.code);
     return response.data;
   },
 );
 
-export const kakaoLogout = createAsyncThunk('KAKAO_LOGOUT', async () => {
+export const kakaoLogout = createAsyncThunk('user/kakaoLogout', async () => {
   await api.kakaoLogout();
 });
 
 export const kakaoDeregister = createAsyncThunk(
-  'KAKAO_DEREGISTER',
+  'user/kakaoDeregister',
   async () => {
     await api.kakaoDeregister();
   },
 );
 
 export const setInfo = createAsyncThunk(
-  'SET_INFO',
+  'user/setInfo',
   async (payload: { username: string; nickname: string; intro: string }) => {
     const { username, nickname, intro } = payload;
     await api.setInfo(username, nickname, intro);
@@ -141,7 +141,7 @@ export const setInfo = createAsyncThunk(
 );
 
 export const setCurrentRoutine = createAsyncThunk(
-  'SET_CURRENT_ROUTINE',
+  'user/setCurrentRoutine',
   async (payload: { username: string; routineId: string }) => {
     const { username, routineId } = payload;
     await api.setCurrentRoutine(username, routineId);
@@ -150,7 +150,7 @@ export const setCurrentRoutine = createAsyncThunk(
 );
 
 export const setProfileImage = createAsyncThunk(
-  'SET_PROFILE_IMAGE',
+  'user/setProfileImage',
   async (payload: { username: string; image: FormData | null }) => {
     const { username, image } = payload;
     if (image) {
@@ -164,7 +164,7 @@ export const setProfileImage = createAsyncThunk(
 );
 
 export const addComplete = createAsyncThunk(
-  'ADD_COMPLETE',
+  'user/addComplete',
   async (payload: { username: string; complete: CompleteItem }) => {
     const { username, complete } = payload;
     await api.addComplete(username, complete);
@@ -173,7 +173,7 @@ export const addComplete = createAsyncThunk(
 );
 
 export const removeComplete = createAsyncThunk(
-  'REMOVE_COMPLETE',
+  'user/removeComplete',
   async (payload: { username: string; date: string }) => {
     const { username, date } = payload;
     await api.removeProgress(username, date);
@@ -182,7 +182,7 @@ export const removeComplete = createAsyncThunk(
 );
 
 export const addProgress = createAsyncThunk(
-  'ADD_PROGRESS',
+  'user/addProgress',
   async (payload: { username: string; progress: ProgressPayload }) => {
     const { username, progress } = payload;
     await api.addProgress(username, [
@@ -195,7 +195,7 @@ export const addProgress = createAsyncThunk(
 );
 
 export const removeProgress = createAsyncThunk(
-  'REMOVE_PROGRESS',
+  'user/removeProgress',
   async (payload: { username: string; date: string }) => {
     const { username, date } = payload;
     await api.removeProgress(username, date);
@@ -204,7 +204,7 @@ export const removeProgress = createAsyncThunk(
 );
 
 export const addRoutine = createAsyncThunk(
-  'ADD_ROUTINE',
+  'user/addRoutine',
   async (payload: { username: string; routineId: string }) => {
     const { username, routineId } = payload;
     const routine: Routine = {
@@ -219,7 +219,7 @@ export const addRoutine = createAsyncThunk(
 );
 
 export const removeRoutine = createAsyncThunk(
-  'REMOVE_ROUTINE',
+  'user/removeRoutine',
   async (payload: { username: string; routineId: string }) => {
     const { username, routineId } = payload;
     await api.removeRoutine(username, routineId);
@@ -228,7 +228,7 @@ export const removeRoutine = createAsyncThunk(
 );
 
 export const editRoutine = createAsyncThunk(
-  'EDIT_ROUTINE',
+  'user/editRoutine',
   async (payload: { username: string; routine: Routine }) => {
     const { username, routine } = payload;
     await api.editRoutine(username, routine);
@@ -237,7 +237,7 @@ export const editRoutine = createAsyncThunk(
 );
 
 export const userSlice = createSlice({
-  name: 'users',
+  name: 'user',
   initialState,
   reducers: {
     initializeUser: () => initialState,
@@ -266,7 +266,7 @@ export const userSlice = createSlice({
     ) => {
       const { routineId, dayIdx, exercise } = action.payload;
       const routine = state.user.routines.find(
-        (s) => s.routineId === routineId,
+        (routine) => routine.routineId === routineId,
       );
       if (!routine) return;
       const dayRoutine = routine.weekRoutine[dayIdx];
@@ -285,14 +285,15 @@ export const userSlice = createSlice({
     ) => {
       const { routineId, dayIdx, exerciseIdx } = action.payload;
       const routine = state.user.routines.find(
-        (s) => s.routineId === routineId,
+        (routine) => routine.routineId === routineId,
       );
       if (!routine) return;
+
       const dayRoutine = routine.weekRoutine[dayIdx];
       if (!dayRoutine) return;
 
       routine.weekRoutine[dayIdx] = dayRoutine.filter(
-        (_, i) => i !== exerciseIdx,
+        (_, idx) => idx !== exerciseIdx,
       );
       routine.lastModified = Date.now();
     },
@@ -307,13 +308,14 @@ export const userSlice = createSlice({
     ) => {
       const { routineId, dayIdx, fromIdx, toIdx } = action.payload;
       const routine = state.user.routines.find(
-        (s) => s.routineId === routineId,
+        (routine) => routine.routineId === routineId,
       );
       if (!routine) return;
+
       const dayRoutine = routine.weekRoutine[dayIdx];
       if (!dayRoutine) return;
 
-      const filtered = dayRoutine.filter((_, i) => i !== fromIdx);
+      const filtered = dayRoutine.filter((_, idx) => idx !== fromIdx);
       routine.weekRoutine[dayIdx] = [
         ...filtered.slice(0, toIdx),
         dayRoutine[fromIdx],

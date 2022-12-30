@@ -159,7 +159,7 @@ const DayRoutine = ({
       <ExerciseListBlock ref={ref} editing={editing}>
         {dayRoutine.map((exercise, idx) => (
           <ExerciseItemBlock
-            key={exercise.name}
+            key={`${exercise.name}${idx}`}
             editing={editing ? 1 : 0}
             onPointerDown={(e) => onPointerDown(e, idx)}
           >

@@ -42,7 +42,7 @@ const ExerciseHistory = ({ complete }: ExerciseHistoryProps) => {
   return (
     <ExerciseHistoryBlock>
       {complete.list.map((exercise) => (
-        <ExerciseHistoryItem>
+        <ExerciseHistoryItem key={exercise.name}>
           <b>{exercise.name}</b>
           <small>
             {exercise.weight}kg, {exercise.numberOfTimes}x

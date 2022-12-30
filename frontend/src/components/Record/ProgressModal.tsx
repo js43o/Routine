@@ -155,14 +155,17 @@ const ProgressModal = ({
         <span>날짜 · 체중 · 골격근량 · 체지방량</span>
       </HeaderBlock>
       <ProgressListBlock>
-        {[...Array(data[0].data.length)].map((_, i) => (
-          <ProgressItemBlock onClick={() => onRemove(data[0].data[i].x)}>
+        {[...Array(data[0].data.length)].map((_, idx) => (
+          <ProgressItemBlock
+            onClick={() => onRemove(data[0].data[idx].x)}
+            key={idx}
+          >
             <div>
-              <b>{data[0].data[i].x.slice(2).replaceAll('-', '.')}</b>
+              <b>{data[0].data[idx].x.slice(2).replaceAll('-', '.')}</b>
             </div>
-            <div>{data[0].data[i].y}kg</div>
-            <div>{data[1].data[i].y}kg</div>
-            <div>{data[2].data[i].y}kg</div>
+            <div>{data[0].data[idx].y}kg</div>
+            <div>{data[1].data[idx].y}kg</div>
+            <div>{data[2].data[idx].y}kg</div>
           </ProgressItemBlock>
         ))}
       </ProgressListBlock>

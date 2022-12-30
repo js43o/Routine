@@ -26,14 +26,14 @@ REACT_APP_KAKAO_REDIRECT=http://localhost:3000/kakao
 
 ```
 PORT=4000
-MONGO_URI=mongodb://localhost:27017/fitness
+MONGO_URI=mongodb://localhost:27017/routine
 JWT_SECRET=... // jwt 토큰을 위한 임의의 문자열 입력
 KAKAO_API=... // Kakao Developers의 REST API 키 값
 ```
 
 4. Frontend, Backend 경로에서 각각 `yarn` 명령어를 입력하여 필요한 패키지를 설치합니다.
 5. Frontend, Backend 경로에서 각각 `yarn start` 명령어를 입력합니다.
-6. http://localhost:3000/fitness-app 에 접속하여 서비스를 이용하세요.
+6. http://localhost:3000/routine 에 접속하여 서비스를 이용하세요.
 
 ## 페이지별 기능 🔧
 
@@ -52,14 +52,9 @@ KAKAO_API=... // Kakao Developers의 REST API 키 값
 
 - 새로운 루틴 추가 및 제거
 - 기존 루틴 수정 (운동 추가/삭제, 루틴명 변경)
+- 현재 사용할 루틴 지정
 
 4. 기록 (/record)
 
 - 운동 기록 캘린더
 - 체성분 변화 기록 관리
-
-## 추가 예정 기능 🕓
-
-1. 사용자 루틴의 특정 운동 항목 수정
-2. 기존 캘린더 기록 삭제
-3. 홈 화면 스톱워치 모듈
