@@ -87,7 +87,7 @@ const RoutinePage = () => {
       <AddExerciseModal
         routineId={editing}
         dayIdx={dayIdx}
-        visible={modal}
+        isVisible={modal}
         onCloseModal={onCloseModal}
       />
       <h1>루틴 목록</h1>

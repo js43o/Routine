@@ -16,7 +16,7 @@ const DayRoutineBlock = styled.div`
   position: relative;
 `;
 
-const ExerciseListBlock = styled.ul<{ editing: boolean }>`
+const ExerciseListBlock = styled.ul<{ isEditing: boolean }>`
   display: flex;
   flex-grow: 1;
   align-items: center;
@@ -25,14 +25,14 @@ const ExerciseListBlock = styled.ul<{ editing: boolean }>`
   height: 4rem;
   padding: 0.5rem 2rem;
   border-radius: 0.5rem;
-  background: ${({ editing, theme }) =>
-    editing ? theme.primary : theme.background_sub};
+  background: ${({ isEditing, theme }) =>
+    isEditing ? theme.primary : theme.background_sub};
   overflow: hidden;
   scroll-behavior: smooth;
-  touch-action: ${({ editing }) => editing && 'none'};
+  touch-action: ${({ isEditing }) => isEditing && 'none'};
 `;
 
-const ExerciseItemBlock = styled.li<{ editing?: number }>`
+const ExerciseItemBlock = styled.li<{ isEditing?: boolean }>`
   display: flex;
   flex-shrink: 0;
   flex-direction: column;
@@ -51,22 +51,22 @@ const ExerciseItemBlock = styled.li<{ editing?: number }>`
   }
   @media (hover: hover) {
     &:hover {
-      opacity: ${({ editing }) => (editing ? 0.75 : 1)};
+      opacity: ${({ isEditing }) => (isEditing ? 0.75 : 1)};
     }
   }
   &:active {
-    opacity: ${({ editing }) => (editing ? 0.5 : 1)};
+    opacity: ${({ isEditing }) => (isEditing ? 0.5 : 1)};
   }
 `;
 
-const AddExerciseButton = styled(Button)<{ editing: number }>`
+const AddExerciseButton = styled(Button)<{ isEditing: boolean }>`
   display: flex;
   flex-shrink: 0;
   place-items: center;
   border-radius: 50%;
   color: ${({ theme }) => theme.letter_primary};
   font-size: 2rem;
-  visibility: ${({ editing }) => (editing ? '' : 'hidden')};
+  visibility: ${({ isEditing }) => !isEditing && 'hidden'};
 `;
 
 const ScrollButton = styled(Button)<{ isEnd: boolean }>`
@@ -90,7 +90,8 @@ type DayRoutineProps = {
   dayRoutine: ExerciseItem[];
   routineId: string;
   dayIdx: number;
-  editing: boolean;
+  isVisible: boolean;
+  isEditing: boolean;
   onOpenModal: (day: number) => void;
   onError: (error: string) => void;
 };
@@ -99,7 +100,8 @@ const DayRoutine = ({
   dayRoutine,
   routineId,
   dayIdx,
-  editing,
+  isVisible,
+  isEditing,
   onOpenModal,
   onError,
 }: DayRoutineProps) => {
@@ -108,6 +110,7 @@ const DayRoutine = ({
   const tempDayRoutine = useRef<ExerciseItem[]>(dayRoutine);
 
   const onAddExercise = () => {
+    if (!isEditing) return;
     if (dayRoutine.length >= 20) {
       onError('추가 가능한 최대 운동 종목 수는 20개입니다.');
       return;
@@ -118,7 +121,7 @@ const DayRoutine = ({
   const onPointerDown = (e: PointerEvent, exerciseIdx: number) => {
     const elem = (e.target as HTMLElement).closest('li') as HTMLLIElement;
     const timer = setTimeout(() => {
-      if (!editing) return;
+      if (!isEditing) return;
       onDragStart(routineId, dayIdx, exerciseIdx, elem, e.clientX);
     }, 500);
 
@@ -127,7 +130,7 @@ const DayRoutine = ({
       document.onpointermove = null;
       document.onpointerup = null;
 
-      if (!editing) return;
+      if (!isEditing) return;
       if (!window.confirm('정말 삭제하시겠습니까?')) return;
 
       dispatch(
@@ -152,15 +155,16 @@ const DayRoutine = ({
       <PrevScrollButton
         onPointerDown={() => moveTo('prev')}
         isEnd={ref.current?.scrollLeft === 0}
+        tabIndex={!isVisible && -1}
         aria-label="scroll prev"
       >
         <MdNavigateBefore />
       </PrevScrollButton>
-      <ExerciseListBlock ref={ref} editing={editing}>
+      <ExerciseListBlock ref={ref} isEditing={isEditing}>
         {dayRoutine.map((exercise, idx) => (
           <ExerciseItemBlock
             key={`${exercise.name}${idx}`}
-            editing={editing ? 1 : 0}
+            isEditing={isEditing}
             onPointerDown={(e) => onPointerDown(e, idx)}
           >
             <b>{exercise.name}</b>
@@ -172,8 +176,8 @@ const DayRoutine = ({
         ))}
         <li>
           <AddExerciseButton
-            onClick={dayIdx !== -1 && editing ? () => onAddExercise() : null}
-            editing={editing ? 1 : 0}
+            onClick={dayIdx !== -1 && onAddExercise}
+            isEditing={isEditing}
             aria-label="add exercise"
           >
             <BsPlusCircleDotted />
@@ -187,6 +191,7 @@ const DayRoutine = ({
           ref.current.scrollLeft ===
             ref.current.scrollWidth - ref.current.clientWidth
         }
+        tabIndex={!isVisible && -1}
         aria-label="scroll next"
       >
         <MdNavigateNext />

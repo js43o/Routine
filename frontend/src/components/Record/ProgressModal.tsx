@@ -10,6 +10,7 @@ import SubmitButtons from 'components/common/SubmitButtons';
 import ErrorMessage from 'components/common/ErrorMessage';
 import Modal from 'components/common/Modal';
 import InputConfirm from 'components/common/InputConfirm';
+import Button from 'components/common/Button';
 
 const HeaderBlock = styled.div`
   display: flex;
@@ -40,7 +41,7 @@ const ProgressListBlock = styled.ul`
   overflow-y: scroll;
 `;
 
-const ProgressItemBlock = styled.li`
+const ProgressItemBlock = styled(Button)`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   padding: 0.25rem;
@@ -50,18 +51,10 @@ const ProgressItemBlock = styled.li`
   background: ${({ theme }) => theme.background_main};
   text-align: center;
   white-space: nowrap;
-  div + div {
+  & > div + div {
     display: flex;
     flex-direction: column;
     border-left: 1px solid ${({ theme }) => theme.border_main};
-  }
-  @media (hover: hover) {
-    :hover {
-      opacity: 0.75;
-    }
-  }
-  :active {
-    opacity: 0.5;
   }
   cursor: pointer;
 `;
@@ -75,13 +68,13 @@ const FooterBlock = styled.div`
 
 type AddProgressModalProps = {
   data: ProgressItem[];
-  visible: boolean;
+  isVisible: boolean;
   onCloseModal: () => void;
 };
 
 const ProgressModal = ({
   data,
-  visible,
+  isVisible,
   onCloseModal,
 }: AddProgressModalProps) => {
   const [input, setInput] = useState({
@@ -149,24 +142,26 @@ const ProgressModal = ({
   };
 
   return (
-    <Modal visible={visible}>
+    <Modal isVisible={isVisible}>
       <HeaderBlock>
         <h2>체성분 기록</h2>
         <span>날짜 · 체중 · 골격근량 · 체지방량</span>
       </HeaderBlock>
       <ProgressListBlock>
         {[...Array(data[0].data.length)].map((_, idx) => (
-          <ProgressItemBlock
-            onClick={() => onRemove(data[0].data[idx].x)}
-            key={idx}
-          >
-            <div>
-              <b>{data[0].data[idx].x.slice(2).replaceAll('-', '.')}</b>
-            </div>
-            <div>{data[0].data[idx].y}kg</div>
-            <div>{data[1].data[idx].y}kg</div>
-            <div>{data[2].data[idx].y}kg</div>
-          </ProgressItemBlock>
+          <li>
+            <ProgressItemBlock
+              onClick={() => onRemove(data[0].data[idx].x)}
+              key={idx}
+            >
+              <div>
+                <b>{data[0].data[idx].x.slice(2).replaceAll('-', '.')}</b>
+              </div>
+              <div>{data[0].data[idx].y}kg</div>
+              <div>{data[1].data[idx].y}kg</div>
+              <div>{data[2].data[idx].y}kg</div>
+            </ProgressItemBlock>
+          </li>
         ))}
       </ProgressListBlock>
       <FooterBlock>

@@ -43,13 +43,14 @@ const WeekRoutineBlock = styled.li<{ visible: boolean; editing?: boolean }>`
   }
 `;
 
-const TitleBlock = styled.div<{ editing: boolean }>`
+const TitleBlock = styled.button<{ editing: boolean }>`
   display: flex;
   place-items: center;
   gap: 0.5rem;
   flex-grow: 1;
   height: 34px;
   white-space: nowrap;
+  padding: 0;
   font-size: 1.125rem;
   font-weight: bold;
   overflow: hidden;
@@ -235,7 +236,8 @@ const WeekRoutine = ({
               routineId={routine.routineId}
               dayIdx={dayIdx}
               dayRoutine={dayRoutine}
-              editing={isEditing}
+              isVisible={isVisible}
+              isEditing={isEditing}
               onOpenModal={onOpenModal}
               onError={onError}
             />

@@ -64,7 +64,7 @@ const RecordPage = () => {
   return (
     <Template>
       <SetProgressModal
-        visible={modal}
+        isVisible={modal}
         data={user.progress}
         onCloseModal={onCloseModal}
       />

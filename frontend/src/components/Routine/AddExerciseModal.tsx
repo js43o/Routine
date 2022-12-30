@@ -76,14 +76,14 @@ const FooterBlock = styled.div`
 type AddExerciseProps = {
   routineId: string | null;
   dayIdx: number | null;
-  visible: boolean;
+  isVisible: boolean;
   onCloseModal: () => void;
 };
 
 const AddExerciseModal = ({
   routineId,
   dayIdx,
-  visible,
+  isVisible,
   onCloseModal,
 }: AddExerciseProps) => {
   const dispatch = useDispatch();
@@ -140,7 +140,7 @@ const AddExerciseModal = ({
   }, []);
 
   return (
-    <Modal visible={visible}>
+    <Modal isVisible={isVisible}>
       <HeaderBlock>
         <h2>운동 목록</h2>
         <CategoryListBlock>
