@@ -64,12 +64,12 @@ const useAddExercise = () => {
       type: 'CHANGE_WEIGHT' | 'CHANGE_NUM_OF_TIMES' | 'CHANGE_NUM_OF_SETS',
       e: React.ChangeEvent<HTMLInputElement>,
     ) => {
-      if (e.target.value.length > 3) return;
-      if (e.target.value.length > 1 && e.target.value[0] === '0')
-        e.target.value = e.target.value.slice(1);
+      let { value } = e.target;
+      if (value.length > 3) return;
+      if (value.length > 1 && value[0] === '0') value = value.slice(1);
       dispatch({
         type,
-        payload: +e.target.value,
+        payload: +value,
       });
     },
     [],

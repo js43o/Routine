@@ -36,14 +36,18 @@ const CompleteDayBar = ({ completes }: CompleteBarProps) => {
 
   const weekDate = getWeekDate(new Date());
 
-  const removeComplete = (e: MouseEvent) => {
-    if (!e.target || !(e.target as HTMLElement).closest('.complete-item'))
+  const hideComplete = (e: MouseEvent) => {
+    if (
+      !e.target ||
+      !(e.target instanceof HTMLElement) ||
+      !e.target.closest('.complete-item')
+    )
       setVisible(null);
   };
 
   useEffect(() => {
-    document.addEventListener('click', removeComplete);
-    return () => document.removeEventListener('click', removeComplete);
+    document.addEventListener('click', hideComplete);
+    return () => document.removeEventListener('click', hideComplete);
   }, []);
 
   return (

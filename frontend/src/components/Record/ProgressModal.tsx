@@ -90,19 +90,21 @@ const ProgressModal = ({
     type: 'weight' | 'muscleMass' | 'fatMass',
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    if (e.target.value.length > 3) return;
-    if (e.target.value.length > 1 && e.target.value[0] === '0') {
-      e.target.value = e.target.value.slice(1);
-    }
-    setInput({ ...input, [type]: +e.target.value });
+    let { value } = e.target;
+    if (value.length > 3) return;
+    if (value.length > 1 && value[0] === '0') value = value.slice(1);
+
+    setInput({ ...input, [type]: +value });
   };
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (!input.weight || !input.muscleMass || !input.fatMass) {
       onError('입력값을 확인해주세요.');
       return;
     }
+
     if (
       data[0].data.length > 0 &&
       data[0].data[data[0].data.length - 1].x === getDatestr(new Date())
@@ -122,6 +124,7 @@ const ProgressModal = ({
         },
       }),
     );
+
     setInput({
       weight: 0,
       muscleMass: 0,
@@ -149,11 +152,8 @@ const ProgressModal = ({
       </HeaderBlock>
       <ProgressListBlock>
         {[...Array(data[0].data.length)].map((_, idx) => (
-          <li>
-            <ProgressItemBlock
-              onClick={() => onRemove(data[0].data[idx].x)}
-              key={idx}
-            >
+          <li key={idx}>
+            <ProgressItemBlock onClick={() => onRemove(data[0].data[idx].x)}>
               <div>
                 <b>{data[0].data[idx].x.slice(2).replaceAll('-', '.')}</b>
               </div>

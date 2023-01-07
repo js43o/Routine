@@ -32,7 +32,7 @@ const ExerciseListBlock = styled.ul<{ isEditing: boolean }>`
   touch-action: ${({ isEditing }) => isEditing && 'none'};
 `;
 
-const ExerciseItemBlock = styled.li<{ isEditing?: boolean }>`
+const ExerciseItemBlock = styled.button<{ isEditing?: boolean }>`
   display: flex;
   flex-shrink: 0;
   flex-direction: column;
@@ -118,8 +118,11 @@ const DayRoutine = ({
     onOpenModal(dayIdx);
   };
 
-  const onPointerDown = (e: PointerEvent, exerciseIdx: number) => {
-    const elem = (e.target as HTMLElement).closest('li') as HTMLLIElement;
+  const onPointerDownExercise = (e: PointerEvent, exerciseIdx: number) => {
+    if (!e.target || !(e.target instanceof HTMLElement)) return;
+    const elem = e.target.closest('li');
+    if (!elem) return;
+
     const timer = setTimeout(() => {
       if (!isEditing) return;
       onDragStart(routineId, dayIdx, exerciseIdx, elem, e.clientX);
@@ -130,17 +133,28 @@ const DayRoutine = ({
       document.onpointermove = null;
       document.onpointerup = null;
 
-      if (!isEditing) return;
-      if (!window.confirm('정말 삭제하시겠습니까?')) return;
-
-      dispatch(
-        removeExercise({
-          routineId,
-          dayIdx,
-          exerciseIdx,
-        }),
-      );
+      onRemoveExercise(exerciseIdx);
     };
+  };
+
+  const onRemoveExercise = (exerciseIdx: number) => {
+    if (!isEditing) return;
+    if (!window.confirm('정말 삭제하시겠습니까?')) return;
+
+    dispatch(
+      removeExercise({
+        routineId,
+        dayIdx,
+        exerciseIdx,
+      }),
+    );
+  };
+
+  const onRemoveExerciseWithKey = (
+    e: React.KeyboardEvent<HTMLButtonElement>,
+    exerciseIdx: number,
+  ) => {
+    if (e.key === 'Enter') onRemoveExercise(exerciseIdx);
   };
 
   useEffect(() => {
@@ -155,24 +169,26 @@ const DayRoutine = ({
       <PrevScrollButton
         onPointerDown={() => moveTo('prev')}
         isEnd={ref.current?.scrollLeft === 0}
-        tabIndex={!isVisible && -1}
+        tabIndex={!isVisible ? -1 : 0}
         aria-label="scroll prev"
       >
         <MdNavigateBefore />
       </PrevScrollButton>
       <ExerciseListBlock ref={ref} isEditing={isEditing}>
         {dayRoutine.map((exercise, idx) => (
-          <ExerciseItemBlock
-            key={`${exercise.name}${idx}`}
-            isEditing={isEditing}
-            onPointerDown={(e) => onPointerDown(e, idx)}
-          >
-            <b>{exercise.name}</b>
-            <small>
-              {exercise.weight}kg, {exercise.numberOfTimes}x
-              {exercise.numberOfSets}
-            </small>
-          </ExerciseItemBlock>
+          <li key={`${exercise.name}${idx}`}>
+            <ExerciseItemBlock
+              isEditing={isEditing}
+              onPointerDown={(e) => onPointerDownExercise(e, idx)}
+              onKeyUp={(e) => onRemoveExerciseWithKey(e, idx)}
+            >
+              <b>{exercise.name}</b>
+              <small>
+                {exercise.weight}kg, {exercise.numberOfTimes}x
+                {exercise.numberOfSets}
+              </small>
+            </ExerciseItemBlock>
+          </li>
         ))}
         <li>
           <AddExerciseButton
@@ -191,7 +207,7 @@ const DayRoutine = ({
           ref.current.scrollLeft ===
             ref.current.scrollWidth - ref.current.clientWidth
         }
-        tabIndex={!isVisible && -1}
+        tabIndex={!isVisible ? -1 : 0}
         aria-label="scroll next"
       >
         <MdNavigateNext />

@@ -14,7 +14,7 @@ const TemplateBlock = styled.div`
   }
 `;
 
-const ContentBlock = styled.div`
+const ContentBlock = styled.main`
   display: flex;
   flex-direction: column;
   flex-grow: 1;

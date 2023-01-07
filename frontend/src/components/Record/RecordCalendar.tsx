@@ -41,7 +41,7 @@ const CalendarList = styled.ul`
   }
 `;
 
-const CalendarItemWire = styled.li`
+const CalendarItemWire = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -180,9 +180,10 @@ const RecordCalendar = ({ selectedDate, setSelected }: RecordCalendarProps) => {
       new Date(currentDate.getFullYear(), currentDate.getMonth() - 1),
     );
 
-  const onSelect = (e: React.MouseEvent) => {
-    const elem = (e.target as HTMLLIElement).closest('li');
-    if (!elem || !elem.textContent) return;
+  const onSelectDay = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const elem = e.target;
+    if (!elem || !(elem instanceof HTMLButtonElement) || !elem.textContent)
+      return;
 
     const info = records.find(
       (r) =>
@@ -191,7 +192,7 @@ const RecordCalendar = ({ selectedDate, setSelected }: RecordCalendarProps) => {
           new Date(
             currentDate.getFullYear(),
             currentDate.getMonth(),
-            +(elem.textContent as string),
+            +(elem.textContent || ''),
           ),
         ),
     );
@@ -300,7 +301,7 @@ const RecordCalendar = ({ selectedDate, setSelected }: RecordCalendarProps) => {
               key={d.date}
               performed={d.list.length > 0}
               selected={selectedDate === d.date}
-              onClick={(e) => onSelect(e)}
+              onClick={(e) => onSelectDay(e)}
             >
               {+d.date.slice(8, 10) > 0 && +d.date.slice(8, 10)}
             </CalendarItem>
