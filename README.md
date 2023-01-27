@@ -4,7 +4,7 @@
 
 ## 사이트 링크 🔗
 
-<b>http://routine-app.ddns.net</b>
+<b>http://routine-app.link</b>
 
 ## 로컬 환경에서 실행하기
 
