@@ -52,9 +52,10 @@ const ExerciseListBlock = styled.ul`
   overflow-y: scroll;
 `;
 
-const ExerciseItemBlock = styled.li<{ isSelected: boolean }>`
+const ExerciseItemBlock = styled.button<{ isSelected: boolean }>`
   display: flex;
   flex-direction: column;
+  width: 100%;
   padding: 0.25rem 0.5rem;
   border-radius: 0.5rem;
   background: ${({ isSelected, theme }) =>
@@ -188,18 +189,19 @@ const AddExerciseModal = ({
                 .includes(name.replaceAll(' ', '')),
             )
             .map((exercise) => (
-              <ExerciseItemBlock
-                onClick={() => onSelectExercise(exercise)}
-                isSelected={selected === exercise.name}
-                key={exercise.name}
-              >
-                <b>{exercise.name}</b>
-                <div>
-                  {exercise.part.map((item) => (
-                    <span key={item}>#{item} </span>
-                  ))}
-                </div>
-              </ExerciseItemBlock>
+              <li key={exercise.name}>
+                <ExerciseItemBlock
+                  onClick={() => onSelectExercise(exercise)}
+                  isSelected={selected === exercise.name}
+                >
+                  <b>{exercise.name}</b>
+                  <div>
+                    {exercise.part.map((item) => (
+                      <span key={item}>#{item} </span>
+                    ))}
+                  </div>
+                </ExerciseItemBlock>
+              </li>
             ))}
         </ExerciseListBlock>
       ) : (

@@ -81,6 +81,7 @@ const CalendarItem = styled(CalendarItemWire)<{
     color: ${({ selected, theme }) =>
       selected ? theme.letter_primary : theme.blue};
   }
+  transition: background 0.25s;
 `;
 
 const CalendarHeader = styled.div`

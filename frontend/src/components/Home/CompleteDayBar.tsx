@@ -10,21 +10,25 @@ const CompleteDayBarBlock = styled.ul`
   border: 1px solid ${({ theme }) => theme.border_main};
   border-radius: 0.5rem;
   overflow: hidden;
+  & > li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
-const CompleteDayItem = styled.li<{ done?: boolean }>`
-  display: flex;
-  justify-content: center;
+const CompleteDayItem = styled.button<{ done?: boolean; idx: number }>`
+  width: 100%;
   background: ${({ done, theme }) =>
     done ? theme.primary : theme.background_sub};
-  color: ${({ theme, done }) => done && theme.letter_primary};
+  border-radius: 0;
   font-weight: bold;
-  &:nth-of-type(1) {
-    color: ${({ theme, done }) => (done ? theme.letter_primary : theme.red)};
-  }
-  &:nth-of-type(7) {
-    color: ${({ theme, done }) => (done ? theme.letter_primary : theme.blue)};
-  }
+  color: ${({ theme, done, idx }) => {
+    if (done) return theme.letter_primary;
+    if (idx === 0) return theme.red;
+    if (idx === 6) return theme.blue;
+    return theme.letter_main;
+  }};
 `;
 
 type CompleteBarProps = {
@@ -52,23 +56,26 @@ const CompleteDayBar = ({ completes }: CompleteBarProps) => {
 
   return (
     <CompleteDayBarBlock>
-      {weekDate.map((date) => {
+      {weekDate.map((date, idx) => {
         const dayComplete = completes.filter(
           (complete) => complete.date === getDatestr(date),
         )[0];
         return (
-          <CompleteDayItem
-            done={!!dayComplete}
-            key={date.getDay()}
-            onClick={() => setVisible(date)}
-            className="complete-item"
-          >
-            {date.getDate()}
+          <li>
+            <CompleteDayItem
+              done={!!dayComplete}
+              key={date.getDay()}
+              onClick={() => setVisible(date)}
+              className="complete-item"
+              idx={idx}
+            >
+              {date.getDate()}
+            </CompleteDayItem>
             <CompleteList
               complete={dayComplete}
               visible={visible?.getDate() === date.getDate()}
             />
-          </CompleteDayItem>
+          </li>
         );
       })}
     </CompleteDayBarBlock>
