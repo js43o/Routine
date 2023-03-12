@@ -35,7 +35,7 @@ const StyledNavLink = styled(NavLink)`
   font-size: 1.125rem;
   &.active {
     color: ${({ theme }) => theme.letter_main};
-    font-weight: bold;
+    font-weight: 500;
     border-bottom: 2px solid ${({ theme }) => theme.letter_main};
   }
 `;

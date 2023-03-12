@@ -13,7 +13,7 @@ const ModalWrapper = styled.div<{ visible: boolean }>`
   z-index: 100;
   background: rgba(0, 0, 0, 0.5);
   opacity: ${({ visible }) => (visible ? 1 : 0)};
-  transition: opacity 0.25s;
+  transition: opacity 0.2s;
   pointer-events: ${({ visible }) => (visible ? 'auto' : 'none')};
 `;
 

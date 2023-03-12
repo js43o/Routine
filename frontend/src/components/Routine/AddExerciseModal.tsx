@@ -12,6 +12,7 @@ import LoadingIndicator from 'components/common/LoadingIndicator';
 import ErrorMessage from 'components/common/ErrorMessage';
 import Modal from 'components/common/Modal';
 import InputConfirm from 'components/common/InputConfirm';
+import { targetKorName } from 'lib/constants';
 
 const HeaderBlock = styled.div`
   display: flex;
@@ -63,7 +64,13 @@ const ExerciseItemBlock = styled.button<{ isSelected: boolean }>`
   color: ${({ isSelected, theme }) => isSelected && theme.letter_primary};
   span {
     color: ${({ isSelected, theme }) =>
-      isSelected ? theme.letter_main : theme.letter_sub};
+      isSelected ? theme.letter_primary : theme.letter_main};
+  }
+  .exercise-name {
+    font-weight: 500;
+  }
+  .target-name {
+    font-size: 0.85rem;
   }
 `;
 
@@ -145,30 +152,14 @@ const AddExerciseModal = ({
       <HeaderBlock>
         <h2>운동 목록</h2>
         <CategoryListBlock>
-          <CategoryItemBlock
-            checked={category === 'all' ? 1 : 0}
-            onClick={() => onSetCategory('all')}
-          >
-            전체
-          </CategoryItemBlock>
-          <CategoryItemBlock
-            checked={category === 'upper' ? 1 : 0}
-            onClick={() => onSetCategory('upper')}
-          >
-            상체
-          </CategoryItemBlock>
-          <CategoryItemBlock
-            checked={category === 'lower' ? 1 : 0}
-            onClick={() => onSetCategory('lower')}
-          >
-            하체
-          </CategoryItemBlock>
-          <CategoryItemBlock
-            checked={category === 'core' ? 1 : 0}
-            onClick={() => onSetCategory('core')}
-          >
-            코어
-          </CategoryItemBlock>
+          {Object.entries(targetKorName).map(([eng, kor]) => (
+            <CategoryItemBlock
+              checked={category === eng ? 1 : 0}
+              onClick={() => onSetCategory(eng)}
+            >
+              {kor}
+            </CategoryItemBlock>
+          ))}
         </CategoryListBlock>
         <input
           type="text"
@@ -194,10 +185,12 @@ const AddExerciseModal = ({
                   onClick={() => onSelectExercise(exercise)}
                   isSelected={selected === exercise.name}
                 >
-                  <b>{exercise.name}</b>
+                  <span className="exercise-name">{exercise.name}</span>
                   <div>
                     {exercise.part.map((item) => (
-                      <span key={item}>#{item} </span>
+                      <span key={item} className="target-name">
+                        #{item}{' '}
+                      </span>
                     ))}
                   </div>
                 </ExerciseItemBlock>
@@ -217,7 +210,7 @@ const AddExerciseModal = ({
               type="number"
               min={0}
               max={999}
-              value={inputs.weight}
+              value={inputs.weight.toString()}
               onChange={(e) => onChangeInput('CHANGE_WEIGHT', e)}
             />
             kg
@@ -230,7 +223,7 @@ const AddExerciseModal = ({
               type="number"
               min={0}
               max={999}
-              value={inputs.numberOfTimes}
+              value={inputs.numberOfTimes.toString()}
               onChange={(e) => onChangeInput('CHANGE_NUM_OF_TIMES', e)}
             />
             회
@@ -243,7 +236,7 @@ const AddExerciseModal = ({
               type="number"
               min={0}
               max={20}
-              value={inputs.numberOfSets}
+              value={inputs.numberOfSets.toString()}
               onChange={(e) => onChangeInput('CHANGE_NUM_OF_SETS', e)}
             />
             세트

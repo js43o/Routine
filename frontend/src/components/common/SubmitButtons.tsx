@@ -12,7 +12,7 @@ const ButtonsBlock = styled.div`
     background: ${({ theme }) => theme.primary};
   }
   .close {
-    background: ${({ theme }) => theme.background_sub};
+    background: ${({ theme }) => theme.background_main};
     border: 1px solid ${({ theme }) => theme.border_main};
   }
 `;

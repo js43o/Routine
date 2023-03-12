@@ -31,7 +31,7 @@ const CalendarList = styled.ul`
   border: 1px solid ${({ theme }) => theme.border_main};
   border-radius: 0.5rem;
   .day-name {
-    font-weight: bold;
+    font-weight: 500;
   }
   .day-name:nth-of-type(1) {
     color: ${({ theme }) => theme.red};
@@ -81,7 +81,6 @@ const CalendarItem = styled(CalendarItemWire)<{
     color: ${({ selected, theme }) =>
       selected ? theme.letter_primary : theme.blue};
   }
-  transition: background 0.25s;
 `;
 
 const CalendarHeader = styled.div`
@@ -114,6 +113,7 @@ const CalendarHeader = styled.div`
 `;
 
 const DateIndicator = styled(Button)`
+  font-weight: 500;
   font-size: 2rem;
 `;
 
@@ -243,7 +243,7 @@ const RecordCalendar = ({ selectedDate, setSelected }: RecordCalendarProps) => {
               title="year"
               className="year count"
               type="number"
-              value={`${input.year}`}
+              value={input.year.toString()}
               onChange={(e) => onChange(e, 'year')}
               min={2000}
               max={2999}
@@ -254,7 +254,7 @@ const RecordCalendar = ({ selectedDate, setSelected }: RecordCalendarProps) => {
               title="month"
               className="month count"
               type="number"
-              value={`${input.month}`}
+              value={input.month.toString()}
               onChange={(e) => onChange(e, 'month')}
               min={1}
               max={12}

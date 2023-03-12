@@ -30,11 +30,15 @@ const ExerciseListBlock = styled.ul<{ isEditing: boolean }>`
   overflow: hidden;
   scroll-behavior: smooth;
   touch-action: ${({ isEditing }) => isEditing && 'none'};
+  & > li {
+    flex-shrink: 0;
+    max-width: 6rem;
+    overflow: hidden;
+  }
 `;
 
 const ExerciseItemBlock = styled.button<{ isEditing?: boolean }>`
   display: flex;
-  flex-shrink: 0;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -42,7 +46,8 @@ const ExerciseItemBlock = styled.button<{ isEditing?: boolean }>`
   padding: 0.5rem;
   border-radius: 0.5rem;
   background: ${({ theme }) => theme.background_main};
-  transition: opacity 0.2s;
+  font-size: 0.85rem;
+  line-height: 1rem;
   span {
     font-size: 0.8rem;
   }

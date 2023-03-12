@@ -13,6 +13,7 @@ const ButtonBlock = styled.button`
   border-radius: 0.5rem;
   background: none;
   font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
   @media (hover: hover) {
     &:hover {

@@ -43,7 +43,7 @@ const Login = ({ onError }: LoginProps) => {
       Object.values(inputCondition.username).includes(false) ||
       Object.values(inputCondition.password).includes(false)
     ) {
-      onError('입력값을 확인해주세요.');
+      onError('로그인에 실패하였습니다.');
       return;
     }
 

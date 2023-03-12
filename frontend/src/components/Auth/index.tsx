@@ -46,7 +46,7 @@ const AuthBlock = styled.div`
     margin-top: 0.25rem;
     color: ${({ theme }) => theme.letter_sub};
     .link {
-      font-weight: bold;
+      font-weight: 500;
       color: ${({ theme }) => theme.blue};
     }
   }

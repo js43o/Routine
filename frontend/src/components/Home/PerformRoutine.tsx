@@ -30,26 +30,29 @@ const PerformRoutineBlock = styled.div`
 
 const PerformExerciseBlock = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  align-items: stretch;
   border: 1px solid ${({ theme }) => theme.background_sub};
   border-radius: 0.5rem;
-  overflow: hidden;
 `;
 
-const ExerciseBlock = styled.div<{ completed: boolean }>`
+const ExerciseTitle = styled.div<{ completed: boolean }>`
   display: flex;
   flex-direction: column;
-  flex-shrink: 0;
+  justify-content: center;
   align-items: center;
-  border-radius: 0 0 0.5rem 0;
   padding: 0.5rem;
   background: ${({ completed, theme }) =>
     completed ? theme.primary : theme.background_sub};
   color: ${({ completed, theme }) => completed && theme.letter_primary};
+  text-align: center;
 `;
 
-const SetButton = styled.div<{ available: boolean }>`
+const SetListBlock = styled.ul`
+  display: flex;
+  flex-wrap: wrap;
+`;
+
+const SetButton = styled.button<{ available: boolean }>`
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
@@ -73,7 +76,7 @@ const CompleteButton = styled.button`
   border-radius: 0.5rem;
   background: ${({ theme }) => theme.background_sub};
   font-size: 1.5rem;
-  font-weight: bold;
+  font-weight: 500;
   &:active {
     color: ${({ theme }) => theme.letter_primary};
     background: ${({ theme }) => theme.primary};
@@ -186,29 +189,33 @@ const PerformRoutine = ({
     <PerformRoutineBlock>
       {performs.list.map((perform, i) => (
         <PerformExerciseBlock key={i}>
-          <ExerciseBlock
+          <ExerciseTitle
             completed={!perform.setCheck.filter((a) => !a).length}
             onClick={() => onCheckAll(i)}
           >
             <b>{perform.exercise.name}</b>
             <span>
-              {perform.exercise.weight}kg, {perform.exercise.numberOfTimes}회
+              {perform.exercise.weight}kg x {perform.exercise.numberOfTimes}회
             </span>
-          </ExerciseBlock>
-          {perform.setCheck.map((_, j) => (
-            <SetButton
-              key={j}
-              available={j === 0 || perform.setCheck[j - 1]}
-              onClick={() => onToggleCheck(i, j)}
-            >
-              {perform.setCheck[j] ? (
-                <MdOutlineCheckCircleOutline />
-              ) : (
-                <MdRadioButtonUnchecked />
-              )}
-              <b>{j + 1}세트</b>
-            </SetButton>
-          ))}
+          </ExerciseTitle>
+          <SetListBlock>
+            {perform.setCheck.map((_, j) => (
+              <li>
+                <SetButton
+                  key={j}
+                  available={j === 0 || perform.setCheck[j - 1]}
+                  onClick={() => onToggleCheck(i, j)}
+                >
+                  {perform.setCheck[j] ? (
+                    <MdOutlineCheckCircleOutline />
+                  ) : (
+                    <MdRadioButtonUnchecked />
+                  )}
+                  <b>{j + 1}세트</b>
+                </SetButton>
+              </li>
+            ))}
+          </SetListBlock>
         </PerformExerciseBlock>
       ))}
       <MemoBlock

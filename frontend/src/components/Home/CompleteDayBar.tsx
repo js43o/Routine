@@ -22,7 +22,7 @@ const CompleteDayItem = styled.button<{ done?: boolean; idx: number }>`
   background: ${({ done, theme }) =>
     done ? theme.primary : theme.background_sub};
   border-radius: 0;
-  font-weight: bold;
+  font-weight: 500;
   color: ${({ theme, done, idx }) => {
     if (done) return theme.letter_primary;
     if (idx === 0) return theme.red;

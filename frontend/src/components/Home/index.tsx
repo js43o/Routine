@@ -25,7 +25,7 @@ const CompleteText = styled.div`
     margin-left: 0.5rem;
     color: black;
     background: ${({ theme }) => theme.yellow};
-    font-weight: bold;
+    font-weight: 500;
   }
 `;
 

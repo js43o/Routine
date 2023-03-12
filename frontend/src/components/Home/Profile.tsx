@@ -23,6 +23,7 @@ const ProfileBlock = styled.div`
   align-items: center;
   flex-direction: column;
   margin-top: 1rem;
+  gap: 1rem;
   @media (min-width: 430px) {
     flex-direction: row;
     gap: 1rem;

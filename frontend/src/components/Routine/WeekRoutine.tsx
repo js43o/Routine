@@ -26,7 +26,6 @@ const WeekRoutineBlock = styled.li<{ visible: boolean; editing?: boolean }>`
     ${({ editing, theme }) => (editing ? theme.primary : theme.border_main)};
   border-radius: 0.5rem;
   overflow: hidden;
-  transition: border 0.2s, height 0.5s;
   .header {
     display: flex;
     justify-content: space-between;
@@ -52,7 +51,7 @@ const TitleBlock = styled.button<{ editing: boolean }>`
   white-space: nowrap;
   padding: 0;
   font-size: 1.125rem;
-  font-weight: bold;
+  font-weight: 500;
   overflow: hidden;
   @media (hover: hover) {
     &:hover {

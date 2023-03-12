@@ -19,7 +19,7 @@ const CompleteListBlock = styled.div<{ visible: boolean }>`
   opacity: ${({ visible }) => (visible ? 1 : 0)};
   transform: translateY(2rem);
   & > .date {
-    font-weight: bold;
+    font-weight: 500;
     padding-bottom: 0.25rem;
     border-bottom: 1px solid ${({ theme }) => theme.border_main};
   }

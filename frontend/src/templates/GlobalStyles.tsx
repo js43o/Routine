@@ -31,6 +31,7 @@ const GlobalStyles = () => {
         h4 {
           display: inline-block;
           text-align: center;
+          font-weight: 500;
           @media (min-width: 430px) {
             text-align: start;
           }
@@ -76,6 +77,9 @@ const GlobalStyles = () => {
         a {
           color: inherit;
           text-decoration: none;
+        }
+        b {
+          font-weight: 500;
         }
         ul,
         li {
