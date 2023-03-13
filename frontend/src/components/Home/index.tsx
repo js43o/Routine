@@ -43,10 +43,10 @@ const HomePage = () => {
   return (
     <Template>
       <Profile user={user} />
-      <h1>이번 주 운동 현황</h1>
+      <h2>이번 주 운동 현황</h2>
       <CompleteDayBar completes={user.completes} />
       <TodayExerciseHeader>
-        <h1>오늘의 운동</h1>
+        <h2>오늘의 운동</h2>
         <CompleteText>{isCompleted ? <span>완료</span> : null}</CompleteText>
       </TodayExerciseHeader>
       <PerformRoutine

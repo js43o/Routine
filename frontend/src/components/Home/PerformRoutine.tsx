@@ -12,6 +12,7 @@ import {
   MdOutlineCheckCircleOutline,
 } from 'react-icons/md';
 import { BsStar } from 'react-icons/bs';
+import Button from 'components/common/Button';
 
 const PerformRoutineBlock = styled.div`
   display: flex;
@@ -33,6 +34,7 @@ const PerformExerciseBlock = styled.div`
   align-items: stretch;
   border: 1px solid ${({ theme }) => theme.background_sub};
   border-radius: 0.5rem;
+  overflow: hidden;
 `;
 
 const ExerciseTitle = styled.div<{ completed: boolean }>`
@@ -67,7 +69,7 @@ const SetButton = styled.button<{ available: boolean }>`
   }
 `;
 
-const CompleteButton = styled.button`
+const CompleteButton = styled(Button)<{ disabled: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -75,13 +77,14 @@ const CompleteButton = styled.button`
   border: 1px solid ${({ theme }) => theme.border_main};
   border-radius: 0.5rem;
   background: ${({ theme }) => theme.background_sub};
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 500;
-  &:active {
-    color: ${({ theme }) => theme.letter_primary};
-    background: ${({ theme }) => theme.primary};
-  }
-  cursor: pointer;
+  color: ${({ theme, disabled }) =>
+    disabled ? theme.letter_sub : theme.letter_primary};
+  background: ${({ theme, disabled }) =>
+    disabled ? theme.bacground_sub : theme.primary};
+  cursor: ${({ disabled }) => (disabled ? 'unset' : 'pointer')};
+  transition: background 0.2s;
 `;
 
 const MemoBlock = styled.textarea<{ visible: number }>`
@@ -90,7 +93,6 @@ const MemoBlock = styled.textarea<{ visible: number }>`
   padding: 0.5rem;
   border: 1px solid ${({ theme }) => theme.border_main};
   border-radius: 0.5rem;
-  font-size: 1rem;
   background: ${({ theme }) => theme.memo_body};
   transition: height 0.2s;
 `;
@@ -227,7 +229,9 @@ const PerformRoutine = ({
         onChange={onMemo}
         value={memo}
       ></MemoBlock>
-      <CompleteButton onClick={onComplete}>운동완료</CompleteButton>
+      <CompleteButton onClick={onComplete} disabled={!isCompleted()}>
+        운동완료
+      </CompleteButton>
       <ErrorMessage message={message} />
     </PerformRoutineBlock>
   );

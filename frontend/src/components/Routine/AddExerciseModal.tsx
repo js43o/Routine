@@ -70,7 +70,7 @@ const ExerciseItemBlock = styled.button<{ isSelected: boolean }>`
     font-weight: 500;
   }
   .target-name {
-    font-size: 0.85rem;
+    font-size: 0.875rem;
   }
 `;
 

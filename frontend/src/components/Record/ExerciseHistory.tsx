@@ -41,8 +41,8 @@ const ExerciseHistory = ({ complete }: ExerciseHistoryProps) => {
 
   return (
     <ExerciseHistoryBlock>
-      {complete.list.map((exercise) => (
-        <ExerciseHistoryItem key={exercise.name}>
+      {complete.list.map((exercise, idx) => (
+        <ExerciseHistoryItem key={idx}>
           <b>{exercise.name}</b>
           <small>
             {exercise.weight}kg, {exercise.numberOfTimes}x

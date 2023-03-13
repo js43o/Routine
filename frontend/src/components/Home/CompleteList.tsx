@@ -28,7 +28,6 @@ const CompleteListBlock = styled.div<{ visible: boolean }>`
     flex-direction: column;
     align-items: center;
     font-weight: normal;
-    font-size: 0.85rem;
     overflow-y: scroll;
   }
 `;

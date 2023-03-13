@@ -2,7 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { CgInfinity } from 'react-icons/cg';
 
-const TitleBlock = styled.div`
+const TitleBlock = styled.h1`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -10,6 +10,7 @@ const TitleBlock = styled.div`
   font-size: 2.5rem;
   user-select: none;
   gap: 0.25rem;
+  margin: 0;
 `;
 
 const LogoBlock = styled(CgInfinity)`

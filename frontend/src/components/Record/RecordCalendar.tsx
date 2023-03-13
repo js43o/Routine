@@ -13,6 +13,7 @@ import { FaRegCalendarCheck } from 'react-icons/fa';
 import { BsCheckLg } from 'react-icons/bs';
 import { useSelector } from 'react-redux';
 import { userSelector } from 'modules/hooks';
+import CalendarItem from './CalendarItem';
 
 const RecordCalendarBlock = styled.div`
   display: flex;
@@ -23,63 +24,18 @@ const RecordCalendarBlock = styled.div`
 
 const CalendarList = styled.ul`
   display: grid;
-  place-items: center;
-  row-gap: 1rem;
   grid-template-columns: repeat(7, 1fr);
+  gap: 0.25rem;
+  place-items: center;
   width: 100%;
   padding: 1rem 0.5rem;
   border: 1px solid ${({ theme }) => theme.border_main};
   border-radius: 0.5rem;
-  .day-name {
-    font-weight: 500;
-  }
   .day-name:nth-of-type(1) {
     color: ${({ theme }) => theme.red};
   }
   .day-name:nth-of-type(7) {
     color: ${({ theme }) => theme.blue};
-  }
-`;
-
-const CalendarItemWire = styled.button`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 2rem;
-  height: 2rem;
-  font-size: 1rem;
-  opacity: 0.25;
-  &:nth-of-type(7n + 1) {
-    color: ${({ theme }) => theme.red};
-  }
-  &:nth-of-type(7n) {
-    color: ${({ theme }) => theme.blue};
-  }
-  @media (min-width: 430px) {
-    width: 3rem;
-    height: 3rem;
-    font-size: 1.25rem;
-  }
-`;
-
-const CalendarItem = styled(CalendarItemWire)<{
-  selected: boolean;
-  performed: boolean;
-}>`
-  border: ${({ selected, performed, theme }) =>
-    `2px solid ${selected || (performed && theme.primary)}`};
-  border-radius: 25%;
-  color: ${({ selected, theme }) => selected && theme.letter_primary};
-  background: ${({ selected, theme }) => (selected ? theme.primary : '')};
-  opacity: 1;
-  cursor: pointer;
-  &:nth-of-type(7n + 1) {
-    color: ${({ selected, theme }) =>
-      selected ? theme.letter_primary : theme.red};
-  }
-  &:nth-of-type(7n) {
-    color: ${({ selected, theme }) =>
-      selected ? theme.letter_primary : theme.blue};
   }
 `;
 
@@ -93,7 +49,6 @@ const CalendarHeader = styled.div`
     gap: 0.5rem;
     svg {
       font-size: 1.5rem;
-      transform: translateY(10%);
     }
   }
   form {
@@ -140,7 +95,7 @@ const RecordCalendar = ({ selectedDate, setSelected }: RecordCalendarProps) => {
     month: currentDate.getMonth() + 1,
   });
 
-  const onChange = (
+  const handleChangeDateField = (
     e: React.ChangeEvent<HTMLInputElement>,
     field: 'year' | 'month',
   ) => {
@@ -224,6 +179,7 @@ const RecordCalendar = ({ selectedDate, setSelected }: RecordCalendarProps) => {
       });
       firstDate.setDate(firstDate.getDate() + 1);
     }
+
     setRecords(tempRecords);
     setInput({
       year: currentDate.getFullYear(),
@@ -244,7 +200,7 @@ const RecordCalendar = ({ selectedDate, setSelected }: RecordCalendarProps) => {
               className="year count"
               type="number"
               value={input.year.toString()}
-              onChange={(e) => onChange(e, 'year')}
+              onChange={(e) => handleChangeDateField(e, 'year')}
               min={2000}
               max={2999}
               placeholder="연도"
@@ -255,7 +211,7 @@ const RecordCalendar = ({ selectedDate, setSelected }: RecordCalendarProps) => {
               className="month count"
               type="number"
               value={input.month.toString()}
-              onChange={(e) => onChange(e, 'month')}
+              onChange={(e) => handleChangeDateField(e, 'month')}
               min={1}
               max={12}
               placeholder="월"
@@ -287,25 +243,29 @@ const RecordCalendar = ({ selectedDate, setSelected }: RecordCalendarProps) => {
             {dayidxToDaystr(i)}
           </li>
         ))}
-        {[...Array(getFirstDay(currentDate))].map((_, i) => (
-          <CalendarItemWire onClick={() => decreaseMonth()} key={i}>
-            {getLastDayOfLastMonth(
-              currentDate.getFullYear(),
-              currentDate.getMonth(),
-            ) +
-              (i + 1 - getFirstDay(currentDate))}
-          </CalendarItemWire>
+        {[...Array(getFirstDay(currentDate))].map((_, idx) => (
+          <CalendarItem
+            key={idx}
+            wire
+            day={
+              getLastDayOfLastMonth(
+                currentDate.getFullYear(),
+                currentDate.getMonth(),
+              ) +
+              (idx + 1 - getFirstDay(currentDate))
+            }
+            handleClick={decreaseMonth}
+          />
         ))}
         {records.length &&
           records.map((d) => (
             <CalendarItem
               key={d.date}
+              day={+d.date.slice(8, 10)}
               performed={d.list.length > 0}
               selected={selectedDate === d.date}
-              onClick={(e) => onSelectDay(e)}
-            >
-              {+d.date.slice(8, 10) > 0 && +d.date.slice(8, 10)}
-            </CalendarItem>
+              handleClick={(e) => onSelectDay(e)}
+            />
           ))}
         {[
           ...Array(
@@ -313,10 +273,15 @@ const RecordCalendar = ({ selectedDate, setSelected }: RecordCalendarProps) => {
               ? Math.max(35 - (getFirstDay(currentDate) + records.length), 0)
               : Math.max(42 - (getFirstDay(currentDate) + records.length), 0),
           ),
-        ].map((_, i) => (
-          <CalendarItemWire onClick={increaseMonth} key={i}>
-            {i + 1}
-          </CalendarItemWire>
+        ].map((_, idx) => (
+          <CalendarItem
+            key={idx}
+            wire
+            day={idx + 1}
+            performed={false}
+            selected={false}
+            handleClick={increaseMonth}
+          />
         ))}
       </CalendarList>
     </RecordCalendarBlock>

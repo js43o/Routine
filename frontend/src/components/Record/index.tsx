@@ -39,7 +39,6 @@ const ProgressHeader = styled.div`
   display: flex;
   gap: 0.5rem;
   align-self: center;
-  font-size: 1.5rem;
   @media (min-width: 430px) {
     align-self: start;
   }
@@ -86,7 +85,7 @@ const RecordPage = () => {
         </MemoBlock>
       </RecordBlock>
       <ProgressHeader>
-        <h1>체성분 변화</h1>
+        <h2>체성분 변화</h2>
         <AddProgressButton onClick={onOpenModal} aria-label="add progress">
           <FaPencilAlt />
         </AddProgressButton>

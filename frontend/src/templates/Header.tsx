@@ -32,7 +32,7 @@ const StyledNavLink = styled(NavLink)`
   color: ${({ theme }) => theme.letter_sub};
   border-bottom: 2px solid transparent;
   text-decoration: none;
-  font-size: 1.125rem;
+  font-size: 1rem;
   &.active {
     color: ${({ theme }) => theme.letter_main};
     font-weight: 500;
@@ -40,7 +40,7 @@ const StyledNavLink = styled(NavLink)`
   }
 `;
 
-const ToggleButton = styled(Button)`
+const ToggleThemeButton = styled(Button)`
   font-size: 1.5rem;
 `;
 
@@ -70,9 +70,9 @@ function Header() {
         <NavLinkBlock to="/">홈</NavLinkBlock>
         <NavLinkBlock to="/routine">루틴</NavLinkBlock>
         <NavLinkBlock to="/record">기록</NavLinkBlock>
-        <ToggleButton onClick={onToggleTheme} aria-label="change theme">
+        <ToggleThemeButton onClick={onToggleTheme} aria-label="change theme">
           {theme.mode === 'light' ? <BsFillSunFill /> : <BsFillMoonFill />}
-        </ToggleButton>
+        </ToggleThemeButton>
       </NavBlock>
     </HeaderBlock>
   );

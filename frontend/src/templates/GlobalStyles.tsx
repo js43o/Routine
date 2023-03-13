@@ -15,6 +15,7 @@ const GlobalStyles = () => {
           color: ${theme.letter_main};
           background: ${theme.body};
           font-family: 'Noto Sans KR', sans-serif;
+          font-size: 0.875rem;
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
           touch-action: pan-y;
@@ -49,7 +50,13 @@ const GlobalStyles = () => {
           font-size: 1.25rem;
         }
         h4 {
+          margin: 0.125rem 0;
+          font-size: 1.125rem;
+        }
+        h5,
+        h6 {
           margin: 0;
+          font-size: 1rem;
         }
         button,
         input,

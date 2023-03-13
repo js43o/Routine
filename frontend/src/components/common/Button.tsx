@@ -12,7 +12,6 @@ const ButtonBlock = styled.button`
   align-items: center;
   border-radius: 0.5rem;
   background: none;
-  font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
   @media (hover: hover) {
@@ -21,7 +20,7 @@ const ButtonBlock = styled.button`
     }
   }
   &:active {
-    opacity: 0.5;
+    opacity: 1;
   }
   margin: 0;
   padding: 0;

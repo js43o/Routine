@@ -90,7 +90,7 @@ const RoutinePage = () => {
         isVisible={modal}
         onCloseModal={onCloseModal}
       />
-      <h1>루틴 목록</h1>
+      <h2>루틴 목록</h2>
       <RoutineListBlock>
         {user.routines.map((routine) => (
           <RoutineItem

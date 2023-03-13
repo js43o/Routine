@@ -5,13 +5,12 @@ import { register } from 'modules/user';
 import Button from 'components/common/Button';
 import useAuth from 'hooks/useAuth';
 import styled from '@emotion/styled';
-import { BsCircle, BsCheckCircle } from 'react-icons/bs';
+import { BsCircle, BsCheckCircleFill } from 'react-icons/bs';
 
 const InputCheckerWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-  font-size: 0.875rem;
   color: ${({ theme }) => theme.letter_sub};
 `;
 
@@ -22,12 +21,12 @@ const InputChecker = styled.div`
 `;
 
 const UncheckedCircle = styled(BsCircle)`
-  font-size: 1.125rem;
+  font-size: 1rem;
 `;
 
-const CheckedCircle = styled(BsCheckCircle)`
+const CheckedCircle = styled(BsCheckCircleFill)`
   color: ${({ theme }) => theme.blue};
-  font-size: 1.125rem;
+  font-size: 1rem;
 `;
 
 type RegisterProps = {

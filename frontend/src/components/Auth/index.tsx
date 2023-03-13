@@ -42,8 +42,10 @@ const AuthBlock = styled.div`
   .auth-switch {
     display: flex;
     justify-content: center;
+    align-items: center;
     gap: 0.25rem;
     margin-top: 0.25rem;
+    font-size: 1rem;
     color: ${({ theme }) => theme.letter_sub};
     .link {
       font-weight: 500;

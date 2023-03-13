@@ -46,10 +46,9 @@ const ExerciseItemBlock = styled.button<{ isEditing?: boolean }>`
   padding: 0.5rem;
   border-radius: 0.5rem;
   background: ${({ theme }) => theme.background_main};
-  font-size: 0.85rem;
+  font-size: 0.875rem;
   line-height: 1rem;
   span {
-    font-size: 0.8rem;
   }
   &.hold {
     transform: scale(1.1);
