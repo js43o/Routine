@@ -1,5 +1,9 @@
 import { useReducer, useCallback } from 'react';
-import { regexp } from 'lib/constants';
+import {
+  validateNickname,
+  validatePassword,
+  validateUsername,
+} from 'lib/validator';
 
 type State = {
   username: string;
@@ -89,7 +93,7 @@ const useAuth = () => {
           payload: {
             field: 'username',
             value: {
-              allowedCharacter: regexp.username.test(str),
+              allowedCharacter: validateUsername(str),
               allowedLength: str.length >= 5 && str.length <= 20,
             },
           },
@@ -101,7 +105,7 @@ const useAuth = () => {
           payload: {
             field: 'password',
             value: {
-              allowedCharacter: regexp.password.test(str),
+              allowedCharacter: validatePassword(str),
               allowedLength: str.length >= 8 && str.length <= 20,
             },
           },
@@ -113,7 +117,7 @@ const useAuth = () => {
           payload: {
             field: 'nickname',
             value: {
-              allowedCharacter: regexp.nickname.test(str),
+              allowedCharacter: validateNickname(str),
               allowedLength: str.length >= 1 && str.length <= 10,
             },
           },
