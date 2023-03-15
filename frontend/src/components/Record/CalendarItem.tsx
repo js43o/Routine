@@ -2,6 +2,11 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { BsCheckLg } from 'react-icons/bs';
 
+const CheckIcon = styled(BsCheckLg)<{ selected: boolean }>`
+  color: ${({ theme, selected }) =>
+    selected ? theme.letter_primary : theme.primary};
+`;
+
 const CalendarItemBlock = styled.li<{ selected: boolean }>`
   display: flex;
   justify-content: center;
@@ -11,6 +16,8 @@ const CalendarItemBlock = styled.li<{ selected: boolean }>`
   border-radius: 50%;
   overflow: hidden;
   @media (min-width: 430px) {
+    width: 100%;
+    height: 10vw;
     max-height: 5rem;
     border-right: 1px solid ${({ theme }) => theme.border_main};
     border-bottom: 1px solid ${({ theme }) => theme.border_main};
@@ -67,7 +74,8 @@ const DayButton = styled(DayButtonWire)<{
   border: ${({ theme, performed }) =>
     performed ? `1px solid ${theme.primary}` : 'none'};
   color: ${({ selected, theme }) => selected && theme.letter_primary};
-  background: ${({ selected, theme }) => selected && theme.primary};
+  background: ${({ selected, theme }) =>
+    selected ? theme.primary : 'inherit'};
   opacity: 1;
   transition: background 0.2s;
   cursor: pointer;
@@ -103,7 +111,9 @@ export default function CalendarItem({
           performed={!!performed}
           onClick={handleClick}
         >
-          <div className="check-icon">{performed ? <BsCheckLg /> : ''}</div>
+          <div className="check-icon">
+            {performed ? <CheckIcon selected={!!selected} /> : ''}
+          </div>
           <div className="day-text">{day}</div>
         </DayButton>
       )}
