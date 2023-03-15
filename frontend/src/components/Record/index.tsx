@@ -15,13 +15,19 @@ import Button from 'components/common/Button';
 const RecordBlock = styled.div`
   display: flex;
   flex-direction: column;
-  & > * {
-    text-align: center;
+  .title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    h3 {
+      margin: 0;
+    }
   }
   gap: 0.5rem;
   padding: 0.5rem;
   border: 1px solid ${({ theme }) => theme.border_main};
   border-radius: 0.5rem;
+  text-align: center;
 `;
 
 const MemoBlock = styled.div`
@@ -72,13 +78,13 @@ const RecordPage = () => {
         setSelected={setSelected}
       />
       <RecordBlock>
-        <h3>
-          {selected &&
-            `${selected.date.slice(5, 7)}월 ${selected.date.slice(
-              8,
-              10,
-            )}일 기록`}
-        </h3>
+        <div className="title">
+          <span className="date">
+            {selected &&
+              `${selected.date.slice(5, 7)}월 ${selected.date.slice(8, 10)}일`}
+          </span>
+          <h3>{selected?.routineName}</h3>
+        </div>
         <ExerciseHistory complete={selected} />
         <MemoBlock>
           {(selected && selected.memo) || <i>작성한 메모가 없습니다.</i>}

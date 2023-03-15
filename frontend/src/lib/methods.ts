@@ -1,3 +1,5 @@
+import { CompleteItem } from 'types';
+
 export const dayidxToDaystr = (n: number) =>
   n >= 0 && n < 7 ? ['일', '월', '화', '수', '목', '금', '토'][n] : 'undefined';
 
@@ -32,14 +34,56 @@ export const getWeekDate = (date: Date) => {
   return result;
 };
 
-export const getFirstDay = (date: Date) => {
+export const getFirstDayIdx = (date: Date) => {
   const d = new Date(date);
   d.setDate(1);
   return d.getDay();
 };
 
-export const getLastDayOfLastMonth = (year: number, month: number) =>
+export const getLastDateOfLastMonth = (year: number, month: number) =>
   new Date(year, month, 0).getDate();
+
+export const getCalendarDateWithRecords = (
+  currentDate: Date,
+  completes: CompleteItem[],
+) => {
+  const frontDummy: number[] = [];
+  const records: CompleteItem[] = [];
+  const rearDummy: number[] = [];
+
+  const tempDate = new Date(currentDate);
+  tempDate.setDate(1);
+
+  const FIRST_DAY_IDX = getFirstDayIdx(currentDate);
+  const LAST_DATE = getLastDateOfLastMonth(
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+  );
+
+  [...Array(FIRST_DAY_IDX)].forEach((_, idx) =>
+    frontDummy.push(LAST_DATE - FIRST_DAY_IDX + (idx + 1)),
+  );
+
+  while (tempDate.getMonth() === currentDate.getMonth()) {
+    const complete = completes.find((c) => c.date === getDatestr(tempDate));
+    records.push({
+      date: getDatestr(tempDate),
+      routineName: complete?.routineName || '',
+      exerciseList: complete?.exerciseList || [],
+      memo: complete?.memo || '',
+    });
+    tempDate.setDate(tempDate.getDate() + 1);
+  }
+
+  const BLOCK_NUMBER = FIRST_DAY_IDX + records.length <= 35 ? 35 : 42;
+  const REAR_NUMBER = Math.max(
+    BLOCK_NUMBER - (FIRST_DAY_IDX + records.length),
+    0,
+  );
+  [...Array(REAR_NUMBER)].forEach((_, idx) => rearDummy.push(idx + 1));
+
+  return { frontDummy, records, rearDummy };
+};
 
 export const hideScroll = () => {
   let offset = document.body.offsetWidth;

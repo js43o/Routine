@@ -19,7 +19,8 @@ const RoutineSchema = new Schema({
 
 const CompleteSchema = new Schema({
   date: String,
-  list: [ExerciseItemSchema],
+  routineName: String,
+  exerciseList: [ExerciseItemSchema],
   memo: String,
 });
 

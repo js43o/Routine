@@ -121,7 +121,7 @@ const PerformRoutine = ({
       dispatch(
         initialPerform({
           lastModified: currentRoutine.lastModified,
-          exerciseList: todayRoutine,
+          exerciseList,
         }),
       );
   }, []);
@@ -141,9 +141,9 @@ const PerformRoutine = ({
     );
 
   const day = new Date().getDay();
-  const todayRoutine = currentRoutine.weekRoutine[day];
+  const exerciseList = currentRoutine.weekRoutine[day];
 
-  if (!todayRoutine.length) {
+  if (!exerciseList.length) {
     return (
       <PerformRoutineBlock>
         <i>오늘은 쉬는 날!</i>
@@ -179,7 +179,8 @@ const PerformRoutine = ({
         username: user.username,
         complete: {
           date: getDatestr(new Date()),
-          list: todayRoutine,
+          routineName: currentRoutine.title,
+          exerciseList,
           memo,
         },
       }),
@@ -202,7 +203,7 @@ const PerformRoutine = ({
           </ExerciseTitle>
           <SetListBlock>
             {perform.setCheck.map((_, j) => (
-              <li>
+              <li key={j}>
                 <SetButton
                   key={j}
                   available={j === 0 || perform.setCheck[j - 1]}

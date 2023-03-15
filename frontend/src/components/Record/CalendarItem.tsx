@@ -89,7 +89,7 @@ type CalendarItemType = {
   wire?: boolean;
   performed?: boolean;
   selected?: boolean;
-  handleClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  handleClick: () => void;
 };
 
 export default function CalendarItem({

@@ -12,7 +12,7 @@ import LoadingIndicator from 'components/common/LoadingIndicator';
 import ErrorMessage from 'components/common/ErrorMessage';
 import Modal from 'components/common/Modal';
 import InputConfirm from 'components/common/InputConfirm';
-import { targetKorName } from 'lib/constants';
+import { TARGET_KOR_NAME } from 'lib/constants';
 
 const HeaderBlock = styled.div`
   display: flex;
@@ -152,7 +152,7 @@ const AddExerciseModal = ({
       <HeaderBlock>
         <h2>운동 목록</h2>
         <CategoryListBlock>
-          {Object.entries(targetKorName).map(([eng, kor]) => (
+          {Object.entries(TARGET_KOR_NAME).map(([eng, kor]) => (
             <CategoryItemBlock
               checked={category === eng ? 1 : 0}
               onClick={() => onSetCategory(eng)}

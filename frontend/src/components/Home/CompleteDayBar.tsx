@@ -61,7 +61,7 @@ const CompleteDayBar = ({ completes }: CompleteBarProps) => {
           (complete) => complete.date === getDatestr(date),
         )[0];
         return (
-          <li>
+          <li key={date.getDate()}>
             <CompleteDayItem
               done={!!dayComplete}
               key={date.getDay()}

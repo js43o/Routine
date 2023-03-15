@@ -7,11 +7,12 @@ import { BsCheckLg } from 'react-icons/bs';
 import { userSelector } from 'modules/hooks';
 import { CompleteItem } from 'types';
 import {
-  dayidxToDaystr,
+  getCalendarDateWithRecords,
   getDatestr,
-  getFirstDay,
-  getLastDayOfLastMonth,
+  getFirstDayIdx,
+  getLastDateOfLastMonth,
 } from 'lib/methods';
+import { DAY_KOR_NAME_LIST } from 'lib/constants';
 import Button from 'components/common/Button';
 import CalendarItem from './CalendarItem';
 
@@ -89,11 +90,13 @@ const RecordCalendar = ({ selectedDate, setSelected }: RecordCalendarProps) => {
   const { user } = useSelector(userSelector);
   const [edit, setEdit] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [records, setRecords] = useState<CompleteItem[]>([]);
   const [input, setInput] = useState({
     year: currentDate.getFullYear(),
     month: currentDate.getMonth() + 1,
   });
+
+  const [records, setRecords] = useState<CompleteItem[]>([]);
+  const [dummyDays, setDummyDays] = useState<[number[], number[]]>([[], []]);
 
   const handleChangeDateField = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -136,20 +139,12 @@ const RecordCalendar = ({ selectedDate, setSelected }: RecordCalendarProps) => {
       new Date(currentDate.getFullYear(), currentDate.getMonth() - 1),
     );
 
-  const onSelectDay = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    const elem = e.target;
-    if (!elem || !(elem instanceof HTMLButtonElement) || !elem.textContent)
-      return;
-
+  const selectDay = (day: number) => {
     const info = records.find(
       (r) =>
         r.date ===
         getDatestr(
-          new Date(
-            currentDate.getFullYear(),
-            currentDate.getMonth(),
-            +(elem.textContent || ''),
-          ),
+          new Date(currentDate.getFullYear(), currentDate.getMonth(), day),
         ),
     );
 
@@ -163,24 +158,10 @@ const RecordCalendar = ({ selectedDate, setSelected }: RecordCalendarProps) => {
   };
 
   useEffect(() => {
-    const firstDate = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      1,
-    );
-    const tempRecords: CompleteItem[] = [];
+    const calculated = getCalendarDateWithRecords(currentDate, user.completes);
 
-    while (firstDate.getMonth() === currentDate.getMonth()) {
-      const r = user.completes.find((c) => c.date === getDatestr(firstDate));
-      tempRecords.push({
-        date: getDatestr(firstDate),
-        list: r ? r.list : [],
-        memo: r ? r.memo : '',
-      });
-      firstDate.setDate(firstDate.getDate() + 1);
-    }
-
-    setRecords(tempRecords);
+    setDummyDays([calculated.frontDummy, calculated.rearDummy]);
+    setRecords(calculated.records);
     setInput({
       year: currentDate.getFullYear(),
       month: currentDate.getMonth() + 1,
@@ -238,42 +219,36 @@ const RecordCalendar = ({ selectedDate, setSelected }: RecordCalendarProps) => {
         </ArrowButton>
       </CalendarHeader>
       <CalendarList>
-        {[...Array(7)].map((_, i) => (
-          <li className="day-name" key={dayidxToDaystr(i)}>
-            {dayidxToDaystr(i)}
+        {DAY_KOR_NAME_LIST.map((dayName) => (
+          <li className="day-name" key={dayName}>
+            {dayName}
           </li>
         ))}
-        {[...Array(getFirstDay(currentDate))].map((_, idx) => (
+        {dummyDays[0].map((_, idx) => (
           <CalendarItem
             key={idx}
             wire
             day={
-              getLastDayOfLastMonth(
+              getLastDateOfLastMonth(
                 currentDate.getFullYear(),
                 currentDate.getMonth(),
               ) +
-              (idx + 1 - getFirstDay(currentDate))
+              (idx + 1 - getFirstDayIdx(currentDate))
             }
             handleClick={decreaseMonth}
           />
         ))}
-        {records.length &&
+        {records.length > 0 &&
           records.map((d) => (
             <CalendarItem
               key={d.date}
-              day={+d.date.slice(8, 10)}
-              performed={d.list.length > 0}
+              day={Number(d.date.slice(8, 10))}
+              performed={d.exerciseList.length > 0}
               selected={selectedDate === d.date}
-              handleClick={(e) => onSelectDay(e)}
+              handleClick={() => selectDay(Number(d.date.slice(8, 10)))}
             />
           ))}
-        {[
-          ...Array(
-            getFirstDay(currentDate) + records.length <= 35
-              ? Math.max(35 - (getFirstDay(currentDate) + records.length), 0)
-              : Math.max(42 - (getFirstDay(currentDate) + records.length), 0),
-          ),
-        ].map((_, idx) => (
+        {dummyDays[1].map((_, idx) => (
           <CalendarItem
             key={idx}
             wire

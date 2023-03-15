@@ -30,7 +30,7 @@ type ExerciseHistoryProps = {
 };
 
 const ExerciseHistory = ({ complete }: ExerciseHistoryProps) => {
-  if (!complete || complete.list.length <= 0)
+  if (!complete || complete.exerciseList.length <= 0)
     return (
       <ExerciseHistoryBlock>
         <li>
@@ -41,7 +41,7 @@ const ExerciseHistory = ({ complete }: ExerciseHistoryProps) => {
 
   return (
     <ExerciseHistoryBlock>
-      {complete.list.map((exercise, idx) => (
+      {complete.exerciseList.map((exercise, idx) => (
         <ExerciseHistoryItem key={idx}>
           <b>{exercise.name}</b>
           <small>

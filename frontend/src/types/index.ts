@@ -1,6 +1,7 @@
 export type CompleteItem = {
   date: string;
-  list: ExerciseItem[];
+  routineName: string;
+  exerciseList: ExerciseItem[];
   memo: string;
 };
 

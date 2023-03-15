@@ -15,7 +15,8 @@ export const addComplete = async (ctx: DefaultContext) => {
     username: Joi.string().alphanum().min(3).max(20).required(),
     complete: Joi.object().keys({
       date: Joi.string(),
-      list: Joi.array().items(exerciseSchema),
+      routineName: Joi.string(),
+      exerciseList: Joi.array().items(exerciseSchema),
       memo: Joi.string().allow(''),
     }),
   });
