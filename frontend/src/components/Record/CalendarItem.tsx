@@ -89,7 +89,7 @@ type CalendarItemType = {
   wire?: boolean;
   performed?: boolean;
   selected?: boolean;
-  handleClick: () => void;
+  handleClick?: () => void;
 };
 
 export default function CalendarItem({
@@ -125,4 +125,5 @@ CalendarItem.defaultProps = {
   wire: false,
   performed: false,
   selected: false,
+  handleClick: undefined,
 };

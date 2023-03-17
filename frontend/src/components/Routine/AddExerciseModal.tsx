@@ -156,6 +156,7 @@ const AddExerciseModal = ({
             <CategoryItemBlock
               checked={category === eng ? 1 : 0}
               onClick={() => onSetCategory(eng)}
+              key={eng}
             >
               {kor}
             </CategoryItemBlock>

@@ -12,7 +12,7 @@ import {
   getFirstDayIdx,
   getLastDateOfLastMonth,
 } from 'lib/methods';
-import { DAY_KOR_NAME_LIST } from 'lib/constants';
+import { DAY_KOR_NAME_LIST, DUMMY_DAYS } from 'lib/constants';
 import Button from 'components/common/Button';
 import CalendarItem from './CalendarItem';
 
@@ -224,40 +224,49 @@ const RecordCalendar = ({ selectedDate, setSelected }: RecordCalendarProps) => {
             {dayName}
           </li>
         ))}
-        {dummyDays[0].map((_, idx) => (
-          <CalendarItem
-            key={idx}
-            wire
-            day={
-              getLastDateOfLastMonth(
-                currentDate.getFullYear(),
-                currentDate.getMonth(),
-              ) +
-              (idx + 1 - getFirstDayIdx(currentDate))
-            }
-            handleClick={decreaseMonth}
-          />
-        ))}
-        {records.length > 0 &&
-          records.map((d) => (
-            <CalendarItem
-              key={d.date}
-              day={Number(d.date.slice(8, 10))}
-              performed={d.exerciseList.length > 0}
-              selected={selectedDate === d.date}
-              handleClick={() => selectDay(Number(d.date.slice(8, 10)))}
-            />
-          ))}
-        {dummyDays[1].map((_, idx) => (
-          <CalendarItem
-            key={idx}
-            wire
-            day={idx + 1}
-            performed={false}
-            selected={false}
-            handleClick={increaseMonth}
-          />
-        ))}
+        {records.length > 0 ? (
+          <>
+            {dummyDays[0].map((_, idx) => (
+              <CalendarItem
+                key={idx}
+                wire
+                day={
+                  getLastDateOfLastMonth(
+                    currentDate.getFullYear(),
+                    currentDate.getMonth(),
+                  ) +
+                  (idx + 1 - getFirstDayIdx(currentDate))
+                }
+                handleClick={decreaseMonth}
+              />
+            ))}
+            {records.map((d) => (
+              <CalendarItem
+                key={d.date}
+                day={Number(d.date.slice(8, 10))}
+                performed={d.exerciseList.length > 0}
+                selected={selectedDate === d.date}
+                handleClick={() => selectDay(Number(d.date.slice(8, 10)))}
+              />
+            ))}
+            {dummyDays[1].map((_, idx) => (
+              <CalendarItem
+                key={idx}
+                wire
+                day={idx + 1}
+                performed={false}
+                selected={false}
+                handleClick={increaseMonth}
+              />
+            ))}
+          </>
+        ) : (
+          <>
+            {DUMMY_DAYS.map((day) => (
+              <CalendarItem key={day} wire day={day} />
+            ))}
+          </>
+        )}
       </CalendarList>
     </RecordCalendarBlock>
   );

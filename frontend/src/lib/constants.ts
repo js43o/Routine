@@ -6,3 +6,5 @@ export const TARGET_KOR_NAME = {
 };
 
 export const DAY_KOR_NAME_LIST = ['일', '월', '화', '수', '목', '금', '토'];
+
+export const DUMMY_DAYS = [...Array(35)];
