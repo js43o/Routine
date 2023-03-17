@@ -42,21 +42,25 @@ const ProgressListBlock = styled.ul`
 `;
 
 const ProgressItemBlock = styled(Button)`
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  padding: 0.25rem;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem;
   width: 100%;
   border: 1px solid ${({ theme }) => theme.border_main};
   border-radius: 0.5rem;
   background: ${({ theme }) => theme.background_main};
+  font-weight: inherit;
   text-align: center;
   white-space: nowrap;
-  & > div + div {
-    display: flex;
-    flex-direction: column;
-    border-left: 1px solid ${({ theme }) => theme.border_main};
-  }
   cursor: pointer;
+  .contents {
+    display: flex;
+    gap: 1rem;
+    div {
+      display: flex;
+      flex-direction: column;
+    }
+  }
 `;
 
 const FooterBlock = styled.div`
@@ -67,13 +71,13 @@ const FooterBlock = styled.div`
 `;
 
 type AddProgressModalProps = {
-  data: ProgressItem[];
+  progress: ProgressItem[];
   isVisible: boolean;
   onCloseModal: () => void;
 };
 
 const ProgressModal = ({
-  data,
+  progress,
   isVisible,
   onCloseModal,
 }: AddProgressModalProps) => {
@@ -86,13 +90,12 @@ const ProgressModal = ({
   const dispatch = useDispatch();
   const { message, onError, resetError } = useErrorMessage();
 
-  const onChange = (
+  const onChangeInput = (
     type: 'weight' | 'muscleMass' | 'fatMass',
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    let { value } = e.target;
+    const { value } = e.target;
     if (value.length > 3) return;
-    if (value.length > 1 && value[0] === '0') value = value.slice(1);
 
     setInput({ ...input, [type]: +value });
   };
@@ -106,8 +109,8 @@ const ProgressModal = ({
     }
 
     if (
-      data[0].data.length > 0 &&
-      data[0].data[data[0].data.length - 1].x === getDatestr(new Date())
+      progress[0].data.length > 0 &&
+      progress[0].data.slice(-1)[0].x === getDatestr(new Date())
     ) {
       onError('이미 오늘 기록을 추가했습니다.');
       return;
@@ -148,18 +151,30 @@ const ProgressModal = ({
     <Modal isVisible={isVisible}>
       <HeaderBlock>
         <h2>체성분 기록</h2>
-        <span>날짜 · 체중 · 골격근량 · 체지방량</span>
       </HeaderBlock>
       <ProgressListBlock>
-        {[...Array(data[0].data.length)].map((_, idx) => (
+        {[...Array(progress[0].data.length)].map((_, idx) => (
           <li key={idx}>
-            <ProgressItemBlock onClick={() => onRemove(data[0].data[idx].x)}>
-              <div>
-                <b>{data[0].data[idx].x.slice(2).replaceAll('-', '.')}</b>
+            <ProgressItemBlock
+              onClick={() => onRemove(progress[0].data[idx].x)}
+            >
+              <div className="date">
+                <h6>{progress[0].data[idx].x.slice(2).replaceAll('-', '.')}</h6>
               </div>
-              <div>{data[0].data[idx].y}kg</div>
-              <div>{data[1].data[idx].y}kg</div>
-              <div>{data[2].data[idx].y}kg</div>
+              <div className="contents">
+                <div>
+                  <small>체중</small>
+                  {progress[0].data[idx].y} kg
+                </div>
+                <div>
+                  <small>골격근량</small>
+                  {progress[1].data[idx].y} kg
+                </div>
+                <div>
+                  <small>체지방량</small>
+                  {progress[2].data[idx].y} kg
+                </div>
+              </div>
             </ProgressItemBlock>
           </li>
         ))}
@@ -174,8 +189,8 @@ const ProgressModal = ({
               type="number"
               min={0}
               max={300}
-              value={input.weight}
-              onChange={(e) => onChange('weight', e)}
+              value={input.weight.toString()}
+              onChange={(e) => onChangeInput('weight', e)}
             />
             kg
           </div>
@@ -187,8 +202,8 @@ const ProgressModal = ({
               type="number"
               min={0}
               max={150}
-              value={input.muscleMass}
-              onChange={(e) => onChange('muscleMass', e)}
+              value={input.muscleMass.toString()}
+              onChange={(e) => onChangeInput('muscleMass', e)}
             />
             kg
           </div>
@@ -200,8 +215,8 @@ const ProgressModal = ({
               type="number"
               min={0}
               max={150}
-              value={input.fatMass}
-              onChange={(e) => onChange('fatMass', e)}
+              value={input.fatMass.toString()}
+              onChange={(e) => onChangeInput('fatMass', e)}
             />
             kg
           </div>

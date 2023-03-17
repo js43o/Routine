@@ -16,11 +16,11 @@ const ButtonBlock = styled.button`
   cursor: pointer;
   @media (hover: hover) {
     &:hover {
-      opacity: 0.75;
+      opacity: 0.8;
     }
   }
   &:active {
-    opacity: 1;
+    opacity: 0.6;
   }
   margin: 0;
   padding: 0;

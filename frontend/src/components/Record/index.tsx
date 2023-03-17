@@ -70,7 +70,7 @@ const RecordPage = () => {
     <Template>
       <SetProgressModal
         isVisible={modal}
-        data={user.progress}
+        progress={user.progress}
         onCloseModal={onCloseModal}
       />
       <RecordCalendar
