@@ -108,7 +108,6 @@ export const removeAllToken = (ctx: DefaultContext) => {
   ctx.cookies.set('kakao_expires_in');
   ctx.cookies.set('kakao_refresh_token');
   ctx.cookies.set('kakao_refresh_token_expires_in');
-  // 로컬 토큰도 만료시킴
   ctx.cookies.set('access_token');
 };
 
@@ -134,11 +133,9 @@ export const refreshKakaoToken = async (ctx: DefaultContext, token: string) => {
       refresh_token_expires_in,
     } = response.data;
 
-    // 액세스 토큰 갱신
     ctx.cookies.set('kakao_access_token', access_token);
     ctx.cookies.set('kakao_expires_in', Date.now() + expires_in * 1000);
 
-    // 만약 새로운 리프레쉬 토큰이 발급된 경우 리프레쉬 토큰도 갱신
     if (refresh_token) {
       ctx.cookies.set('kakao_refresh_token', refresh_token);
       ctx.cookies.set(

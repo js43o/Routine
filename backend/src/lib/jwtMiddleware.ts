@@ -22,16 +22,13 @@ const jwtMiddleware = async (ctx: Context, next: Next) => {
   );
 
   if (kakao_expires_in && Date.now() > +kakao_expires_in) {
-    // 카카오로 로그인했고 액세스 토큰이 만료되었을 때
     if (
       kakao_refresh_token &&
       kakao_refresh_token_expires_in &&
       Date.now() < +kakao_refresh_token_expires_in
     ) {
-      // 만약 리프레쉬 토큰이 만료되지 않았다면 토큰 갱신 요청
       await refreshKakaoToken(ctx, kakao_refresh_token);
     } else {
-      // 리프레쉬 토큰도 만료된 경우
       removeAllToken(ctx);
       return next();
     }
@@ -43,7 +40,6 @@ const jwtMiddleware = async (ctx: Context, next: Next) => {
       process.env.JWT_SECRET as string,
     ) as Decoded;
     ctx.state.user = decoded.username;
-    // 현재 토큰의 유효기간이 3.5일보다 적을 경우, 토큰 재발급
     const now = Math.floor(Date.now() / 1000);
     const user = await User.findById(decoded._id);
     if (user && decoded.exp - now < 60 * 60 * 24 * 3.5) {
