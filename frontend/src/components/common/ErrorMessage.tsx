@@ -16,7 +16,7 @@ const shaking = keyframes`
 
 const ErrorMessageBlock = styled.div`
   display: flex;
-  place-items: center;
+  align-items: center;
   min-height: 2rem;
   color: red;
   &.shaking {

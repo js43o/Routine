@@ -18,10 +18,10 @@ import {
 } from 'types';
 
 type UserStateType = {
-  loading: boolean;
+  user: User;
+  authLoading: boolean;
   error: SerializedError | null;
   authErrorCode: number;
-  user: User;
 };
 
 const initialUser: User = {
@@ -50,7 +50,7 @@ const initialUser: User = {
 };
 
 const initialState: UserStateType = {
-  loading: false,
+  authLoading: false,
   error: null,
   authErrorCode: 0,
   user: initialUser,
@@ -326,12 +326,18 @@ export const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(register.pending, (state) => {
+        state.authLoading = true;
+      })
       .addCase(register.fulfilled, (state, action) => {
         state.user = action.payload;
       })
       .addCase(register.rejected, (state, action) => {
         state.user = initialUser;
         state.authErrorCode = action.payload as number;
+      })
+      .addCase(login.pending, (state) => {
+        state.authLoading = true;
       })
       .addCase(login.fulfilled, (state, action) => {
         state.user = action.payload;
@@ -340,11 +346,17 @@ export const userSlice = createSlice({
         state.user = initialUser;
         state.authErrorCode = action.payload as number;
       })
+      .addCase(kakaoLogin.pending, (state) => {
+        state.authLoading = true;
+      })
       .addCase(kakaoLogin.fulfilled, (state, action) => {
         state.user = action.payload;
       })
       .addCase(kakaoLogin.rejected, (state) => {
         state.user = initialUser;
+      })
+      .addCase(logout.pending, (state) => {
+        state.authLoading = true;
       })
       .addCase(logout.fulfilled, () => initialState)
       .addCase(setInfo.fulfilled, (state, action) => {
@@ -353,6 +365,9 @@ export const userSlice = createSlice({
       })
       .addCase(setCurrentRoutine.fulfilled, (state, action) => {
         state.user.currentRoutineId = action.payload;
+      })
+      .addCase(setProfileImage.pending, (state) => {
+        state.authLoading = true;
       })
       .addCase(setProfileImage.fulfilled, (state, action) => {
         state.user.profileImage = action.payload;
@@ -389,15 +404,14 @@ export const userSlice = createSlice({
         );
       })
       .addMatcher(isPending, (state) => {
-        state.loading = true;
         state.authErrorCode = 0;
         state.error = null;
       })
       .addMatcher(isFulfilled, (state) => {
-        state.loading = false;
+        state.authLoading = false;
       })
       .addMatcher(isRejected, (state, action) => {
-        state.loading = false;
+        state.authLoading = false;
         state.error = action.error;
       });
   },

@@ -66,7 +66,7 @@ const ProgressItemBlock = styled(Button)`
 const FooterBlock = styled.div`
   display: flex;
   flex-direction: column;
-  place-items: center;
+  align-items: center;
   border-top: 1px solid ${({ theme }) => theme.border_main};
 `;
 

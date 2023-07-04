@@ -18,7 +18,7 @@ const AddRoutineButton = styled(Button)`
   flex-direction: column;
   flex-grow: 0;
   width: 100%;
-  place-items: center;
+  align-items: center;
   padding: 0.5rem;
   margin-top: 1rem;
   font-size: 2rem;

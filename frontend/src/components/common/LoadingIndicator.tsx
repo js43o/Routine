@@ -15,7 +15,7 @@ const rotating = keyframes`
 const LoadingIndicatorBlock = styled.div<{ white?: boolean }>`
   display: flex;
   flex-direction: column;
-  place-items: center;
+  align-items: center;
   gap: 0.5rem;
   color: ${({ white, theme }) => (white ? 'white' : theme.letter_main)};
   .indicator {

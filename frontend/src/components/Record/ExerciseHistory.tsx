@@ -17,7 +17,7 @@ const ExerciseHistoryBlock = styled.ul`
 const ExerciseHistoryItem = styled.li`
   display: flex;
   flex-direction: column;
-  place-items: center;
+  align-items: center;
   flex-grow: 1;
   padding: 0.25rem;
   border-radius: 0.5rem;

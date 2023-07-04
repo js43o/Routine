@@ -33,7 +33,7 @@ const WeekRoutineBlock = styled.li<{ visible: boolean; editing?: boolean }>`
     gap: 0.5rem;
     .buttons {
       display: flex;
-      place-items: center;
+      align-items: center;
       gap: 0.5rem;
       button {
         font-size: 1.5rem;
@@ -44,7 +44,7 @@ const WeekRoutineBlock = styled.li<{ visible: boolean; editing?: boolean }>`
 
 const TitleBlock = styled.button<{ editing: boolean }>`
   display: flex;
-  place-items: center;
+  align-items: center;
   gap: 0.5rem;
   flex-grow: 1;
   height: 34px;
@@ -89,7 +89,7 @@ const RoutineContent = styled.ul`
 
 const DayRoutineWrapper = styled.li`
   display: flex;
-  place-items: center;
+  align-items: center;
   border-radius: 0.5rem;
   overflow: hidden;
 `;

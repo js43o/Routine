@@ -12,11 +12,12 @@ import RoutinePage from 'components/Routine';
 import RecordPage from 'components/Record';
 import AuthPage from 'components/Auth';
 import KakaoPage from 'components/Auth/Kakao';
+import errorMessageMap from 'lib/errorMessageMap';
 
 const LoadingBlock = styled.div<{ visible: boolean }>`
   display: flex;
   justify-content: center;
-  place-items: center;
+  align-items: center;
   position: fixed;
   z-index: 1000;
   top: 0;
@@ -38,7 +39,7 @@ const AppBlock = styled.div`
 `;
 
 function App() {
-  const { loading, error, user } = useSelector(userSelector);
+  const { user, authLoading, error } = useSelector(userSelector);
   const theme = useSelector(themeSelector);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -57,12 +58,7 @@ function App() {
     )
       return;
 
-    if (error.code === 'ERR_BAD_REQUEST') {
-      alert('잘못된 요청입니다.\n다시 로그인해주세요.');
-    }
-    if (error.code === 'ERR_BAD_RESPONSE') {
-      alert('서버와의 연결이 끊겼습니다.\n다시 로그인해주세요.');
-    }
+    alert(errorMessageMap.get(error.code));
 
     dispatch(initializeUser());
     navigate('/login');
@@ -70,7 +66,7 @@ function App() {
 
   return (
     <AppBlock>
-      <LoadingBlock visible={loading}>
+      <LoadingBlock visible={authLoading}>
         <LoadingIndicator white />
       </LoadingBlock>
       <ThemeProvider theme={theme.colors}>

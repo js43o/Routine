@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 const KakaoBlock = styled.div`
   display: flex;
-  place-items: center;
+  align-items: center;
 `;
 
 const Kakao = () => {

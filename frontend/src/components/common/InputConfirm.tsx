@@ -10,7 +10,7 @@ const InputConfirmBlock = styled.form`
   & > div {
     display: flex;
     flex-direction: column;
-    place-items: center;
+    align-items: center;
     flex-grow: 1;
   }
   .buttons {

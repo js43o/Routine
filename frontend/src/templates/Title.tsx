@@ -1,8 +1,9 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import { NavLink } from 'react-router-dom';
 import { CgInfinity } from 'react-icons/cg';
 
-const TitleBlock = styled.h1`
+const TitleBlock = styled(NavLink)`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -19,7 +20,7 @@ const LogoBlock = styled(CgInfinity)`
 
 const Title = () => {
   return (
-    <TitleBlock>
+    <TitleBlock to="/">
       Routine
       <LogoBlock />
     </TitleBlock>

@@ -58,7 +58,7 @@ const SetButton = styled.button<{ available: boolean }>`
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-  place-items: center;
+  align-items: center;
   padding: 0.25rem 0.5rem;
   font-size: 2rem;
   opacity: ${({ available }) => !available && 0.25};

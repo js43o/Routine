@@ -66,7 +66,7 @@ const ExerciseItemBlock = styled.button<{ isEditing?: boolean }>`
 const AddExerciseButton = styled(Button)<{ isEditing: boolean }>`
   display: flex;
   flex-shrink: 0;
-  place-items: center;
+  align-items: center;
   border-radius: 50%;
   color: ${({ theme }) => theme.letter_primary};
   font-size: 2rem;
