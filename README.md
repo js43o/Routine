@@ -4,7 +4,7 @@
 
 ## 사이트 링크 🔗
 
-<b>http://routine-app.link</b>
+<b>http://js43o-project.com</b>
 
 ## 로컬 환경에서 실행하기
 
@@ -15,24 +15,26 @@
 - yarn
 
 1. 코드를 다운로드한 후 압축을 해제합니다.
-2. Frontend 폴더에 .env 파일을 생성한 후, 다음과 같이 작성합니다.
+2. `/frontend` 폴더에 `.env` 파일을 생성한 후, 다음과 같이 작성합니다.
 
 ```
 REACT_APP_KAKAO_API=... // Kakao Developers의 REST API 키 값
 REACT_APP_KAKAO_REDIRECT=http://localhost:3000/kakao
 ```
 
-3. Backend 폴더에 .env 파일을 생성한 후, 다음과 같이 작성합니다.
+3. `/backend` 폴더에 `.env` 파일을 생성한 후, 다음과 같이 작성합니다.
 
 ```
 PORT=4000
 MONGO_URI=mongodb://localhost:27017/routine
+MONGO_USER=...  // MongoDB 계정 이름
+MONGO_PASS=...  // MongoDB 계정 패스워드
 JWT_SECRET=... // jwt 토큰을 위한 임의의 문자열 입력
 KAKAO_API=... // Kakao Developers의 REST API 키 값
 ```
 
-4. Frontend, Backend 경로에서 각각 `yarn` 명령어를 입력하여 필요한 패키지를 설치합니다.
-5. Frontend, Backend 경로에서 각각 `yarn start` 명령어를 입력합니다.
+4. `/frontend`, `/backend` 경로에서 각각 `yarn` 명령어를 입력하여 필요한 패키지를 설치합니다.
+5. `/frontend`, `/backend` 경로에서 각각 `yarn start` 명령어를 입력합니다.
 6. http://localhost:3000/routine 에 접속하여 서비스를 이용하세요.
 
 ## 페이지별 기능 🔧

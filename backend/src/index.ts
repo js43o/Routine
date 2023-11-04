@@ -8,10 +8,14 @@ import mongoose from 'mongoose';
 import api from './api';
 import jwtMiddleware from './lib/jwtMiddleware';
 
-const { PORT, MONGO_URI } = process.env;
+const { PORT, MONGO_URI, MONGO_USER, MONGO_PASS } = process.env;
 
 mongoose
-  .connect(`${MONGO_URI}`)
+  .connect(MONGO_URI!, {
+    authSource: 'admin',
+    user: MONGO_USER,
+    pass: MONGO_PASS,
+  })
   .then(() => {
     console.log('Connected to MongoDB');
   })
